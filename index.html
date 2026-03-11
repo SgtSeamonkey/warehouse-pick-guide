@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Warehouse Pick Guide</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8620A;--ord:#7A3305;
+  --yw:#F5C800;--ywh:#FFE840;--ywd:#4a3800;
+  --bg:#141c28;--pb:#111820;--tx:#dde3ec;--gn:#00e676;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
+  font-family:'Segoe UI',Arial,sans-serif;overflow:hidden}
+#app{display:grid;grid-template-rows:50px 1fr 50px;
+  grid-template-columns:270px 1fr;height:100vh}
+#hd{grid-column:1/3;background:#0a1220;border-bottom:2px solid var(--yw);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+#hd h1{font-size:.95rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--yw)}
+#hr{display:flex;align-items:center;gap:10px;font-size:.75rem}
+#sd{width:8px;height:8px;border-radius:50%;background:var(--gn);
+  box-shadow:0 0 8px 2px rgba(0,230,118,.7)}
+#lu{color:#445;font-size:.68rem}
+.hb{background:#182435;border:1px solid #2a3a55;color:var(--yw);
+  padding:4px 10px;border-radius:4px;font-size:.7rem;cursor:pointer}
+.hb:hover{background:#203050;border-color:var(--yw)}
+#pc{background:var(--pb);border-right:1px solid #1c2e48;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:8px 4px;gap:6px}
+.pl{font-size:.6rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:#445}
+#pr{background:#0d151f;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:6px 8px;overflow:hidden}
+#ft{grid-column:1/3;background:#080f18;border-top:2px solid #1a2840;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;gap:12px}
+#fl{color:#334;font-size:.68rem;white-space:nowrap}
+#fm{flex:1;text-align:center;font-size:.8rem;font-weight:600;
+  color:var(--yw);letter-spacing:.03em}
+#fx{color:#445;font-size:.65rem;white-space:nowrap;text-align:right}
+#csv{width:100%;max-width:246px;height:auto}
+.cf{fill:none;stroke:var(--or);stroke-width:5;stroke-linejoin:round}
+.cd{stroke:#5a2800;stroke-width:2.5}
+.cs{stroke:#242424;stroke-width:1;stroke-dasharray:3 3}
+.cg{fill:#181818;stroke:#222;stroke-width:1}
+.cn{font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:900;
+  fill:var(--or);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cb{font-family:'Segoe UI',Arial,sans-serif;font-size:6px;fill:#3a2010;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cw{fill:#111;stroke:var(--or);stroke-width:2.5}
+.ch{fill:var(--ord)}
+.ck{fill:#1a1a1a;stroke:var(--or);stroke-width:1.5}
+#rsv{width:100%;height:auto;display:block}
+.RL{stroke:var(--yw);stroke-width:6;stroke-linecap:round;fill:none}
+.RB{stroke:var(--yw);stroke-width:4.5;stroke-linecap:round;fill:none}
+.RX{stroke:var(--ywd);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
+.RR{stroke:#1e1e1e;stroke-width:1.2;fill:none}
+.RS{fill:#080e18;stroke:#111a28;stroke-width:1}
+.RS.on{fill:rgba(245,200,0,.16);stroke:var(--ywh);stroke-width:2.5;
+  animation:rg 1.4s ease-in-out infinite}
+@keyframes rg{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.8))}
+  50%{filter:drop-shadow(0 0 20px rgba(245,200,0,1))}
+}
+.RR{stroke:#1e1e1e;stroke-width:1.2;fill:none}
+.SL{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;
+  fill:#1a2e42;font-weight:700;text-anchor:middle;
+  dominant-baseline:central;pointer-events:none}
+.SL.on{fill:rgba(245,200,0,.55)}
+.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:8px;font-weight:700;
+  fill:var(--yw);text-anchor:middle;dominant-baseline:central;
+  letter-spacing:.08em;opacity:.45;pointer-events:none}
+.BC{fill:var(--or);stroke:#000;stroke-width:1.5}
+.BT{font-family:'Segoe UI',Arial,sans-serif;font-size:8px;font-weight:900;
+  fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="app">
+<header id="hd">
+  <h1>&#9881; Warehouse Pick Guide</h1>
+  <div id="hr">
+    <div id="sd"></div>
+    <span style="color:#556">LIVE</span>
+    <span id="lu">&#8212;</span>
+    <button class="hb" id="demoBtn">&#9654; Demo</button>
+    <button class="hb" style="color:#556" id="clrBtn">&#10005; Clear</button>
+  </div>
+</header>
+<section id="pc">
+  <div class="pl">Orange Cart &#8212; Slot Reference</div>
+  <svg id="csv" viewBox="0 0 246 374" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="123" cy="367" rx="100" ry="7" fill="rgba(0,0,0,.4)"/>
+    <rect x="13" y="326" width="220" height="11" rx="2" fill="#180900" stroke="#5a2800" stroke-width="1.2"/>
+    <rect class="cf" x="11" y="11" width="224" height="318" rx="5"/>
+    <line class="cd" x1="67" y1="11" x2="67" y2="329"/>
+    <line class="cd" x1="123" y1="11" x2="123" y2="329"/>
+    <line class="cd" x1="179" y1="11" x2="179" y2="329"/>
+    <line class="cd" x1="11" y1="175" x2="235" y2="175"/>
+    <rect class="cg" x="14" y="14" width="50" height="158"/>
+    <rect class="cg" x="70" y="14" width="50" height="158"/>
+    <rect class="cg" x="126" y="14" width="50" height="158"/>
+    <rect class="cg" x="182" y="14" width="50" height="158"/>
+    <rect class="cg" x="14" y="178" width="50" height="158"/>
+    <rect class="cg" x="70" y="178" width="50" height="158"/>
+    <rect class="cg" x="126" y="178" width="50" height="158"/>
+    <rect class="cg" x="182" y="178" width="50" height="158"/>
+    <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
+    <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
+    <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
+    <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
+    <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
+    <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
+    <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
+    <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
+    <text class="cn" x="39" y="92">1</text><text class="cn" x="95" y="92">2</text>
+    <text class="cn" x="151" y="92">3</text><text class="cn" x="207" y="92">4</text>
+    <text class="cn" x="39" y="256">5</text><text class="cn" x="95" y="256">6</text>
+    <text class="cn" x="151" y="256">7</text><text class="cn" x="207" y="256">8</text>
+    <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
+    <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
+    <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
+    <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="207" y="323">BOT&#xB7;R</text>
+    <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
+    <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
+    <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
+    <rect class="ck" x="194" y="5" width="10" height="8" rx="2"/>
+    <circle class="cw" cx="43" cy="349" r="13"/><circle class="ch" cx="43" cy="349" r="5"/>
+    <circle class="cw" cx="203" cy="349" r="13"/><circle class="ch" cx="203" cy="349" r="5"/>
+    <line x1="43" y1="336" x2="43" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+    <line x1="30" y1="349" x2="56" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+    <line x1="203" y1="336" x2="203" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+    <line x1="190" y1="349" x2="216" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+    </svg>
+</section>
+<section id="pr">
+  <div class="pl">Yellow Flow Rack &#8212; Pick Locations</div>
+  <svg id="rsv" viewBox="0 0 1280 530" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <ellipse cx="640" cy="524" rx="625" ry="7" fill="rgba(0,0,0,.5)"/>
+    <rect id="s1"  class="RS" x="3"    y="22"  width="110" height="126"/>
+    <rect id="s2"  class="RS" x="117"  y="22"  width="111" height="126"/>
+    <rect id="s3"  class="RS" x="3"    y="152" width="110" height="126"/>
+    <rect id="s4"  class="RS" x="117"  y="152" width="111" height="126"/>
+    <rect id="s5"  class="RS" x="3"    y="282" width="110" height="126"/>
+    <rect id="s6"  class="RS" x="117"  y="282" width="111" height="126"/>
+    <rect id="s7"  class="RS" x="3"    y="412" width="110" height="96"/>
+    <rect id="s8"  class="RS" x="117"  y="412" width="111"  height="96"/>
+    <rect id="s9"  class="RS" x="233"  y="202" width="90"  height="151"/>
+    <rect id="s10" class="RS" x="327"  y="202" width="91"  height="151"/>
+    <rect id="s11" class="RS" x="233"  y="357" width="90"  height="151"/>
+    <rect id="s12" class="RS" x="327"  y="357" width="91"  height="151"/>
+    <rect id="s13" class="RS" x="423"  y="22"  width="70"  height="126"/>
+    <rect id="s14" class="RS" x="497"  y="22"  width="71"  height="126"/>
+    <rect id="s15" class="RS" x="423"  y="152" width="70"  height="126"/>
+    <rect id="s16" class="RS" x="497"  y="152" width="71"  height="126"/>
+    <rect id="s17" class="RS" x="423"  y="282" width="70"  height="126"/>
+    <rect id="s18" class="RS" x="497"  y="282" width="71"  height="126"/>
+    <rect id="s19" class="RS" x="423"  y="412" width="70"  height="96"/>
+    <rect id="s20" class="RS" x="497"  y="412" width="71"  height="96"/>
+    <rect id="s21" class="RS" x="573"  y="22"  width="70"  height="126"/>
+    <rect id="s22" class="RS" x="647"  y="22"  width="71"  height="126"/>
+    <rect id="s23" class="RS" x="573"  y="152" width="70"  height="126"/>
+    <rect id="s24" class="RS" x="647"  y="152" width="71"  height="126"/>
+    <rect id="s25" class="RS" x="573"  y="282" width="70"  height="126"/>
+    <rect id="s26" class="RS" x="647"  y="282" width="71"  height="126"/>
+    <rect id="s27" class="RS" x="573"  y="412" width="70"  height="96"/>
+    <rect id="s28" class="RS" x="647"  y="412" width="71"  height="96"/>
+    <rect id="s29" class="RS" x="723"  y="22"  width="137" height="296"/>
+    <rect id="s30" class="RS" x="864"  y="22"  width="139" height="296"/>
+    <rect id="s31" class="RS" x="1007" y="22"  width="146" height="296"/>
+    <rect id="s32" class="RS" x="723"  y="322" width="220" height="93"/>
+    <rect id="s33" class="RS" x="723"  y="419" width="220" height="89"/>
+    <rect id="s34" class="RS" x="947"  y="322" width="206" height="93"/>
+    <rect id="s35" class="RS" x="947"  y="419" width="101" height="89"/>
+    <rect id="s36" class="RS" x="1052" y="419" width="101" height="89"/>
+    <rect id="s37" class="RS" x="1158" y="22"  width="109" height="286"/>
+    <rect id="s38" class="RS" x="1158" y="312" width="109" height="196"/>
+    <line class="RR" x1="425" y1="292" x2="566" y2="292"/><line class="RR" x1="425" y1="302" x2="566" y2="302"/>
+    <line class="RR" x1="425" y1="312" x2="566" y2="312"/><line class="RR" x1="425" y1="322" x2="566" y2="322"/>
+    <line class="RR" x1="425" y1="332" x2="566" y2="332"/><line class="RR" x1="425" y1="342" x2="566" y2="342"/>
+    <line class="RR" x1="425" y1="352" x2="566" y2="352"/><line class="RR" x1="425" y1="362" x2="566" y2="362"/>
+    <line class="RR" x1="425" y1="372" x2="566" y2="372"/><line class="RR" x1="425" y1="382" x2="566" y2="382"/>
+    <line class="RR" x1="425" y1="392" x2="566" y2="392"/><line class="RR" x1="425" y1="402" x2="566" y2="402"/>
+    <line class="RR" x1="425" y1="422" x2="566" y2="422"/><line class="RR" x1="425" y1="432" x2="566" y2="432"/>
+    <line class="RR" x1="575" y1="292" x2="716" y2="292"/><line class="RR" x1="575" y1="302" x2="716" y2="302"/>
+    <line class="RR" x1="575" y1="312" x2="716" y2="312"/><line class="RR" x1="575" y1="322" x2="716" y2="322"/>
+    <line class="RR" x1="575" y1="332" x2="716" y2="332"/><line class="RR" x1="575" y1="342" x2="716" y2="342"/>
+    <line class="RR" x1="575" y1="352" x2="716" y2="352"/><line class="RR" x1="575" y1="362" x2="716" y2="362"/>
+    <line class="RR" x1="575" y1="372" x2="716" y2="372"/><line class="RR" x1="575" y1="382" x2="716" y2="382"/>
+    <line class="RR" x1="575" y1="392" x2="716" y2="392"/><line class="RR" x1="575" y1="402" x2="716" y2="402"/>
+    <line class="RR" x1="575" y1="422" x2="716" y2="422"/><line class="RR" x1="575" y1="432" x2="716" y2="432"/>
+    <line class="RR" x1="575" y1="442" x2="716" y2="442"/><line class="RR" x1="575" y1="452" x2="716" y2="452"/>
+    <line class="RR" x1="575" y1="462" x2="716" y2="462"/><line class="RR" x1="575" y1="472" x2="716" y2="472"/>
+    <line class="RR" x1="575" y1="482" x2="716" y2="482"/><line class="RR" x1="575" y1="492" x2="716" y2="492"/>
+    <line class="RR" x1="1160" y1="35"  x2="1265" y2="35"/> <line class="RR" x1="1160" y1="47"  x2="1265" y2="47"/>
+    <line class="RR" x1="1160" y1="59"  x2="1265" y2="59"/> <line class="RR" x1="1160" y1="71"  x2="1265" y2="71"/>
+    <line class="RR" x1="1160" y1="83"  x2="1265" y2="83"/> <line class="RR" x1="1160" y1="95"  x2="1265" y2="95"/>
+    <line class="RR" x1="1160" y1="107" x2="1265" y2="107"/><line class="RR" x1="1160" y1="119" x2="1265" y2="119"/>
+    <line class="RR" x1="1160" y1="131" x2="1265" y2="131"/><line class="RR" x1="1160" y1="143" x2="1265" y2="143"/>
+    <line class="RR" x1="1160" y1="155" x2="1265" y2="155"/><line class="RR" x1="1160" y1="167" x2="1265" y2="167"/>
+    <line class="RR" x1="1160" y1="179" x2="1265" y2="179"/><line class="RR" x1="1160" y1="191" x2="1265" y2="191"/>
+    <line class="RR" x1="1160" y1="203" x2="1265" y2="203"/><line class="RR" x1="1160" y1="215" x2="1265" y2="215"/>
+    <line class="RR" x1="1160" y1="227" x2="1265" y2="227"/><line class="RR" x1="1160" y1="239" x2="1265" y2="239"/>
+    <line class="RR" x1="1160" y1="251" x2="1265" y2="251"/><line class="RR" x1="1160" y1="263" x2="1265" y2="263"/>
+    <line class="RR" x1="1160" y1="275" x2="1265" y2="275"/><line class="RR" x1="1160" y1="287" x2="1265" y2="287"/>
+    <line class="RR" x1="1160" y1="299" x2="1265" y2="299"/><line class="RR" x1="1160" y1="325" x2="1265" y2="325"/>
+    <line class="RR" x1="1160" y1="337" x2="1265" y2="337"/><line class="RR" x1="1160" y1="349" x2="1265" y2="349"/>
+    <line class="RR" x1="1160" y1="361" x2="1265" y2="361"/><line class="RR" x1="1160" y1="373" x2="1265" y2="373"/>
+    <line class="RR" x1="1160" y1="385" x2="1265" y2="385"/><line class="RR" x1="1160" y1="397" x2="1265" y2="397"/>
+    <line class="RR" x1="1160" y1="409" x2="1265" y2="409"/><line class="RR" x1="1160" y1="421" x2="1265" y2="421"/>
+    <line class="RR" x1="1160" y1="433" x2="1265" y2="433"/><line class="RR" x1="1160" y1="445" x2="1265" y2="445"/>
+    <line class="RR" x1="1160" y1="457" x2="1265" y2="457"/><line class="RR" x1="1160" y1="469" x2="1265" y2="469"/>
+    <line class="RR" x1="1160" y1="481" x2="1265" y2="481"/><line class="RR" x1="1160" y1="493" x2="1265" y2="493"/>
+    <text class="SC" x="115"  y="10">A</text>
+    <text class="SC" x="324"  y="190">B</text>
+    <text class="SC" x="494"  y="10">C</text>
+    <text class="SC" x="644"  y="10">D</text>
+    <text class="SC" x="937"  y="10">E</text>
+    <text class="SC" x="1211" y="10">F</text>
+    <g id="badge-layer"></g>
+  </svg>
+</section>
+<footer id="ft">
+  <span id="fl">&#128260; 5s refresh</span>
+  <span id="fm">Waiting for pick data&#8230;</span>
+  <span id="fx"></span>
+</footer>
+</div>
+<script>
+(function(){
+'use strict';
+const GEO={
+  1:{x:3,y:22,w:110,h:126},2:{x:117,y:22,w:111,h:126},
+  3:{x:3,y:152,w:110,h:126},4:{x:117,y:152,w:111,h:126},
+  5:{x:3,y:282,w:110,h:126},6:{x:117,y:282,w:111,h:126},
+  7:{x:3,y:412,w:110,h:96},8:{x:117,y:412,w:111,h:96},
+  9:{x:233,y:202,w:90,h:151},10:{x:327,y:202,w:91,h:151},
+  11:{x:233,y:357,w:90,h:151},12:{x:327,y:357,w:91,h:151},
+  13:{x:423,y:22,w:70,h:126},14:{x:497,y:22,w:71,h:126},
+  15:{x:423,y:152,w:70,h:126},16:{x:497,y:152,w:71,h:126},
+  17:{x:423,y:282,w:70,h:126},18:{x:497,y:282,w:71,h:126},
+  19:{x:423,y:412,w:70,h:96},20:{x:497,y:412,w:71,h:96},
+  21:{x:573,y:22,w:70,h:126},22:{x:647,y:22,w:71,h:126},
+  23:{x:573,y:152,w:70,h:126},24:{x:647,y:152,w:71,h:126},
+  25:{x:573,y:282,w:70,h:126},26:{x:647,y:282,w:71,h:126},
+  27:{x:573,y:412,w:70,h:96},28:{x:647,y:412,w:71,h:96},
+  29:{x:723,y:22,w:137,h:296},30:{x:864,y:22,w:139,h:296},
+  31:{x:1007,y:22,w:146,h:296},32:{x:723,y:322,w:220,h:93},
+  33:{x:723,y:419,w:220,h:89},34:{x:947,y:322,w:206,h:93},
+  35:{x:947,y:419,w:101,h:89},36:{x:1052,y:419,w:101,h:89},
+  37:{x:1158,y:22,w:109,h:286},38:{x:1158,y:312,w:109,h:196}
+};
+const ALL=Object.keys(GEO).map(Number);
+const NS='http://www.w3.org/2000/svg';
+function mkEl(tag,a){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;}
+function clearRack(){
+  ALL.forEach(n=>{
+    const s=document.getElementById('s'+n);const l=document.getElementById('l'+n);
+    if(s)s.classList.remove('on');if(l)l.classList.remove('on');
+  });
+  const bl=document.getElementById('badge-layer');if(bl)bl.innerHTML='';
+  document.getElementById('fm').textContent='Waiting for pick data';
+  document.getElementById('fx').textContent='';
+}
+function drawBadges(slotNum,cartNums){
+  const g=GEO[slotNum];if(!g)return;
+  const layer=document.getElementById('badge-layer');
+  const R=9,PAD=4,GAP=2,STEP=R*2+GAP;
+  const baseX=g.x+g.w-PAD-R;const baseY=g.y+PAD+R;
+  cartNums.forEach((num,i)=>{
+    const cx=baseX-i*STEP;if(cx<g.x+R)return;
+    const grp=document.createElementNS(NS,'g');
+    const circle=mkEl('circle',{class:'BC',cx,cy:baseY,r:R});
+    const text=mkEl('text',{class:'BT',x:cx,y:baseY});
+    text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
+  });
+}
+function applyCartItems(cartItems){
+  clearRack();if(!cartItems||!cartItems.length)return;
+  const map={};
+  cartItems.forEach((item,idx)=>{
+    if(!item||!item.rackSlots)return;const cn=idx+1;
+    item.rackSlots.forEach(rn=>{const k=Number(rn);if(!map[k])map[k]=[];if(!map[k].includes(cn))map[k].push(cn);});
+  });
+  Object.entries(map).forEach(([rn,nums])=>{
+    const n=Number(rn);
+    const s=document.getElementById('s'+n);const l=document.getElementById('l'+n);
+    if(s)s.classList.add('on');if(l)l.classList.add('on');drawBadges(n,nums);
+  });
+  const hasPicks=Object.keys(map).length>0;
+  document.getElementById('fm').textContent=hasPicks?'Pick from highlighted sections  place in numbered cart slots':'No active picks';
+  document.getElementById('fx').textContent=cartItems.map((it,i)=>it?`${i+1}:${it.description}`:null).filter(Boolean).join('  ;  ');
+}
+const DEMOS=[
+  [{description:'Black Front',rackSlots:[1,30]},{description:'Black Rear',rackSlots:[2,30]},{description:'Grey Front',rackSlots:[9,30]},{description:'Grey Rear',rackSlots:[10,30]},{description:'Orange Front',rackSlots:[13,30]},{description:'Orange Rear',rackSlots:[14,30]},{description:'White Front',rackSlots:[21,30]},{description:'White Rear',rackSlots:[22,30]}],
+  [{description:'Panel A',rackSlots:[17,37]},{description:'Panel B',rackSlots:[18,37]},{description:'Panel C',rackSlots:[19,38]},{description:'Panel D',rackSlots:[20,38]},{description:'Panel E',rackSlots:[25,37]},{description:'Panel F',rackSlots:[26,37]},{description:'Panel G',rackSlots:[27,38]},{description:'Panel H',rackSlots:[28,38]}],
+  [{description:'Door Liner 1',rackSlots:[3,29]},{description:'Door Liner 2',rackSlots:[4,29]},{description:'Door Liner 3',rackSlots:[5,29]},{description:'Door Liner 4',rackSlots:[6,29]},{description:'Door Liner 5',rackSlots:[7,29]},{description:'Door Liner 6',rackSlots:[8,29]},{description:'Door Liner 7',rackSlots:[11,29]},{description:'Door Liner 8',rackSlots:[12,29]}],
+  [{description:'Armrest Black',rackSlots:[32,33]},{description:'Armrest Black',rackSlots:[32,33]},{description:'Armrest Grey',rackSlots:[34,35]},{description:'Armrest Grey',rackSlots:[34,36]},null,null,null,null]
+];
+let demoIdx=-1;
+function cycleDemo(){demoIdx=(demoIdx+1)%DEMOS.length;applyCartItems(DEMOS[demoIdx]);document.getElementById('lu').textContent=`Demo ${demoIdx+1}/${DEMOS.length} ; ${new Date().toLocaleTimeString()}`;}
+const CFG={apiEndpoint:'/api/cart-items',pollMs:5000,useMock:true};
+async function poll(){
+  if(CFG.useMock)return;
+  try{const r=await fetch(CFG.apiEndpoint,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('HTTP '+r.status);applyCartItems(await r.json());document.getElementById('lu').textContent='Polled: '+new Date().toLocaleTimeString();}
+  catch(e){console.error('Fetch:',e);}
+}
+document.getElementById('demoBtn').addEventListener('click',cycleDemo);
+document.getElementById('clrBtn').addEventListener('click',()=>{demoIdx=-1;clearRack();document.getElementById('lu').textContent=';';});
+poll();setInterval(poll,CFG.pollMs);
+})();
+</script>
+</body>
+</html>
