@@ -54,28 +54,21 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 .ch{fill:var(--ord)}
 .ck{fill:#1a1a1a;stroke:var(--or);stroke-width:1.5}
 #rsv{width:100%;height:auto;display:block}
-.RL{stroke:var(--yw);stroke-width:6;stroke-linecap:round;fill:none}
-.RB{stroke:var(--yw);stroke-width:4.5;stroke-linecap:round;fill:none}
-.RX{stroke:var(--ywd);stroke-width:1.5;stroke-dasharray:6 4;fill:none}
-.RR{stroke:#1e1e1e;stroke-width:1.2;fill:none}
-.RS{fill:#080e18;stroke:#111a28;stroke-width:1}
-.RS.on{fill:rgba(245,200,0,.16);stroke:var(--ywh);stroke-width:2.5;
+.RF{fill:rgba(20,28,42,.55);stroke:var(--yw);stroke-width:3;stroke-linejoin:round}
+.RS{fill:#0c1824;stroke:#263a52;stroke-width:1.5}
+.RS.on{fill:rgba(245,200,0,.18);stroke:var(--ywh);stroke-width:2.5;
   animation:rg 1.4s ease-in-out infinite}
 @keyframes rg{
   0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.8))}
   50%{filter:drop-shadow(0 0 20px rgba(245,200,0,1))}
 }
-.RR{stroke:#1e1e1e;stroke-width:1.2;fill:none}
-.SL{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;
-  fill:#1a2e42;font-weight:700;text-anchor:middle;
+.SL{font-family:'Segoe UI',Arial,sans-serif;font-size:20px;
+  fill:#4a7aa8;font-weight:900;text-anchor:middle;
   dominant-baseline:central;pointer-events:none}
-.SL.on{fill:rgba(245,200,0,.55)}
-.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:8px;font-weight:700;
+.SL.on{fill:rgba(245,200,0,.95)}
+.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;font-weight:700;
   fill:var(--yw);text-anchor:middle;dominant-baseline:central;
-  letter-spacing:.08em;opacity:.45;pointer-events:none}
-.BC{fill:var(--or);stroke:#000;stroke-width:1.5}
-.BT{font-family:'Segoe UI',Arial,sans-serif;font-size:8px;font-weight:900;
-  fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+  letter-spacing:.08em;opacity:.65;pointer-events:none}
 </style>
 </head>
 <body>
@@ -138,88 +131,104 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </section>
 <section id="pr">
   <div class="pl">Yellow Flow Rack &#8212; Pick Locations</div>
-  <svg id="rsv" viewBox="0 0 1280 530" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-    <ellipse cx="640" cy="524" rx="625" ry="7" fill="rgba(0,0,0,.5)"/>
-    <rect id="s1"  class="RS" x="3"    y="22"  width="110" height="126"/>
-    <rect id="s2"  class="RS" x="117"  y="22"  width="111" height="126"/>
-    <rect id="s3"  class="RS" x="3"    y="152" width="110" height="126"/>
-    <rect id="s4"  class="RS" x="117"  y="152" width="111" height="126"/>
-    <rect id="s5"  class="RS" x="3"    y="282" width="110" height="126"/>
-    <rect id="s6"  class="RS" x="117"  y="282" width="111" height="126"/>
-    <rect id="s7"  class="RS" x="3"    y="412" width="110" height="96"/>
-    <rect id="s8"  class="RS" x="117"  y="412" width="111"  height="96"/>
-    <rect id="s9"  class="RS" x="233"  y="202" width="90"  height="151"/>
-    <rect id="s10" class="RS" x="327"  y="202" width="91"  height="151"/>
-    <rect id="s11" class="RS" x="233"  y="357" width="90"  height="151"/>
-    <rect id="s12" class="RS" x="327"  y="357" width="91"  height="151"/>
-    <rect id="s13" class="RS" x="423"  y="22"  width="70"  height="126"/>
-    <rect id="s14" class="RS" x="497"  y="22"  width="71"  height="126"/>
-    <rect id="s15" class="RS" x="423"  y="152" width="70"  height="126"/>
-    <rect id="s16" class="RS" x="497"  y="152" width="71"  height="126"/>
-    <rect id="s17" class="RS" x="423"  y="282" width="70"  height="126"/>
-    <rect id="s18" class="RS" x="497"  y="282" width="71"  height="126"/>
-    <rect id="s19" class="RS" x="423"  y="412" width="70"  height="96"/>
-    <rect id="s20" class="RS" x="497"  y="412" width="71"  height="96"/>
-    <rect id="s21" class="RS" x="573"  y="22"  width="70"  height="126"/>
-    <rect id="s22" class="RS" x="647"  y="22"  width="71"  height="126"/>
-    <rect id="s23" class="RS" x="573"  y="152" width="70"  height="126"/>
-    <rect id="s24" class="RS" x="647"  y="152" width="71"  height="126"/>
-    <rect id="s25" class="RS" x="573"  y="282" width="70"  height="126"/>
-    <rect id="s26" class="RS" x="647"  y="282" width="71"  height="126"/>
-    <rect id="s27" class="RS" x="573"  y="412" width="70"  height="96"/>
-    <rect id="s28" class="RS" x="647"  y="412" width="71"  height="96"/>
-    <rect id="s29" class="RS" x="723"  y="22"  width="137" height="296"/>
-    <rect id="s30" class="RS" x="864"  y="22"  width="139" height="296"/>
-    <rect id="s31" class="RS" x="1007" y="22"  width="146" height="296"/>
-    <rect id="s32" class="RS" x="723"  y="322" width="220" height="93"/>
-    <rect id="s33" class="RS" x="723"  y="419" width="220" height="89"/>
-    <rect id="s34" class="RS" x="947"  y="322" width="206" height="93"/>
-    <rect id="s35" class="RS" x="947"  y="419" width="101" height="89"/>
-    <rect id="s36" class="RS" x="1052" y="419" width="101" height="89"/>
-    <rect id="s37" class="RS" x="1158" y="22"  width="109" height="286"/>
-    <rect id="s38" class="RS" x="1158" y="312" width="109" height="196"/>
-    <line class="RR" x1="425" y1="292" x2="566" y2="292"/><line class="RR" x1="425" y1="302" x2="566" y2="302"/>
-    <line class="RR" x1="425" y1="312" x2="566" y2="312"/><line class="RR" x1="425" y1="322" x2="566" y2="322"/>
-    <line class="RR" x1="425" y1="332" x2="566" y2="332"/><line class="RR" x1="425" y1="342" x2="566" y2="342"/>
-    <line class="RR" x1="425" y1="352" x2="566" y2="352"/><line class="RR" x1="425" y1="362" x2="566" y2="362"/>
-    <line class="RR" x1="425" y1="372" x2="566" y2="372"/><line class="RR" x1="425" y1="382" x2="566" y2="382"/>
-    <line class="RR" x1="425" y1="392" x2="566" y2="392"/><line class="RR" x1="425" y1="402" x2="566" y2="402"/>
-    <line class="RR" x1="425" y1="422" x2="566" y2="422"/><line class="RR" x1="425" y1="432" x2="566" y2="432"/>
-    <line class="RR" x1="575" y1="292" x2="716" y2="292"/><line class="RR" x1="575" y1="302" x2="716" y2="302"/>
-    <line class="RR" x1="575" y1="312" x2="716" y2="312"/><line class="RR" x1="575" y1="322" x2="716" y2="322"/>
-    <line class="RR" x1="575" y1="332" x2="716" y2="332"/><line class="RR" x1="575" y1="342" x2="716" y2="342"/>
-    <line class="RR" x1="575" y1="352" x2="716" y2="352"/><line class="RR" x1="575" y1="362" x2="716" y2="362"/>
-    <line class="RR" x1="575" y1="372" x2="716" y2="372"/><line class="RR" x1="575" y1="382" x2="716" y2="382"/>
-    <line class="RR" x1="575" y1="392" x2="716" y2="392"/><line class="RR" x1="575" y1="402" x2="716" y2="402"/>
-    <line class="RR" x1="575" y1="422" x2="716" y2="422"/><line class="RR" x1="575" y1="432" x2="716" y2="432"/>
-    <line class="RR" x1="575" y1="442" x2="716" y2="442"/><line class="RR" x1="575" y1="452" x2="716" y2="452"/>
-    <line class="RR" x1="575" y1="462" x2="716" y2="462"/><line class="RR" x1="575" y1="472" x2="716" y2="472"/>
-    <line class="RR" x1="575" y1="482" x2="716" y2="482"/><line class="RR" x1="575" y1="492" x2="716" y2="492"/>
-    <line class="RR" x1="1160" y1="35"  x2="1265" y2="35"/> <line class="RR" x1="1160" y1="47"  x2="1265" y2="47"/>
-    <line class="RR" x1="1160" y1="59"  x2="1265" y2="59"/> <line class="RR" x1="1160" y1="71"  x2="1265" y2="71"/>
-    <line class="RR" x1="1160" y1="83"  x2="1265" y2="83"/> <line class="RR" x1="1160" y1="95"  x2="1265" y2="95"/>
-    <line class="RR" x1="1160" y1="107" x2="1265" y2="107"/><line class="RR" x1="1160" y1="119" x2="1265" y2="119"/>
-    <line class="RR" x1="1160" y1="131" x2="1265" y2="131"/><line class="RR" x1="1160" y1="143" x2="1265" y2="143"/>
-    <line class="RR" x1="1160" y1="155" x2="1265" y2="155"/><line class="RR" x1="1160" y1="167" x2="1265" y2="167"/>
-    <line class="RR" x1="1160" y1="179" x2="1265" y2="179"/><line class="RR" x1="1160" y1="191" x2="1265" y2="191"/>
-    <line class="RR" x1="1160" y1="203" x2="1265" y2="203"/><line class="RR" x1="1160" y1="215" x2="1265" y2="215"/>
-    <line class="RR" x1="1160" y1="227" x2="1265" y2="227"/><line class="RR" x1="1160" y1="239" x2="1265" y2="239"/>
-    <line class="RR" x1="1160" y1="251" x2="1265" y2="251"/><line class="RR" x1="1160" y1="263" x2="1265" y2="263"/>
-    <line class="RR" x1="1160" y1="275" x2="1265" y2="275"/><line class="RR" x1="1160" y1="287" x2="1265" y2="287"/>
-    <line class="RR" x1="1160" y1="299" x2="1265" y2="299"/><line class="RR" x1="1160" y1="325" x2="1265" y2="325"/>
-    <line class="RR" x1="1160" y1="337" x2="1265" y2="337"/><line class="RR" x1="1160" y1="349" x2="1265" y2="349"/>
-    <line class="RR" x1="1160" y1="361" x2="1265" y2="361"/><line class="RR" x1="1160" y1="373" x2="1265" y2="373"/>
-    <line class="RR" x1="1160" y1="385" x2="1265" y2="385"/><line class="RR" x1="1160" y1="397" x2="1265" y2="397"/>
-    <line class="RR" x1="1160" y1="409" x2="1265" y2="409"/><line class="RR" x1="1160" y1="421" x2="1265" y2="421"/>
-    <line class="RR" x1="1160" y1="433" x2="1265" y2="433"/><line class="RR" x1="1160" y1="445" x2="1265" y2="445"/>
-    <line class="RR" x1="1160" y1="457" x2="1265" y2="457"/><line class="RR" x1="1160" y1="469" x2="1265" y2="469"/>
-    <line class="RR" x1="1160" y1="481" x2="1265" y2="481"/><line class="RR" x1="1160" y1="493" x2="1265" y2="493"/>
-    <text class="SC" x="115"  y="10">A</text>
-    <text class="SC" x="324"  y="190">B</text>
-    <text class="SC" x="494"  y="10">C</text>
-    <text class="SC" x="644"  y="10">D</text>
-    <text class="SC" x="937"  y="10">E</text>
-    <text class="SC" x="1211" y="10">F</text>
+  <svg id="rsv" viewBox="0 0 1280 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <ellipse cx="640" cy="516" rx="625" ry="7" fill="rgba(0,0,0,.5)"/>
+    <!-- Group frames (yellow structural outlines) -->
+    <rect class="RF" x="2"    y="13" width="247" height="493" rx="4"/>
+    <rect class="RF" x="253"  y="259" width="193" height="247" rx="4"/>
+    <rect class="RF" x="453"  y="13" width="165" height="493" rx="4"/>
+    <rect class="RF" x="625"  y="13" width="155" height="493" rx="4"/>
+    <rect class="RF" x="787"  y="13" width="430" height="509" rx="4"/>
+    <rect class="RF" x="1217" y="13" width="60"  height="509" rx="4"/>
+    <!-- Group A: sections 1-8 (2-col × 4-row, full height) -->
+    <rect id="s1"  class="RS" x="4"    y="15"  width="120" height="120"/>
+    <text id="l1"  class="SL" x="64"   y="75"  font-size="20">1</text>
+    <rect id="s2"  class="RS" x="127"  y="15"  width="120" height="120"/>
+    <text id="l2"  class="SL" x="187"  y="75"  font-size="20">2</text>
+    <rect id="s3"  class="RS" x="4"    y="138" width="120" height="120"/>
+    <text id="l3"  class="SL" x="64"   y="198" font-size="20">3</text>
+    <rect id="s4"  class="RS" x="127"  y="138" width="120" height="120"/>
+    <text id="l4"  class="SL" x="187"  y="198" font-size="20">4</text>
+    <rect id="s5"  class="RS" x="4"    y="261" width="120" height="120"/>
+    <text id="l5"  class="SL" x="64"   y="321" font-size="20">5</text>
+    <rect id="s6"  class="RS" x="127"  y="261" width="120" height="120"/>
+    <text id="l6"  class="SL" x="187"  y="321" font-size="20">6</text>
+    <rect id="s7"  class="RS" x="4"    y="384" width="120" height="120"/>
+    <text id="l7"  class="SL" x="64"   y="444" font-size="20">7</text>
+    <rect id="s8"  class="RS" x="127"  y="384" width="120" height="120"/>
+    <text id="l8"  class="SL" x="187"  y="444" font-size="20">8</text>
+    <!-- Group B: sections 9-12 (2-col × 2-row, lower half) -->
+    <rect id="s9"  class="RS" x="255"  y="261" width="93"  height="120"/>
+    <text id="l9"  class="SL" x="301"  y="321" font-size="20">9</text>
+    <rect id="s10" class="RS" x="351"  y="261" width="93"  height="120"/>
+    <text id="l10" class="SL" x="397"  y="321" font-size="20">10</text>
+    <rect id="s11" class="RS" x="255"  y="384" width="93"  height="120"/>
+    <text id="l11" class="SL" x="301"  y="444" font-size="20">11</text>
+    <rect id="s12" class="RS" x="351"  y="384" width="93"  height="120"/>
+    <text id="l12" class="SL" x="397"  y="444" font-size="20">12</text>
+    <!-- Group C: sections 13-20 (2-col × 4-row) -->
+    <rect id="s13" class="RS" x="455"  y="15"  width="79"  height="120"/>
+    <text id="l13" class="SL" x="494"  y="75"  font-size="20">13</text>
+    <rect id="s14" class="RS" x="537"  y="15"  width="79"  height="120"/>
+    <text id="l14" class="SL" x="576"  y="75"  font-size="20">14</text>
+    <rect id="s15" class="RS" x="455"  y="138" width="79"  height="120"/>
+    <text id="l15" class="SL" x="494"  y="198" font-size="20">15</text>
+    <rect id="s16" class="RS" x="537"  y="138" width="79"  height="120"/>
+    <text id="l16" class="SL" x="576"  y="198" font-size="20">16</text>
+    <rect id="s17" class="RS" x="455"  y="261" width="79"  height="120"/>
+    <text id="l17" class="SL" x="494"  y="321" font-size="20">17</text>
+    <rect id="s18" class="RS" x="537"  y="261" width="79"  height="120"/>
+    <text id="l18" class="SL" x="576"  y="321" font-size="20">18</text>
+    <rect id="s19" class="RS" x="455"  y="384" width="79"  height="120"/>
+    <text id="l19" class="SL" x="494"  y="444" font-size="20">19</text>
+    <rect id="s20" class="RS" x="537"  y="384" width="79"  height="120"/>
+    <text id="l20" class="SL" x="576"  y="444" font-size="20">20</text>
+    <!-- Group D: sections 21-28 (2-col × 4-row) -->
+    <rect id="s21" class="RS" x="627"  y="15"  width="74"  height="120"/>
+    <text id="l21" class="SL" x="664"  y="75"  font-size="20">21</text>
+    <rect id="s22" class="RS" x="704"  y="15"  width="74"  height="120"/>
+    <text id="l22" class="SL" x="741"  y="75"  font-size="20">22</text>
+    <rect id="s23" class="RS" x="627"  y="138" width="74"  height="120"/>
+    <text id="l23" class="SL" x="664"  y="198" font-size="20">23</text>
+    <rect id="s24" class="RS" x="704"  y="138" width="74"  height="120"/>
+    <text id="l24" class="SL" x="741"  y="198" font-size="20">24</text>
+    <rect id="s25" class="RS" x="627"  y="261" width="74"  height="120"/>
+    <text id="l25" class="SL" x="664"  y="321" font-size="20">25</text>
+    <rect id="s26" class="RS" x="704"  y="261" width="74"  height="120"/>
+    <text id="l26" class="SL" x="741"  y="321" font-size="20">26</text>
+    <rect id="s27" class="RS" x="627"  y="384" width="74"  height="120"/>
+    <text id="l27" class="SL" x="664"  y="444" font-size="20">27</text>
+    <rect id="s28" class="RS" x="704"  y="384" width="74"  height="120"/>
+    <text id="l28" class="SL" x="741"  y="444" font-size="20">28</text>
+    <!-- Group E: sections 29-36 (top 3-wide row + bottom complex) -->
+    <rect id="s29" class="RS" x="789"  y="15"  width="140" height="253"/>
+    <text id="l29" class="SL" x="859"  y="141" font-size="28">29</text>
+    <rect id="s30" class="RS" x="932"  y="15"  width="140" height="253"/>
+    <text id="l30" class="SL" x="1002" y="141" font-size="28">30</text>
+    <rect id="s31" class="RS" x="1075" y="15"  width="140" height="253"/>
+    <text id="l31" class="SL" x="1145" y="141" font-size="28">31</text>
+    <rect id="s32" class="RS" x="789"  y="271" width="283" height="120"/>
+    <text id="l32" class="SL" x="930"  y="331" font-size="28">32</text>
+    <rect id="s33" class="RS" x="789"  y="394" width="283" height="126"/>
+    <text id="l33" class="SL" x="930"  y="457" font-size="28">33</text>
+    <rect id="s34" class="RS" x="1075" y="271" width="140" height="120"/>
+    <text id="l34" class="SL" x="1145" y="331" font-size="28">34</text>
+    <rect id="s35" class="RS" x="1075" y="394" width="70"  height="126"/>
+    <text id="l35" class="SL" x="1110" y="457" font-size="22">35</text>
+    <rect id="s36" class="RS" x="1145" y="394" width="70"  height="126"/>
+    <text id="l36" class="SL" x="1180" y="457" font-size="22">36</text>
+    <!-- Group F: sections 37-38 (narrow right column) -->
+    <rect id="s37" class="RS" x="1219" y="15"  width="56"  height="295"/>
+    <text id="l37" class="SL" x="1247" y="162" font-size="22">37</text>
+    <rect id="s38" class="RS" x="1219" y="313" width="56"  height="207"/>
+    <text id="l38" class="SL" x="1247" y="416" font-size="22">38</text>
+    <!-- Group letter labels -->
+    <text class="SC" x="125"  y="9">A</text>
+    <text class="SC" x="349"  y="257">B</text>
+    <text class="SC" x="535"  y="9">C</text>
+    <text class="SC" x="701"  y="9">D</text>
+    <text class="SC" x="1001" y="9">E</text>
+    <text class="SC" x="1247" y="9">F</text>
     <g id="badge-layer"></g>
   </svg>
 </section>
@@ -233,25 +242,44 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 (function(){
 'use strict';
 const GEO={
-  1:{x:3,y:22,w:110,h:126},2:{x:117,y:22,w:111,h:126},
-  3:{x:3,y:152,w:110,h:126},4:{x:117,y:152,w:111,h:126},
-  5:{x:3,y:282,w:110,h:126},6:{x:117,y:282,w:111,h:126},
-  7:{x:3,y:412,w:110,h:96},8:{x:117,y:412,w:111,h:96},
-  9:{x:233,y:202,w:90,h:151},10:{x:327,y:202,w:91,h:151},
-  11:{x:233,y:357,w:90,h:151},12:{x:327,y:357,w:91,h:151},
-  13:{x:423,y:22,w:70,h:126},14:{x:497,y:22,w:71,h:126},
-  15:{x:423,y:152,w:70,h:126},16:{x:497,y:152,w:71,h:126},
-  17:{x:423,y:282,w:70,h:126},18:{x:497,y:282,w:71,h:126},
-  19:{x:423,y:412,w:70,h:96},20:{x:497,y:412,w:71,h:96},
-  21:{x:573,y:22,w:70,h:126},22:{x:647,y:22,w:71,h:126},
-  23:{x:573,y:152,w:70,h:126},24:{x:647,y:152,w:71,h:126},
-  25:{x:573,y:282,w:70,h:126},26:{x:647,y:282,w:71,h:126},
-  27:{x:573,y:412,w:70,h:96},28:{x:647,y:412,w:71,h:96},
-  29:{x:723,y:22,w:137,h:296},30:{x:864,y:22,w:139,h:296},
-  31:{x:1007,y:22,w:146,h:296},32:{x:723,y:322,w:220,h:93},
-  33:{x:723,y:419,w:220,h:89},34:{x:947,y:322,w:206,h:93},
-  35:{x:947,y:419,w:101,h:89},36:{x:1052,y:419,w:101,h:89},
-  37:{x:1158,y:22,w:109,h:286},38:{x:1158,y:312,w:109,h:196}
+  1:{x:4,y:15,w:120,h:120},
+  2:{x:127,y:15,w:120,h:120},
+  3:{x:4,y:138,w:120,h:120},
+  4:{x:127,y:138,w:120,h:120},
+  5:{x:4,y:261,w:120,h:120},
+  6:{x:127,y:261,w:120,h:120},
+  7:{x:4,y:384,w:120,h:120},
+  8:{x:127,y:384,w:120,h:120},
+  9:{x:255,y:261,w:93,h:120},
+  10:{x:351,y:261,w:93,h:120},
+  11:{x:255,y:384,w:93,h:120},
+  12:{x:351,y:384,w:93,h:120},
+  13:{x:455,y:15,w:79,h:120},
+  14:{x:537,y:15,w:79,h:120},
+  15:{x:455,y:138,w:79,h:120},
+  16:{x:537,y:138,w:79,h:120},
+  17:{x:455,y:261,w:79,h:120},
+  18:{x:537,y:261,w:79,h:120},
+  19:{x:455,y:384,w:79,h:120},
+  20:{x:537,y:384,w:79,h:120},
+  21:{x:627,y:15,w:74,h:120},
+  22:{x:704,y:15,w:74,h:120},
+  23:{x:627,y:138,w:74,h:120},
+  24:{x:704,y:138,w:74,h:120},
+  25:{x:627,y:261,w:74,h:120},
+  26:{x:704,y:261,w:74,h:120},
+  27:{x:627,y:384,w:74,h:120},
+  28:{x:704,y:384,w:74,h:120},
+  29:{x:789,y:15,w:140,h:253},
+  30:{x:932,y:15,w:140,h:253},
+  31:{x:1075,y:15,w:140,h:253},
+  32:{x:789,y:271,w:283,h:120},
+  33:{x:789,y:394,w:283,h:126},
+  34:{x:1075,y:271,w:140,h:120},
+  35:{x:1075,y:394,w:70,h:126},
+  36:{x:1145,y:394,w:70,h:126},
+  37:{x:1219,y:15,w:56,h:295},
+  38:{x:1219,y:313,w:56,h:207}
 };
 const ALL=Object.keys(GEO).map(Number);
 const NS='http://www.w3.org/2000/svg';
@@ -268,13 +296,13 @@ function clearRack(){
 function drawBadges(slotNum,cartNums){
   const g=GEO[slotNum];if(!g)return;
   const layer=document.getElementById('badge-layer');
-  const R=9,PAD=4,GAP=2,STEP=R*2+GAP;
+  const R=10,PAD=4,GAP=3,STEP=R*2+GAP;
   const baseX=g.x+g.w-PAD-R;const baseY=g.y+PAD+R;
   cartNums.forEach((num,i)=>{
     const cx=baseX-i*STEP;if(cx<g.x+R)return;
     const grp=document.createElementNS(NS,'g');
-    const circle=mkEl('circle',{class:'BC',cx,cy:baseY,r:R});
-    const text=mkEl('text',{class:'BT',x:cx,y:baseY});
+    const circle=mkEl('circle',{style:'fill:#E8620A;stroke:#000;stroke-width:1.5',cx,cy:baseY,r:R});
+    const text=mkEl('text',{style:'font-family:Arial,sans-serif;font-size:9px;font-weight:900;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none',x:cx,y:baseY});
     text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
   });
 }
@@ -295,10 +323,42 @@ function applyCartItems(cartItems){
   document.getElementById('fx').textContent=cartItems.map((it,i)=>it?`${i+1}:${it.description}`:null).filter(Boolean).join('  ;  ');
 }
 const DEMOS=[
-  [{description:'Black Front',rackSlots:[1,30]},{description:'Black Rear',rackSlots:[2,30]},{description:'Grey Front',rackSlots:[9,30]},{description:'Grey Rear',rackSlots:[10,30]},{description:'Orange Front',rackSlots:[13,30]},{description:'Orange Rear',rackSlots:[14,30]},{description:'White Front',rackSlots:[21,30]},{description:'White Rear',rackSlots:[22,30]}],
-  [{description:'Panel A',rackSlots:[17,37]},{description:'Panel B',rackSlots:[18,37]},{description:'Panel C',rackSlots:[19,38]},{description:'Panel D',rackSlots:[20,38]},{description:'Panel E',rackSlots:[25,37]},{description:'Panel F',rackSlots:[26,37]},{description:'Panel G',rackSlots:[27,38]},{description:'Panel H',rackSlots:[28,38]}],
-  [{description:'Door Liner 1',rackSlots:[3,29]},{description:'Door Liner 2',rackSlots:[4,29]},{description:'Door Liner 3',rackSlots:[5,29]},{description:'Door Liner 4',rackSlots:[6,29]},{description:'Door Liner 5',rackSlots:[7,29]},{description:'Door Liner 6',rackSlots:[8,29]},{description:'Door Liner 7',rackSlots:[11,29]},{description:'Door Liner 8',rackSlots:[12,29]}],
-  [{description:'Armrest Black',rackSlots:[32,33]},{description:'Armrest Black',rackSlots:[32,33]},{description:'Armrest Grey',rackSlots:[34,35]},{description:'Armrest Grey',rackSlots:[34,36]},null,null,null,null]
+  // Demo 1 – Seat Assemblies
+  [{description:'Front Seat Cushion',rackSlots:[1,2,3,4,5]},
+   {description:'Rear Seat Cushion', rackSlots:[6,7,8,9,10]},
+   {description:'Seat Back A',       rackSlots:[11,12,13,14,15]},
+   {description:'Seat Back B',       rackSlots:[16,17,18,19,20]},
+   {description:'Side Bolster L',    rackSlots:[21,22,23,24,25]},
+   {description:'Side Bolster R',    rackSlots:[26,27,28,29,30]},
+   {description:'Lumbar Support',    rackSlots:[31,32,33,34,35]},
+   {description:'Headrest Assy',     rackSlots:[36,37,38,1,2,3]}],
+  // Demo 2 – Door Panels
+  [{description:'Front Door Inner L',rackSlots:[1,3,5,7,9,11]},
+   {description:'Front Door Inner R',rackSlots:[2,4,6,8,10,12]},
+   {description:'Rear Door Inner L', rackSlots:[13,15,17,19,21]},
+   {description:'Rear Door Inner R', rackSlots:[14,16,18,20,22]},
+   {description:'Door Trim Upper L', rackSlots:[23,25,27,29,31,37]},
+   {description:'Door Trim Upper R', rackSlots:[24,26,28,30,32,38]},
+   {description:'Window Seal Strip', rackSlots:[33,34,35,36,37,38]},
+   {description:'Door Handle Bezel', rackSlots:[1,2,13,14,15,29,30]}],
+  // Demo 3 – Headliner Kit
+  [{description:'Headliner Front L', rackSlots:[1,2,13,14,21,22]},
+   {description:'Headliner Front R', rackSlots:[3,4,15,16,23,24]},
+   {description:'Headliner Rear L',  rackSlots:[5,6,17,18,25,26]},
+   {description:'Headliner Rear R',  rackSlots:[7,8,19,20,27,28]},
+   {description:'Sun Visor L',       rackSlots:[9,10,29,30,31,37]},
+   {description:'Sun Visor R',       rackSlots:[11,12,32,33,38]},
+   {description:'Grab Handle Set',   rackSlots:[34,35,36,1,3,5]},
+   {description:'Dome Light Surround',rackSlots:[2,4,6,7,8,9,10]}],
+  // Demo 4 – Trim & Cargo
+  [{description:'Cargo Floor Mat',   rackSlots:[29,30,31,37,38]},
+   {description:'Cargo Side Panel',  rackSlots:[32,33,34,35,36]},
+   {description:'A-Pillar Trim L',   rackSlots:[1,2,3,4,5]},
+   {description:'A-Pillar Trim R',   rackSlots:[6,7,8,9,10]},
+   {description:'B-Pillar Trim L',   rackSlots:[11,12,13,14,15,16]},
+   {description:'B-Pillar Trim R',   rackSlots:[17,18,19,20,21,22]},
+   {description:'C-Pillar Trim L',   rackSlots:[23,24,25,26,27,28]},
+   {description:'C-Pillar Trim R',   rackSlots:[1,5,9,13,17,21,25]}]
 ];
 let demoIdx=-1;
 function cycleDemo(){demoIdx=(demoIdx+1)%DEMOS.length;applyCartItems(DEMOS[demoIdx]);document.getElementById('lu').textContent=`Demo ${demoIdx+1}/${DEMOS.length} ; ${new Date().toLocaleTimeString()}`;}
