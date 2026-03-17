@@ -477,6 +477,14 @@ const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
 const BADGE_RADIUS=11;   // px radius of cart-slot number badges
 const BADGE_PADDING=4;   // px from edge of section to badge centre
 const BADGE_GAP=3;       // px gap between adjacent badges
+const NARROW_W=90;       // px — sections narrower than this use vertical text
+const NARROW_PART_FS=14; // starting font-size for part number in narrow sections
+const NARROW_DESC_FS=11; // starting font-size for description in narrow sections
+const NARROW_PART_Y=0.38;  // part number centre: fraction of cell height from top
+const NARROW_PART_FIT=0.40;// fraction of cell height available for part number text
+const NARROW_DESC_Y=0.74;  // description centre: fraction of cell height from top
+const NARROW_DESC_FIT=0.32;// fraction of cell height available for description text
+const NARROW_FIT_PAD=4;  // px subtracted from available text length before fitting
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -500,13 +508,36 @@ function renderRackLabels(){
     const rp=RACK_PARTS[n]||{p:'',d:''};
     const pel=document.getElementById('p'+n);
     const del_=document.getElementById('d'+n);
+    const narrow=g.w<NARROW_W;
+    const cx=g.x+g.w/2;
     if(pel){
       pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
-      fitText(pel,g.w-8);
+      if(narrow){
+        // Rotate -90° so text reads vertically, gaining the cell height as usable space
+        const py=g.y+g.h*NARROW_PART_Y;
+        pel.setAttribute('x',String(cx));
+        pel.setAttribute('y',String(py));
+        pel.setAttribute('font-size',String(NARROW_PART_FS));
+        pel.setAttribute('transform','rotate(-90,'+cx+','+py+')');
+        fitText(pel,g.h*NARROW_PART_FIT-NARROW_FIT_PAD);
+      }else{
+        pel.removeAttribute('transform');
+        fitText(pel,g.w-8);
+      }
     }
     if(del_){
       del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
-      fitText(del_,g.w-8);
+      if(narrow){
+        const dy=g.y+g.h*NARROW_DESC_Y;
+        del_.setAttribute('x',String(cx));
+        del_.setAttribute('y',String(dy));
+        del_.setAttribute('font-size',String(NARROW_DESC_FS));
+        del_.setAttribute('transform','rotate(-90,'+cx+','+dy+')');
+        fitText(del_,g.h*NARROW_DESC_FIT-NARROW_FIT_PAD);
+      }else{
+        del_.removeAttribute('transform');
+        fitText(del_,g.w-8);
+      }
     }
   });
 }
