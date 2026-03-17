@@ -480,11 +480,10 @@ const BADGE_GAP=3;       // px gap between adjacent badges
 const NARROW_W=90;       // px — sections narrower than this use vertical text
 const NARROW_PART_FS=14; // starting font-size for part number in narrow sections
 const NARROW_DESC_FS=11; // starting font-size for description in narrow sections
-const NARROW_PART_Y=0.38;  // part number centre: fraction of cell height from top
-const NARROW_PART_FIT=0.40;// fraction of cell height available for part number text
-const NARROW_DESC_Y=0.74;  // description centre: fraction of cell height from top
-const NARROW_DESC_FIT=0.32;// fraction of cell height available for description text
-const NARROW_FIT_PAD=4;  // px subtracted from available text length before fitting
+const NARROW_COL_P=0.28;   // part number column centre: fraction of cell width from left
+const NARROW_COL_D=0.72;   // description column centre: fraction of cell width from left
+const NARROW_TOP_RESERVE=22;// px reserved at cell top for the section number label
+const NARROW_BOT_MARGIN=6; // px bottom margin for the rotated text zone
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -509,32 +508,37 @@ function renderRackLabels(){
     const pel=document.getElementById('p'+n);
     const del_=document.getElementById('d'+n);
     const narrow=g.w<NARROW_W;
-    const cx=g.x+g.w/2;
-    if(pel){
-      pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
-      if(narrow){
-        // Rotate -90° so text reads vertically, gaining the cell height as usable space
-        const py=g.y+g.h*NARROW_PART_Y;
-        pel.setAttribute('x',String(cx));
-        pel.setAttribute('y',String(py));
+    if(narrow){
+      // Stacked vertical columns: part number in left column, description in right.
+      // Both span the full available cell height, maximising text-length budget.
+      const midY=g.y+(NARROW_TOP_RESERVE+g.h-NARROW_BOT_MARGIN)/2;
+      const avail=g.h-NARROW_TOP_RESERVE-NARROW_BOT_MARGIN;
+      if(pel){
+        pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
+        const px=g.x+g.w*NARROW_COL_P;
+        pel.setAttribute('x',String(px));
+        pel.setAttribute('y',String(midY));
         pel.setAttribute('font-size',String(NARROW_PART_FS));
-        pel.setAttribute('transform','rotate(-90,'+cx+','+py+')');
-        fitText(pel,g.h*NARROW_PART_FIT-NARROW_FIT_PAD);
-      }else{
+        pel.setAttribute('transform','rotate(-90,'+px+','+midY+')');
+        fitText(pel,avail);
+      }
+      if(del_){
+        del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
+        const dx=g.x+g.w*NARROW_COL_D;
+        del_.setAttribute('x',String(dx));
+        del_.setAttribute('y',String(midY));
+        del_.setAttribute('font-size',String(NARROW_DESC_FS));
+        del_.setAttribute('transform','rotate(-90,'+dx+','+midY+')');
+        fitText(del_,avail);
+      }
+    }else{
+      if(pel){
+        pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
         pel.removeAttribute('transform');
         fitText(pel,g.w-8);
       }
-    }
-    if(del_){
-      del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
-      if(narrow){
-        const dy=g.y+g.h*NARROW_DESC_Y;
-        del_.setAttribute('x',String(cx));
-        del_.setAttribute('y',String(dy));
-        del_.setAttribute('font-size',String(NARROW_DESC_FS));
-        del_.setAttribute('transform','rotate(-90,'+cx+','+dy+')');
-        fitText(del_,g.h*NARROW_DESC_FIT-NARROW_FIT_PAD);
-      }else{
+      if(del_){
+        del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
         del_.removeAttribute('transform');
         fitText(del_,g.w-8);
       }
