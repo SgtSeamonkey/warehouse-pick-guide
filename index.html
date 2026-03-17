@@ -476,8 +476,8 @@ const NARROW_COL_P=0.28;   // part number column centre: fraction of cell width 
 const NARROW_COL_D=0.72;   // description column centre: fraction of cell width from left
 const NARROW_TOP_RESERVE=22;// px reserved at cell top for the section number label
 const NARROW_BOT_MARGIN=6; // px bottom margin for the rotated text zone
-const CART_PART_FS=8;    // starting font-size for part number in cart slots
-const CART_DESC_FS=7;    // starting font-size for description in cart slots
+const CART_PART_FS=20;   // starting font-size for part number in cart slots
+const CART_DESC_FS=16;   // starting font-size for description in cart slots
 const CART_COL_P=0.28;   // part number column: fraction of slot width from left
 const CART_COL_D=0.72;   // description column: fraction of slot width from left
 const CART_PAD=12;       // px padding top/bottom within each cart slot
@@ -520,7 +520,7 @@ function renderRackLabels(){
         pel.setAttribute('x',String(px));
         pel.setAttribute('y',String(midY));
         pel.setAttribute('font-size',String(NARROW_PART_FS));
-        pel.setAttribute('transform','rotate(-90,'+px+','+midY+')');
+        pel.setAttribute('transform','rotate(90,'+px+','+midY+')');
         fitText(pel,avail);
       }
       if(del_){
@@ -529,7 +529,7 @@ function renderRackLabels(){
         del_.setAttribute('x',String(dx));
         del_.setAttribute('y',String(midY));
         del_.setAttribute('font-size',String(NARROW_DESC_FS));
-        del_.setAttribute('transform','rotate(-90,'+dx+','+midY+')');
+        del_.setAttribute('transform','rotate(90,'+dx+','+midY+')');
         fitText(del_,avail);
       }
     }else{
