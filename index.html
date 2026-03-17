@@ -133,22 +133,14 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     <text class="cn" x="39"  y="244">5</text><text class="cn" x="95"  y="244">6</text>
     <text class="cn" x="151" y="244">7</text><text class="cn" x="207" y="244">8</text>
     <!-- Part number + description per cart slot (populated by JS) -->
-    <text id="cp1" class="CPT" x="39"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd1" class="CDT" x="39"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp2" class="CPT" x="95"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd2" class="CDT" x="95"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp3" class="CPT" x="151" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd3" class="CDT" x="151" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp4" class="CPT" x="207" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd4" class="CDT" x="207" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp5" class="CPT" x="39"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd5" class="CDT" x="39"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp6" class="CPT" x="95"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd6" class="CDT" x="95"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp7" class="CPT" x="151" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd7" class="CDT" x="151" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp8" class="CPT" x="207" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd8" class="CDT" x="207" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
+    <text id="cp1" class="CPT"></text><text id="cd1" class="CDT"></text>
+    <text id="cp2" class="CPT"></text><text id="cd2" class="CDT"></text>
+    <text id="cp3" class="CPT"></text><text id="cd3" class="CDT"></text>
+    <text id="cp4" class="CPT"></text><text id="cd4" class="CDT"></text>
+    <text id="cp5" class="CPT"></text><text id="cd5" class="CDT"></text>
+    <text id="cp6" class="CPT"></text><text id="cd6" class="CDT"></text>
+    <text id="cp7" class="CPT"></text><text id="cd7" class="CDT"></text>
+    <text id="cp8" class="CPT"></text><text id="cd8" class="CDT"></text>
     <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
     <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
     <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
@@ -484,6 +476,15 @@ const NARROW_COL_P=0.28;   // part number column centre: fraction of cell width 
 const NARROW_COL_D=0.72;   // description column centre: fraction of cell width from left
 const NARROW_TOP_RESERVE=22;// px reserved at cell top for the section number label
 const NARROW_BOT_MARGIN=6; // px bottom margin for the rotated text zone
+const CART_PART_FS=8;    // starting font-size for part number in cart slots
+const CART_DESC_FS=7;    // starting font-size for description in cart slots
+const CART_COL_P=0.28;   // part number column: fraction of slot width from left
+const CART_COL_D=0.72;   // description column: fraction of slot width from left
+const CART_PAD=12;       // px padding top/bottom within each cart slot
+const CART_W=50;         // px width of each cart slot cell
+const CART_H=158;        // px height of each cart slot cell
+const CART_LEFT=[14,70,126,182]; // px left-edge x for each of the 4 slot columns
+const CART_TOP=[14,178];         // px top-edge y for the two slot rows
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -552,8 +553,31 @@ function renderCartLabels(){
     const op=ORANGE_PARTS[s]||{p:'',d:''};
     const pel=document.getElementById('cp'+s);
     const del_=document.getElementById('cd'+s);
-    if(pel)pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
-    if(del_)del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+    const col=(s-1)%4;
+    const row=s<=4?0:1;
+    const cx=CART_LEFT[col];
+    const cy=CART_TOP[row];
+    const midY=cy+CART_H/2;
+    const avail=CART_H-CART_PAD*2;
+    if(pel){
+      pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
+      const px=cx+CART_W*CART_COL_P;
+      pel.setAttribute('x',String(px));
+      pel.setAttribute('y',String(midY));
+      pel.setAttribute('font-size',String(CART_PART_FS));
+      // rotate(90) = top-to-bottom reading direction
+      pel.setAttribute('transform','rotate(90,'+px+','+midY+')');
+      fitText(pel,avail);
+    }
+    if(del_){
+      del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+      const dx=cx+CART_W*CART_COL_D;
+      del_.setAttribute('x',String(dx));
+      del_.setAttribute('y',String(midY));
+      del_.setAttribute('font-size',String(CART_DESC_FS));
+      del_.setAttribute('transform','rotate(90,'+dx+','+midY+')');
+      fitText(del_,avail);
+    }
   }
 }
 
