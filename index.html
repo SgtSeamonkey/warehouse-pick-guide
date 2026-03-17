@@ -13,76 +13,82 @@
 }
 html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   font-family:'Segoe UI',Arial,sans-serif;overflow:hidden}
-#app{display:grid;grid-template-rows:50px 1fr 50px;
-  grid-template-columns:270px 1fr;height:100vh}
-#hd{grid-column:1/3;background:#0a1220;border-bottom:2px solid var(--yw);
-  display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-#hd h1{font-size:.95rem;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--yw)}
-#hr{display:flex;align-items:center;gap:10px;font-size:.75rem}
-#sd{width:8px;height:8px;border-radius:50%;background:var(--gn);
-  box-shadow:0 0 8px 2px rgba(0,230,118,.7)}
-#lu{color:#445;font-size:.68rem}
-.hb{background:#182435;border:1px solid #2a3a55;color:var(--yw);
-  padding:4px 10px;border-radius:4px;font-size:.7rem;cursor:pointer}
-.hb:hover{background:#203050;border-color:var(--yw)}
-#pc{background:var(--pb);border-right:1px solid #1c2e48;
+#app{display:grid;grid-template-rows:56px 1fr 52px;
+  grid-template-columns:280px 1fr;height:100vh}
+#hd{grid-column:1/3;background:linear-gradient(135deg,#060e1a,#0d1a2e 55%,#0a1520);
+  border-bottom:2px solid var(--yw);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  box-shadow:0 3px 16px rgba(0,0,0,.6)}
+#hd h1{font-size:1.05rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--yw);
+  text-shadow:0 0 20px rgba(245,200,0,.45)}
+#hr{display:flex;align-items:center;gap:12px;font-size:.78rem}
+#sd{width:10px;height:10px;border-radius:50%;background:var(--gn);
+  box-shadow:0 0 10px 3px rgba(0,230,118,.65)}
+#lu{color:#7090b0;font-size:.72rem}
+.hb{background:#182435;border:1px solid #304060;color:var(--yw);
+  padding:5px 12px;border-radius:4px;font-size:.72rem;cursor:pointer;
+  transition:background .15s,border-color .15s}
+.hb:hover{background:#243858;border-color:var(--yw)}
+#pc{background:var(--pb);border-right:2px solid #1e3050;
   display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:8px 4px;gap:6px}
-.pl{font-size:.6rem;font-weight:700;letter-spacing:.15em;
-  text-transform:uppercase;color:#445}
+  justify-content:center;padding:10px 6px;gap:8px}
+.pl{font-size:.65rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;color:#8ab0d8;
+  border-bottom:1px solid rgba(138,176,216,.18);padding-bottom:3px}
 #pr{background:#0d151f;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   padding:6px 8px;overflow:hidden}
-#ft{grid-column:1/3;background:#080f18;border-top:2px solid #1a2840;
+#ft{grid-column:1/3;background:linear-gradient(180deg,#0a1018 0%,#080c14 100%);
+  border-top:2px solid #1e2e48;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;gap:12px}
-#fl{color:#334;font-size:.68rem;white-space:nowrap}
-#fm{flex:1;text-align:center;font-size:.8rem;font-weight:600;
+  padding:0 20px;gap:12px;box-shadow:0 -3px 14px rgba(0,0,0,.5)}
+#fl{color:#7090b0;font-size:.72rem;white-space:nowrap}
+#fm{flex:1;text-align:center;font-size:.85rem;font-weight:600;
   color:var(--yw);letter-spacing:.03em}
-#fx{color:#445;font-size:.65rem;white-space:nowrap;text-align:right}
-#csv{width:100%;max-width:246px;height:auto}
+#fx{color:#6080a0;font-size:.68rem;white-space:nowrap;text-align:right}
+#csv{width:100%;max-width:256px;height:auto}
 .cf{fill:none;stroke:var(--or);stroke-width:5;stroke-linejoin:round}
 .cd{stroke:#5a2800;stroke-width:2.5}
-.cs{stroke:#242424;stroke-width:1;stroke-dasharray:3 3}
-.cg{fill:#181818;stroke:#222;stroke-width:1}
+.cs{stroke:#2a2a2a;stroke-width:1;stroke-dasharray:3 3}
+.cg{fill:#1a1a1a;stroke:#252525;stroke-width:1}
 .cn{font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:900;
   fill:var(--or);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.cb{font-family:'Segoe UI',Arial,sans-serif;font-size:6px;fill:#3a2010;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+
 .cw{fill:#111;stroke:var(--or);stroke-width:2.5}
 .ch{fill:var(--ord)}
 .ck{fill:#1a1a1a;stroke:var(--or);stroke-width:1.5}
 #rsv{width:100%;height:auto;display:block}
-.RF{fill:rgba(20,28,42,.55);stroke:var(--yw);stroke-width:3;stroke-linejoin:round}
-.RS{fill:#0c1824;stroke:#263a52;stroke-width:1.5}
-.RS.on{fill:rgba(245,200,0,.18);stroke:var(--ywh);stroke-width:2.5;
+.RF{fill:rgba(12,20,34,.72);stroke:var(--yw);stroke-width:3;stroke-linejoin:round;
+  filter:drop-shadow(0 0 5px rgba(245,200,0,.18))}
+.RS{fill:#0f2034;stroke:#2e4a68;stroke-width:1.5}
+.RS.on{fill:rgba(245,200,0,.16);stroke:var(--ywh);stroke-width:2.5;
   animation:rg 1.4s ease-in-out infinite}
 @keyframes rg{
-  0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.8))}
-  50%{filter:drop-shadow(0 0 20px rgba(245,200,0,1))}
+  0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.85))}
+  50%{filter:drop-shadow(0 0 22px rgba(245,200,0,1))}
 }
-/* SN = rack section number (small, top-left of each cell) */
-.SN{font-family:'Segoe UI',Arial,sans-serif;fill:#304a66;font-weight:900;
-  text-anchor:start;dominant-baseline:auto;pointer-events:none}
-.SN.on{fill:rgba(245,200,0,.7)}
+/* SN = rack section number (small, bottom-right of each cell; text-anchor:end aligns right) */
+.SN{font-family:'Segoe UI',Arial,sans-serif;fill:#6090c0;font-weight:900;
+  text-anchor:end;dominant-baseline:auto;pointer-events:none}
+.SN.on{fill:rgba(245,200,0,.92)}
 /* SP = part number text inside rack cell */
-.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#3a6e9a;font-weight:700;
+.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#72c0f2;font-weight:700;
   text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.SP.on{fill:rgba(245,200,0,.95)}
+.SP.on{fill:rgba(245,200,0,.98)}
 /* SD = part description text inside rack cell */
-.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#26506e;font-weight:400;
+.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#5aa0d0;font-weight:400;
   text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
-.SD.on{fill:rgba(240,180,0,.82)}
+.SD.on{fill:rgba(240,185,0,.9)}
 /* CPT/CDT = part number / description inside orange cart slots */
-.CPT{font-family:'Segoe UI',Arial,sans-serif;font-size:4.5px;fill:#b04515;
+.CPT{font-family:'Segoe UI',Arial,sans-serif;fill:#e07830;
   text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.CDT{font-family:'Segoe UI',Arial,sans-serif;font-size:4px;fill:#7a3820;
+.CDT{font-family:'Segoe UI',Arial,sans-serif;fill:#c07040;
   text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
-.CPT.on{fill:rgba(245,200,0,.9)}.CDT.on{fill:rgba(240,175,0,.75)}
-.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;font-weight:700;
+.CPT.on{fill:rgba(245,200,0,.95)}.CDT.on{fill:rgba(240,175,0,.82)}
+.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:10px;font-weight:700;
   fill:var(--yw);text-anchor:middle;dominant-baseline:central;
-  letter-spacing:.08em;opacity:.65;pointer-events:none}
+  letter-spacing:.08em;opacity:.88;pointer-events:none}
 </style>
 </head>
 <body>
@@ -91,7 +97,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   <h1>&#9881; Warehouse Pick Guide</h1>
   <div id="hr">
     <div id="sd"></div>
-    <span style="color:#556">ACTIVE</span>
+    <span style="color:#90a8c8">ACTIVE</span>
     <span id="lu">&#8212;</span>
   </div>
 </header>
@@ -113,39 +119,19 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     <rect class="cg" x="70" y="178" width="50" height="158"/>
     <rect class="cg" x="126" y="178" width="50" height="158"/>
     <rect class="cg" x="182" y="178" width="50" height="158"/>
-    <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
-    <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
-    <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
-    <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
-    <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
-    <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
-    <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
-    <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
     <text class="cn" x="39"  y="80">1</text><text class="cn" x="95"  y="80">2</text>
     <text class="cn" x="151" y="80">3</text><text class="cn" x="207" y="80">4</text>
     <text class="cn" x="39"  y="244">5</text><text class="cn" x="95"  y="244">6</text>
     <text class="cn" x="151" y="244">7</text><text class="cn" x="207" y="244">8</text>
     <!-- Part number + description per cart slot (populated by JS) -->
-    <text id="cp1" class="CPT" x="39"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd1" class="CDT" x="39"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp2" class="CPT" x="95"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd2" class="CDT" x="95"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp3" class="CPT" x="151" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd3" class="CDT" x="151" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp4" class="CPT" x="207" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd4" class="CDT" x="207" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp5" class="CPT" x="39"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd5" class="CDT" x="39"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp6" class="CPT" x="95"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd6" class="CDT" x="95"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp7" class="CPT" x="151" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd7" class="CDT" x="151" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp8" class="CPT" x="207" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd8" class="CDT" x="207" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
-    <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
-    <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
-    <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="207" y="323">BOT&#xB7;R</text>
+    <text id="cp1" class="CPT"></text><text id="cd1" class="CDT"></text>
+    <text id="cp2" class="CPT"></text><text id="cd2" class="CDT"></text>
+    <text id="cp3" class="CPT"></text><text id="cd3" class="CDT"></text>
+    <text id="cp4" class="CPT"></text><text id="cd4" class="CDT"></text>
+    <text id="cp5" class="CPT"></text><text id="cd5" class="CDT"></text>
+    <text id="cp6" class="CPT"></text><text id="cd6" class="CDT"></text>
+    <text id="cp7" class="CPT"></text><text id="cd7" class="CDT"></text>
+    <text id="cp8" class="CPT"></text><text id="cd8" class="CDT"></text>
     <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
     <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
     <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
@@ -321,12 +307,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     <text id="l38" class="SN" x="1224" y="323" font-size="9">38</text>
     <text id="p38" class="SP" x="1247" y="391" font-size="7.3"></text>
     <text id="d38" class="SD" x="1247" y="453" font-size="5.6"></text>
-    <text class="SC" x="125" y="9">A</text>
-    <text class="SC" x="349" y="257">B</text>
-    <text class="SC" x="535" y="9">C</text>
-    <text class="SC" x="701" y="9">D</text>
-    <text class="SC" x="1001" y="9">E</text>
-    <text class="SC" x="1247" y="9">F</text>
     <g id="badge-layer"></g>
   </svg>
 </section>
@@ -467,9 +447,26 @@ const NS='http://www.w3.org/2000/svg';
 const MAX_TEXT_LEN=30;   // max characters displayed per label
 const MIN_FONT_SIZE=4;   // smallest font-size (px) fitText will shrink to
 const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
-const BADGE_RADIUS=10;   // px radius of cart-slot number badges
+const BADGE_RADIUS=11;   // px radius of cart-slot number badges
 const BADGE_PADDING=4;   // px from edge of section to badge centre
 const BADGE_GAP=3;       // px gap between adjacent badges
+const NARROW_W=90;       // px — sections narrower than this use vertical text
+const NARROW_PART_FS=14; // starting font-size for part number in narrow sections
+const NARROW_DESC_FS=11; // starting font-size for description in narrow sections
+const NARROW_COL_P=0.28;   // part number column centre: fraction of cell width from left
+const NARROW_COL_D=0.72;   // description column centre: fraction of cell width from left
+const NARROW_TOP_RESERVE=22;// px reserved at cell top for the section number label
+const NARROW_BOT_MARGIN=6; // px bottom margin for the rotated text zone
+const CART_PART_FS=20;   // starting font-size for part number in cart slots
+const CART_DESC_FS=16;   // starting font-size for description in cart slots
+const CART_COL_P=0.28;   // part number column: fraction of slot width from left
+const CART_COL_D=0.72;   // description column: fraction of slot width from left
+const CART_PAD=12;       // px padding top/bottom within each cart slot
+const CART_W=50;         // px width of each cart slot cell
+const CART_H=158;        // px height of each cart slot cell
+const CART_LEFT=[14,70,126,182]; // px left-edge x for each of the 4 slot columns
+const LABEL_CORNER_OFFSET=3; // px inset from bottom-right corner for section number labels
+const CART_TOP=[14,178];     // px top-edge y for the two slot rows
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -486,6 +483,17 @@ function fitText(el,maxW){
   }
 }
 
+/** Move section number labels to the bottom-right corner of each cell. */
+function renderSectionLabels(){
+  ALL.forEach(n=>{
+    const g=GEO[n];
+    const el=document.getElementById('l'+n);
+    if(!el)return;
+    el.setAttribute('x',String(g.x+g.w-LABEL_CORNER_OFFSET));
+    el.setAttribute('y',String(g.y+g.h-LABEL_CORNER_OFFSET));
+  });
+}
+
 /** Populate part-number and description text into every rack section. */
 function renderRackLabels(){
   ALL.forEach(n=>{
@@ -493,13 +501,41 @@ function renderRackLabels(){
     const rp=RACK_PARTS[n]||{p:'',d:''};
     const pel=document.getElementById('p'+n);
     const del_=document.getElementById('d'+n);
-    if(pel){
-      pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
-      fitText(pel,g.w-8);
-    }
-    if(del_){
-      del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
-      fitText(del_,g.w-8);
+    const narrow=g.w<NARROW_W;
+    if(narrow){
+      // Stacked vertical columns: part number in left column, description in right.
+      // Both span the full available cell height, maximising text-length budget.
+      const midY=g.y+(NARROW_TOP_RESERVE+g.h-NARROW_BOT_MARGIN)/2;
+      const avail=g.h-NARROW_TOP_RESERVE-NARROW_BOT_MARGIN;
+      if(pel){
+        pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
+        const px=g.x+g.w*NARROW_COL_P;
+        pel.setAttribute('x',String(px));
+        pel.setAttribute('y',String(midY));
+        pel.setAttribute('font-size',String(NARROW_PART_FS));
+        pel.setAttribute('transform','rotate(90,'+px+','+midY+')');
+        fitText(pel,avail);
+      }
+      if(del_){
+        del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
+        const dx=g.x+g.w*NARROW_COL_D;
+        del_.setAttribute('x',String(dx));
+        del_.setAttribute('y',String(midY));
+        del_.setAttribute('font-size',String(NARROW_DESC_FS));
+        del_.setAttribute('transform','rotate(90,'+dx+','+midY+')');
+        fitText(del_,avail);
+      }
+    }else{
+      if(pel){
+        pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
+        pel.removeAttribute('transform');
+        fitText(pel,g.w-8);
+      }
+      if(del_){
+        del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
+        del_.removeAttribute('transform');
+        fitText(del_,g.w-8);
+      }
     }
   });
 }
@@ -510,8 +546,31 @@ function renderCartLabels(){
     const op=ORANGE_PARTS[s]||{p:'',d:''};
     const pel=document.getElementById('cp'+s);
     const del_=document.getElementById('cd'+s);
-    if(pel)pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
-    if(del_)del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+    const col=(s-1)%4;
+    const row=s<=4?0:1;
+    const cx=CART_LEFT[col];
+    const cy=CART_TOP[row];
+    const midY=cy+CART_H/2;
+    const avail=CART_H-CART_PAD*2;
+    if(pel){
+      pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
+      const px=cx+CART_W*CART_COL_P;
+      pel.setAttribute('x',String(px));
+      pel.setAttribute('y',String(midY));
+      pel.setAttribute('font-size',String(CART_PART_FS));
+      // rotate(90) = top-to-bottom reading direction
+      pel.setAttribute('transform','rotate(90,'+px+','+midY+')');
+      fitText(pel,avail);
+    }
+    if(del_){
+      del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+      const dx=cx+CART_W*CART_COL_D;
+      del_.setAttribute('x',String(dx));
+      del_.setAttribute('y',String(midY));
+      del_.setAttribute('font-size',String(CART_DESC_FS));
+      del_.setAttribute('transform','rotate(90,'+dx+','+midY+')');
+      fitText(del_,avail);
+    }
   }
 }
 
@@ -526,7 +585,7 @@ function drawBadges(slotNum,cartNums){
     const cx=baseX-i*STEP;if(cx<g.x+BADGE_RADIUS)return;
     const grp=document.createElementNS(NS,'g');
     const circle=mkEl('circle',{style:'fill:#E8620A;stroke:#000;stroke-width:1.5',cx,cy:baseY,r:BADGE_RADIUS});
-    const text=mkEl('text',{style:'font-family:Arial,sans-serif;font-size:9px;font-weight:900;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none',x:cx,y:baseY});
+    const text=mkEl('text',{style:'font-family:Arial,sans-serif;font-size:10px;font-weight:900;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none',x:cx,y:baseY});
     text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
   });
 }
@@ -579,6 +638,7 @@ function applyPickRoutes(){
 }
 
 // Boot
+renderSectionLabels();
 renderRackLabels();
 renderCartLabels();
 applyPickRoutes();
