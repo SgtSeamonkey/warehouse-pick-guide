@@ -305,7 +305,7 @@ const GEO={
   37:{x:1180,y:15,w:112,h:112},
   38:{x:1180,y:127,w:112,h:112},
   39:{x:1180,y:239,w:112,h:112},
-  40:{x:1180,y:351,w:112,h:28}
+  40:{x:1180,y:351,w:112,h:28} // 0.5u tall — label-only strip below stacked 37-39
 };
 const ALL=Object.keys(GEO).map(Number);
 const NS='http://www.w3.org/2000/svg';
@@ -335,7 +335,7 @@ function fitText(el,maxW){
 function generateRackCells(){
   const svg=document.getElementById('rsv');
   const bl=document.getElementById('badge-layer');
-  const NARROW_W=90;       // cells narrower than this get smaller fonts (wide=112-140, narrow=28-84)
+  const NARROW_W=90;       // cells narrower than this get smaller fonts (wide≥90: 112-140px, narrow<90: 28-84px)
   const LABEL_X=5;         // px offset from cell left for section number label
   const LABEL_Y=12;        // px offset from cell top for section number label
   const PART_Y_RATIO=0.38; // vertical position ratio for part-number text
