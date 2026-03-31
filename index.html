@@ -337,7 +337,12 @@ function fitText(el,maxW){
 function generateRackCells(){
   const svg=document.getElementById('rsv');
   const bl=document.getElementById('badge-layer');
-  const NARROW_W=90;
+  const NARROW_W=90;       // cells narrower than this get smaller fonts (wide=126, narrow=63)
+  const LABEL_X=5;         // px offset from cell left for section number label
+  const LABEL_Y=12;        // px offset from cell top for section number label
+  const PART_Y_RATIO=0.38; // vertical position ratio for part-number text
+  const DESC_Y_RATIO=0.68; // vertical position ratio for description text
+  const frag=document.createDocumentFragment();
   ALL.forEach(n=>{
     const g=GEO[n];
     const narrow=g.w<NARROW_W;
@@ -345,16 +350,17 @@ function generateRackCells(){
     const pfs=narrow?10:12;
     const dfs=narrow?8:10;
     // Cell rect
-    svg.insertBefore(mkEl('rect',{id:'s'+n,class:'RS',x:g.x,y:g.y,width:g.w,height:g.h}),bl);
+    frag.appendChild(mkEl('rect',{id:'s'+n,class:'RS',x:g.x,y:g.y,width:g.w,height:g.h}));
     // Section number label (top-left)
-    const lbl=mkEl('text',{id:'l'+n,class:'SN',x:g.x+5,y:g.y+12,'font-size':fs});
+    const lbl=mkEl('text',{id:'l'+n,class:'SN',x:g.x+LABEL_X,y:g.y+LABEL_Y,'font-size':fs});
     lbl.textContent=n;
-    svg.insertBefore(lbl,bl);
+    frag.appendChild(lbl);
     // Part number text (center)
-    svg.insertBefore(mkEl('text',{id:'p'+n,class:'SP',x:g.x+g.w/2,y:g.y+g.h*0.38,'font-size':pfs}),bl);
+    frag.appendChild(mkEl('text',{id:'p'+n,class:'SP',x:g.x+g.w/2,y:g.y+g.h*PART_Y_RATIO,'font-size':pfs}));
     // Description text (center, below part)
-    svg.insertBefore(mkEl('text',{id:'d'+n,class:'SD',x:g.x+g.w/2,y:g.y+g.h*0.68,'font-size':dfs}),bl);
+    frag.appendChild(mkEl('text',{id:'d'+n,class:'SD',x:g.x+g.w/2,y:g.y+g.h*DESC_Y_RATIO,'font-size':dfs}));
   });
+  svg.insertBefore(frag,bl);
 }
 
 /** Populate part-number and description text into every rack section. */
