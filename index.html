@@ -424,13 +424,17 @@ function drawBadges(slotNum,cartNums){
   const g=GEO[slotNum];if(!g)return;
   const layer=document.getElementById('badge-layer');
   const STEP=BADGE_RADIUS*2+BADGE_GAP;
-  const baseX=g.x+g.w-BADGE_PADDING-BADGE_RADIUS;
-  const baseY=g.y+BADGE_PADDING+BADGE_RADIUS;
+  const usableW=g.w-BADGE_PADDING*2;
+  const perRow=Math.max(1,Math.floor((usableW+BADGE_GAP)/STEP));
   cartNums.forEach((num,i)=>{
-    const cx=baseX-i*STEP;if(cx<g.x+BADGE_RADIUS)return;
+    const col=i%perRow;
+    const row=Math.floor(i/perRow);
+    const cx=g.x+g.w-BADGE_PADDING-BADGE_RADIUS-col*STEP;
+    const cy=g.y+BADGE_PADDING+BADGE_RADIUS+row*STEP;
+    if(cy+BADGE_RADIUS>g.y+g.h)return;
     const grp=document.createElementNS(NS,'g');
-    const circle=mkEl('circle',{fill:'#E8620A',stroke:'#000','stroke-width':'1.5',cx,cy:baseY,r:BADGE_RADIUS});
-    const text=mkEl('text',{'font-family':'Arial,sans-serif','font-size':'9','font-weight':'900',fill:'#fff','text-anchor':'middle','dominant-baseline':'central','pointer-events':'none',x:cx,y:baseY});
+    const circle=mkEl('circle',{fill:'#E8620A',stroke:'#000','stroke-width':'1.5',cx,cy,r:BADGE_RADIUS});
+    const text=mkEl('text',{'font-family':'Arial,sans-serif','font-size':'9','font-weight':'900',fill:'#fff','text-anchor':'middle','dominant-baseline':'central','pointer-events':'none',x:cx,y:cy});
     text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
   });
 }
