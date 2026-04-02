@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Warehouse Pick Guide</title>
+<title>Door Line RH Side Kitting Pick Guide</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -79,7 +79,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 <body>
 <div id="app">
 <header id="hd">
-  <h1>&#9881; Warehouse Pick Guide</h1>
+  <h1>&#9881; Door Line RH Side Kitting Pick Guide</h1>
   <div id="hr">
     <div id="sd"></div>
     <span style="color:#556">ACTIVE</span>
@@ -196,45 +196,47 @@ const ORANGE_PARTS={
    Replace PARTDESC_RACK_01  with the human-readable label (max 30 chars).
 */
 const RACK_PARTS={
-   1:{p:"PCPE23942IN01.H-RH",d:"PCPE23942IN01.H-RH"},
-   2:{p:"PCPE27406IN01.H-RH",d:"PCPE27406IN01.H-RH"},
-   3:{p:"PCPE23942IN02.H-RH",d:"PCPE23942IN02.H-RH"},
-   4:{p:"PCPE23942IN03.H-RH",d:"PCPE23942IN03.H-RH"},
-   5:{p:"PCPE27406IN02.H-RH",d:"PCPE27406IN02.H-RH"},
-   6:{p:"PCPE27406IN03.H-RH",d:"PCPE27406IN03.H-RH"},
-   7:{p:"SPARE",d:"SPARE"},
-   8:{p:"SPARE",d:"SPARE"},
-   9:{p:"PCPE27406AR01.H-RH",d:"PCPE27406AR01.H-RH"},
-  10:{p:"PCPE27406AR02.H-RH",d:"PCPE27406AR02.H-RH"},
-  11:{p:"PCPE27406AR05.H-RH",d:"PCPE27406AR05.H-RH"},
-  12:{p:"PCPE27406AR04.H-RH",d:"PCPE27406AR04.H-RH"},
-  13:{p:"PCP14E072AE-RH",d:"PCP14E072AE-RH"},
-  14:{p:"SPARE",d:"SPARE"},
-  15:{p:"PCP14E072AE-RH",d:"PCP14E072AE-RH"},
-  16:{p:"PCP14E072EF-RH",d:"PCP14E072EF-RH"},
-  17:{p:"PCP237W28APIA70",d:"PCP237W28APIA70"},
-  18:{p:"PCP237W28APIA91",d:"PCP237W28APIA91"},
-  19:{p:"PARTNUMBER_RACK_19",d:"PARTDESC_RACK_19"},
-  20:{p:"PARTNUMBER_RACK_20",d:"PARTDESC_RACK_20"},
-  21:{p:"PARTNUMBER_RACK_21",d:"PARTDESC_RACK_21"},
-  22:{p:"PARTNUMBER_RACK_22",d:"PARTDESC_RACK_22"},
-  23:{p:"PARTNUMBER_RACK_23",d:"PARTDESC_RACK_23"},
-  24:{p:"PARTNUMBER_RACK_24",d:"PARTDESC_RACK_24"},
-  25:{p:"PARTNUMBER_RACK_25",d:"PARTDESC_RACK_25"},
-  26:{p:"PARTNUMBER_RACK_26",d:"PARTDESC_RACK_26"},
-  27:{p:"PARTNUMBER_RACK_27",d:"PARTDESC_RACK_27"},
-  28:{p:"PARTNUMBER_RACK_28",d:"PARTDESC_RACK_28"},
-  29:{p:"PARTNUMBER_RACK_29",d:"PARTDESC_RACK_29"},
-  30:{p:"PARTNUMBER_RACK_30",d:"PARTDESC_RACK_30"},
-  31:{p:"PARTNUMBER_RACK_31",d:"PARTDESC_RACK_31"},
-  32:{p:"PARTNUMBER_RACK_32",d:"PARTDESC_RACK_32"},
-  33:{p:"PARTNUMBER_RACK_33",d:"PARTDESC_RACK_33"},
-  34:{p:"PARTNUMBER_RACK_34",d:"PARTDESC_RACK_34"},
-  35:{p:"PARTNUMBER_RACK_35",d:"PARTDESC_RACK_35"},
-  36:{p:"PARTNUMBER_RACK_36",d:"PARTDESC_RACK_36"},
-  37:{p:"PARTNUMBER_RACK_37",d:"PARTDESC_RACK_37"},
-  38:{p:"PARTNUMBER_RACK_38",d:"PARTDESC_RACK_38"},
-  39:{p:"PARTNUMBER_RACK_39",d:"PARTDESC_RACK_39"}
+   1:{p:"PCPE23942IN01.H",d:"INSERT EBONY SOHO"},
+   2:{p:"PCPE27406IN01.H",d:"INSERT EBONY SOHO"},
+   3:{p:"PCPE23942IN02.H",d:"INSERT SAND SOHO"},
+   4:{p:"PCPE23942IN03.H",d:"INSERT EBONY SUPER SMOOTH"},
+   5:{p:"PCPE27406IN02.H",d:"INSERT SAND STONE"},
+   6:{p:"PCPE27406IN03.H",d:"INSERT EBONY S.SMOOTH"},
+   7:{p:"",d:""},
+   8:{p:"",d:""},
+   9:{p:"PCPE27406AR01.H",d:"RR EBONY NO/STITCH"},
+  10:{p:"PCPE27406AR02.H",d:"RR EBONY W/STITCH"},
+  11:{p:"PCPE27406AR05.H",d:"REAR BLACK PACK"},
+  12:{p:"PCPE27406AR04.H",d:"RR S.SMOOTH"},
+  13:{p:"PCP14E072AE",d:"AMBIENT LIGHT BLUE"},
+  14:{p:"",d:""},
+  15:{p:"PCPE14E072AE",d:"AMBIENT LIGHT BLUE"},
+  16:{p:"PCPE14E072EF",d:"AMBIENT LIGHT ORANGE"},
+  17:{p:"PCPE237W28APIA70",d:"FRONT APPLIQUE"},
+  18:{p:"PCPE237W28APIA91",d:"FRONT APPLIQUE"},
+  19:{p:"",d:""},
+  20:{p:"PCPE23942APIA30A",d:"FRONT I/P EXTENSION MIC"},
+  21:{p:"",d:""},
+  22:{p:"PCPE23942APIA201MY",d:"I/P EXTENSION 1MY"},
+  23:{p:"",d:""},
+  24:{p:"PCPE23942APIA20JA6",d:"I/P EXTENSION JA6"},
+  25:{p:"",d:""},
+  26:{p:"",d:""},
+  27:{p:"",d:""},
+  28:{p:"PCPE23942AR01.H",d:"FRONT EBONY NO-STICH"},
+  29:{p:"PCPE23942AR02.H",d:"FRONT EBONY W/STITCH"},
+  30:{p:"PCPE23942AR04.H",d:"FRONT S.SMOOTH"},
+  31:{p:"PCPE23942AR05.H",d:"FRONT BLACK PACK"},
+  32:{p:"PCPE23942AR03.H",d:"FRONT SAND W/STITCH"},
+  33:{p:"",d:""},
+  34:{p:"",d:""},
+  35:{p:"",d:""},
+  36:{p:"ASYE23900ASE",d:"Soho Ebony W/ Urban Gray"},
+  37:{p:"ASYE23900ATS",d:"Terra Suede Ebony W/ BLK"},
+  38:{p:"ASYE23900AMIC",d:"Hard Top Roll W REINF"},
+  39:{p:"",d:""}
+  //WE NEED TO ADD THESE PART NUMBERS: PCPE27406AR03.HA, PCPE237WAPIA71, PCP14017E, ASYE23900ABP
+
 };
 /*
    Pick routes: which yellow rack sections illuminate for each cart slot.
@@ -242,13 +244,13 @@ const RACK_PARTS={
    Example: change [1,2,3,4,5] to [14,17,21,22,28]
 */
 const PICK_ROUTES={
-  1:[1,10,13,19,3],
+  1:[1,10,13,3],
   2:[1,2],
-  3:[1,10,13,19,3],
+  3:[1,10,13,3],
   4:[1,2],
-  5:[1,10,13,19,3],
+  5:[1,10,13,3],
   6:[1,2],
-  7:[1,10,13,19,3],
+  7:[1,10,13,3],
   8:[1,2],
 };
 /* ================================================================
@@ -270,8 +272,8 @@ const GEO={
   11:{x:284,y:375,w:140,h:140},
   12:{x:424,y:375,w:140,h:140},
   // Group C: Slots 13-19 (13-18 are 1.25u×1u; 19 is 2.5u×2.5u) — 5.5u tall
-  13:{x:564,y:207,w:70,h:56},
-  14:{x:634,y:207,w:70,h:56},
+  13:{x:564,y:207,w:140,h:56},//13:{x:564,y:207,w:70,h:56},
+  14:{x:634,y:207,w:0,h:0},//14:{x:634,y:207,w:70,h:56},
   15:{x:564,y:263,w:70,h:56},
   16:{x:634,y:263,w:70,h:56},
   17:{x:564,y:319,w:70,h:56},
