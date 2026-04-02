@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Warehouse Pick Guide</title>
+<title>Door Line RH Side Kitting Pick Guide</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -14,8 +14,8 @@
 html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   font-family:'Segoe UI',Arial,sans-serif;overflow:hidden}
 #app{display:grid;grid-template-rows:50px 1fr 50px;
-  grid-template-columns:270px 1fr;height:100vh}
-#hd{grid-column:1/3;background:#0a1220;border-bottom:2px solid var(--yw);
+  grid-template-columns:1fr;height:100vh}
+#hd{grid-column:1/-1;background:#0a1220;border-bottom:2px solid var(--yw);
   display:flex;align-items:center;justify-content:space-between;padding:0 18px}
 #hd h1{font-size:.95rem;font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--yw)}
@@ -26,22 +26,16 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 .hb{background:#182435;border:1px solid #2a3a55;color:var(--yw);
   padding:4px 10px;border-radius:4px;font-size:.7rem;cursor:pointer}
 .hb:hover{background:#203050;border-color:var(--yw)}
-#pc{background:var(--pb);border-right:1px solid #1c2e48;
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:8px 4px;gap:6px}
-.pl{font-size:.6rem;font-weight:700;letter-spacing:.15em;
-  text-transform:uppercase;color:#445}
 #pr{background:#0d151f;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   padding:6px 8px;overflow:hidden}
-#ft{grid-column:1/3;background:#080f18;border-top:2px solid #1a2840;
+#ft{grid-column:1/-1;background:#080f18;border-top:2px solid #1a2840;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 18px;gap:12px}
 #fl{color:#334;font-size:.68rem;white-space:nowrap}
 #fm{flex:1;text-align:center;font-size:.8rem;font-weight:600;
   color:var(--yw);letter-spacing:.03em}
 #fx{color:#445;font-size:.65rem;white-space:nowrap;text-align:right}
-#csv{width:100%;max-width:246px;height:auto}
 .cf{fill:none;stroke:var(--or);stroke-width:5;stroke-linejoin:round}
 .cd{stroke:#5a2800;stroke-width:2.5}
 .cs{stroke:#242424;stroke-width:1;stroke-dasharray:3 3}
@@ -67,266 +61,103 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   text-anchor:start;dominant-baseline:auto;pointer-events:none}
 .SN.on{fill:rgba(245,200,0,.7)}
 /* SP = part number text inside rack cell */
-.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#3a6e9a;font-weight:700;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.SP.on{fill:rgba(245,200,0,.95)}
-/* SD = part description text inside rack cell */
-.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#26506e;font-weight:400;
+.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#3a6e9a;font-weight:400;
   text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
-.SD.on{fill:rgba(240,180,0,.82)}
-/* CPT/CDT = part number / description inside orange cart slots */
-.CPT{font-family:'Segoe UI',Arial,sans-serif;font-size:4.5px;fill:#b04515;
+.SP.on{fill:rgba(240,180,0,.82)}
+/* SD = part description text inside rack cell */
+.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#26506e;font-weight:700;
   text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.CDT{font-family:'Segoe UI',Arial,sans-serif;font-size:4px;fill:#7a3820;
+.SD.on{fill:rgba(245,200,0,.95)}
+/* CPT/CDT = part number / description inside orange cart slots */
+.CPT{font-family:'Segoe UI',Arial,sans-serif;fill:#b04515;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.CDT{font-family:'Segoe UI',Arial,sans-serif;fill:#7a3820;
   text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
 .CPT.on{fill:rgba(245,200,0,.9)}.CDT.on{fill:rgba(240,175,0,.75)}
-.SC{font-family:'Segoe UI',Arial,sans-serif;font-size:9px;font-weight:700;
-  fill:var(--yw);text-anchor:middle;dominant-baseline:central;
-  letter-spacing:.08em;opacity:.65;pointer-events:none}
 </style>
 </head>
 <body>
 <div id="app">
 <header id="hd">
-  <h1>&#9881; Warehouse Pick Guide</h1>
+  <h1>&#9881; Door Line RH Side Kitting Pick Guide</h1>
   <div id="hr">
     <div id="sd"></div>
     <span style="color:#556">ACTIVE</span>
     <span id="lu">&#8212;</span>
   </div>
 </header>
-<section id="pc">
-  <div class="pl">Orange Cart &#8212; Slot Reference</div>
-  <svg id="csv" viewBox="0 0 246 374" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="123" cy="367" rx="100" ry="7" fill="rgba(0,0,0,.4)"/>
-    <rect x="13" y="326" width="220" height="11" rx="2" fill="#180900" stroke="#5a2800" stroke-width="1.2"/>
-    <rect class="cf" x="11" y="11" width="224" height="318" rx="5"/>
-    <line class="cd" x1="67" y1="11" x2="67" y2="329"/>
-    <line class="cd" x1="123" y1="11" x2="123" y2="329"/>
-    <line class="cd" x1="179" y1="11" x2="179" y2="329"/>
-    <line class="cd" x1="11" y1="175" x2="235" y2="175"/>
-    <rect class="cg" x="14" y="14" width="50" height="158"/>
-    <rect class="cg" x="70" y="14" width="50" height="158"/>
-    <rect class="cg" x="126" y="14" width="50" height="158"/>
-    <rect class="cg" x="182" y="14" width="50" height="158"/>
-    <rect class="cg" x="14" y="178" width="50" height="158"/>
-    <rect class="cg" x="70" y="178" width="50" height="158"/>
-    <rect class="cg" x="126" y="178" width="50" height="158"/>
-    <rect class="cg" x="182" y="178" width="50" height="158"/>
-    <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
-    <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
-    <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
-    <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
-    <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
-    <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
-    <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
-    <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
-    <text class="cn" x="39"  y="80">1</text><text class="cn" x="95"  y="80">2</text>
-    <text class="cn" x="151" y="80">3</text><text class="cn" x="207" y="80">4</text>
-    <text class="cn" x="39"  y="244">5</text><text class="cn" x="95"  y="244">6</text>
-    <text class="cn" x="151" y="244">7</text><text class="cn" x="207" y="244">8</text>
-    <!-- Part number + description per cart slot (populated by JS) -->
-    <text id="cp1" class="CPT" x="39"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd1" class="CDT" x="39"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp2" class="CPT" x="95"  y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd2" class="CDT" x="95"  y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp3" class="CPT" x="151" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd3" class="CDT" x="151" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp4" class="CPT" x="207" y="114" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd4" class="CDT" x="207" y="128" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp5" class="CPT" x="39"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd5" class="CDT" x="39"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp6" class="CPT" x="95"  y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd6" class="CDT" x="95"  y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp7" class="CPT" x="151" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd7" class="CDT" x="151" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cp8" class="CPT" x="207" y="278" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text id="cd8" class="CDT" x="207" y="292" textLength="46" lengthAdjust="spacingAndGlyphs"></text>
-    <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
-    <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
-    <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
-    <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="207" y="323">BOT&#xB7;R</text>
-    <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
-    <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
-    <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
-    <rect class="ck" x="194" y="5" width="10" height="8" rx="2"/>
-    <circle class="cw" cx="43" cy="349" r="13"/><circle class="ch" cx="43" cy="349" r="5"/>
-    <circle class="cw" cx="203" cy="349" r="13"/><circle class="ch" cx="203" cy="349" r="5"/>
-    <line x1="43" y1="336" x2="43" y2="362" stroke="#5a2800" stroke-width="1.5"/>
-    <line x1="30" y1="349" x2="56" y2="349" stroke="#5a2800" stroke-width="1.5"/>
-    <line x1="203" y1="336" x2="203" y2="362" stroke="#5a2800" stroke-width="1.5"/>
-    <line x1="190" y1="349" x2="216" y2="349" stroke="#5a2800" stroke-width="1.5"/>
-    </svg>
-</section>
 <section id="pr">
-  <div class="pl">Yellow Flow Rack &#8212; Pick Locations</div>
-  <svg id="rsv" viewBox="0 0 1280 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-<ellipse cx="640" cy="516" rx="625" ry="7" fill="rgba(0,0,0,.5)"/>
-    <!-- Group frames -->
-    <rect class="RF" x="2" y="13" width="247" height="493" rx="4"/>
-    <rect class="RF" x="253" y="259" width="193" height="247" rx="4"/>
-    <rect class="RF" x="453" y="13" width="165" height="493" rx="4"/>
-    <rect class="RF" x="625" y="13" width="155" height="493" rx="4"/>
-    <rect class="RF" x="787" y="13" width="430" height="509" rx="4"/>
-    <rect class="RF" x="1217" y="13" width="60" height="509" rx="4"/>
-    <rect id="s1" class="RS" x="4" y="15" width="120" height="120"/>
-    <text id="l1" class="SN" x="9" y="26" font-size="10">1</text>
-    <text id="p1" class="SP" x="64" y="60" font-size="12"></text>
-    <text id="d1" class="SD" x="64" y="96" font-size="10"></text>
-    <rect id="s2" class="RS" x="127" y="15" width="120" height="120"/>
-    <text id="l2" class="SN" x="132" y="26" font-size="10">2</text>
-    <text id="p2" class="SP" x="187" y="60" font-size="12"></text>
-    <text id="d2" class="SD" x="187" y="96" font-size="10"></text>
-    <rect id="s3" class="RS" x="4" y="138" width="120" height="120"/>
-    <text id="l3" class="SN" x="9" y="149" font-size="10">3</text>
-    <text id="p3" class="SP" x="64" y="183" font-size="12"></text>
-    <text id="d3" class="SD" x="64" y="219" font-size="10"></text>
-    <rect id="s4" class="RS" x="127" y="138" width="120" height="120"/>
-    <text id="l4" class="SN" x="132" y="149" font-size="10">4</text>
-    <text id="p4" class="SP" x="187" y="183" font-size="12"></text>
-    <text id="d4" class="SD" x="187" y="219" font-size="10"></text>
-    <rect id="s5" class="RS" x="4" y="261" width="120" height="120"/>
-    <text id="l5" class="SN" x="9" y="272" font-size="10">5</text>
-    <text id="p5" class="SP" x="64" y="306" font-size="12"></text>
-    <text id="d5" class="SD" x="64" y="342" font-size="10"></text>
-    <rect id="s6" class="RS" x="127" y="261" width="120" height="120"/>
-    <text id="l6" class="SN" x="132" y="272" font-size="10">6</text>
-    <text id="p6" class="SP" x="187" y="306" font-size="12"></text>
-    <text id="d6" class="SD" x="187" y="342" font-size="10"></text>
-    <rect id="s7" class="RS" x="4" y="384" width="120" height="120"/>
-    <text id="l7" class="SN" x="9" y="395" font-size="10">7</text>
-    <text id="p7" class="SP" x="64" y="429" font-size="12"></text>
-    <text id="d7" class="SD" x="64" y="465" font-size="10"></text>
-    <rect id="s8" class="RS" x="127" y="384" width="120" height="120"/>
-    <text id="l8" class="SN" x="132" y="395" font-size="10">8</text>
-    <text id="p8" class="SP" x="187" y="429" font-size="12"></text>
-    <text id="d8" class="SD" x="187" y="465" font-size="10"></text>
-    <rect id="s9" class="RS" x="255" y="261" width="93" height="120"/>
-    <text id="l9" class="SN" x="260" y="272" font-size="10">9</text>
-    <text id="p9" class="SP" x="301" y="306" font-size="12"></text>
-    <text id="d9" class="SD" x="301" y="342" font-size="9.3"></text>
-    <rect id="s10" class="RS" x="351" y="261" width="93" height="120"/>
-    <text id="l10" class="SN" x="356" y="272" font-size="10">10</text>
-    <text id="p10" class="SP" x="397" y="306" font-size="12"></text>
-    <text id="d10" class="SD" x="397" y="342" font-size="9.3"></text>
-    <rect id="s11" class="RS" x="255" y="384" width="93" height="120"/>
-    <text id="l11" class="SN" x="260" y="395" font-size="10">11</text>
-    <text id="p11" class="SP" x="301" y="429" font-size="12"></text>
-    <text id="d11" class="SD" x="301" y="465" font-size="9.3"></text>
-    <rect id="s12" class="RS" x="351" y="384" width="93" height="120"/>
-    <text id="l12" class="SN" x="356" y="395" font-size="10">12</text>
-    <text id="p12" class="SP" x="397" y="429" font-size="12"></text>
-    <text id="d12" class="SD" x="397" y="465" font-size="9.3"></text>
-    <rect id="s13" class="RS" x="455" y="15" width="79" height="120"/>
-    <text id="l13" class="SN" x="460" y="25" font-size="9">13</text>
-    <text id="p13" class="SP" x="494" y="60" font-size="10.3"></text>
-    <text id="d13" class="SD" x="494" y="96" font-size="7.9"></text>
-    <rect id="s14" class="RS" x="537" y="15" width="79" height="120"/>
-    <text id="l14" class="SN" x="542" y="25" font-size="9">14</text>
-    <text id="p14" class="SP" x="576" y="60" font-size="10.3"></text>
-    <text id="d14" class="SD" x="576" y="96" font-size="7.9"></text>
-    <rect id="s15" class="RS" x="455" y="138" width="79" height="120"/>
-    <text id="l15" class="SN" x="460" y="148" font-size="9">15</text>
-    <text id="p15" class="SP" x="494" y="183" font-size="10.3"></text>
-    <text id="d15" class="SD" x="494" y="219" font-size="7.9"></text>
-    <rect id="s16" class="RS" x="537" y="138" width="79" height="120"/>
-    <text id="l16" class="SN" x="542" y="148" font-size="9">16</text>
-    <text id="p16" class="SP" x="576" y="183" font-size="10.3"></text>
-    <text id="d16" class="SD" x="576" y="219" font-size="7.9"></text>
-    <rect id="s17" class="RS" x="455" y="261" width="79" height="120"/>
-    <text id="l17" class="SN" x="460" y="271" font-size="9">17</text>
-    <text id="p17" class="SP" x="494" y="306" font-size="10.3"></text>
-    <text id="d17" class="SD" x="494" y="342" font-size="7.9"></text>
-    <rect id="s18" class="RS" x="537" y="261" width="79" height="120"/>
-    <text id="l18" class="SN" x="542" y="271" font-size="9">18</text>
-    <text id="p18" class="SP" x="576" y="306" font-size="10.3"></text>
-    <text id="d18" class="SD" x="576" y="342" font-size="7.9"></text>
-    <rect id="s19" class="RS" x="455" y="384" width="79" height="120"/>
-    <text id="l19" class="SN" x="460" y="394" font-size="9">19</text>
-    <text id="p19" class="SP" x="494" y="429" font-size="10.3"></text>
-    <text id="d19" class="SD" x="494" y="465" font-size="7.9"></text>
-    <rect id="s20" class="RS" x="537" y="384" width="79" height="120"/>
-    <text id="l20" class="SN" x="542" y="394" font-size="9">20</text>
-    <text id="p20" class="SP" x="576" y="429" font-size="10.3"></text>
-    <text id="d20" class="SD" x="576" y="465" font-size="7.9"></text>
-    <rect id="s21" class="RS" x="627" y="15" width="74" height="120"/>
-    <text id="l21" class="SN" x="632" y="25" font-size="9">21</text>
-    <text id="p21" class="SP" x="664" y="60" font-size="9.6"></text>
-    <text id="d21" class="SD" x="664" y="96" font-size="7.4"></text>
-    <rect id="s22" class="RS" x="704" y="15" width="74" height="120"/>
-    <text id="l22" class="SN" x="709" y="25" font-size="9">22</text>
-    <text id="p22" class="SP" x="741" y="60" font-size="9.6"></text>
-    <text id="d22" class="SD" x="741" y="96" font-size="7.4"></text>
-    <rect id="s23" class="RS" x="627" y="138" width="74" height="120"/>
-    <text id="l23" class="SN" x="632" y="148" font-size="9">23</text>
-    <text id="p23" class="SP" x="664" y="183" font-size="9.6"></text>
-    <text id="d23" class="SD" x="664" y="219" font-size="7.4"></text>
-    <rect id="s24" class="RS" x="704" y="138" width="74" height="120"/>
-    <text id="l24" class="SN" x="709" y="148" font-size="9">24</text>
-    <text id="p24" class="SP" x="741" y="183" font-size="9.6"></text>
-    <text id="d24" class="SD" x="741" y="219" font-size="7.4"></text>
-    <rect id="s25" class="RS" x="627" y="261" width="74" height="120"/>
-    <text id="l25" class="SN" x="632" y="271" font-size="9">25</text>
-    <text id="p25" class="SP" x="664" y="306" font-size="9.6"></text>
-    <text id="d25" class="SD" x="664" y="342" font-size="7.4"></text>
-    <rect id="s26" class="RS" x="704" y="261" width="74" height="120"/>
-    <text id="l26" class="SN" x="709" y="271" font-size="9">26</text>
-    <text id="p26" class="SP" x="741" y="306" font-size="9.6"></text>
-    <text id="d26" class="SD" x="741" y="342" font-size="7.4"></text>
-    <rect id="s27" class="RS" x="627" y="384" width="74" height="120"/>
-    <text id="l27" class="SN" x="632" y="394" font-size="9">27</text>
-    <text id="p27" class="SP" x="664" y="429" font-size="9.6"></text>
-    <text id="d27" class="SD" x="664" y="465" font-size="7.4"></text>
-    <rect id="s28" class="RS" x="704" y="384" width="74" height="120"/>
-    <text id="l28" class="SN" x="709" y="394" font-size="9">28</text>
-    <text id="p28" class="SP" x="741" y="429" font-size="9.6"></text>
-    <text id="d28" class="SD" x="741" y="465" font-size="7.4"></text>
-    <rect id="s29" class="RS" x="789" y="15" width="140" height="253"/>
-    <text id="l29" class="SN" x="794" y="28" font-size="12">29</text>
-    <text id="p29" class="SP" x="859" y="111" font-size="12"></text>
-    <text id="d29" class="SD" x="859" y="187" font-size="10"></text>
-    <rect id="s30" class="RS" x="932" y="15" width="140" height="253"/>
-    <text id="l30" class="SN" x="937" y="28" font-size="12">30</text>
-    <text id="p30" class="SP" x="1002" y="111" font-size="12"></text>
-    <text id="d30" class="SD" x="1002" y="187" font-size="10"></text>
-    <rect id="s31" class="RS" x="1075" y="15" width="140" height="253"/>
-    <text id="l31" class="SN" x="1080" y="28" font-size="12">31</text>
-    <text id="p31" class="SP" x="1145" y="111" font-size="12"></text>
-    <text id="d31" class="SD" x="1145" y="187" font-size="10"></text>
-    <rect id="s32" class="RS" x="789" y="271" width="283" height="120"/>
-    <text id="l32" class="SN" x="794" y="284" font-size="12">32</text>
-    <text id="p32" class="SP" x="930" y="316" font-size="12"></text>
-    <text id="d32" class="SD" x="930" y="352" font-size="10"></text>
-    <rect id="s33" class="RS" x="789" y="394" width="283" height="126"/>
-    <text id="l33" class="SN" x="794" y="407" font-size="12">33</text>
-    <text id="p33" class="SP" x="930" y="441" font-size="12"></text>
-    <text id="d33" class="SD" x="930" y="479" font-size="10"></text>
-    <rect id="s34" class="RS" x="1075" y="271" width="140" height="120"/>
-    <text id="l34" class="SN" x="1080" y="284" font-size="12">34</text>
-    <text id="p34" class="SP" x="1145" y="316" font-size="12"></text>
-    <text id="d34" class="SD" x="1145" y="352" font-size="10"></text>
-    <rect id="s35" class="RS" x="1075" y="394" width="70" height="126"/>
-    <text id="l35" class="SN" x="1080" y="404" font-size="9">35</text>
-    <text id="p35" class="SP" x="1110" y="441" font-size="9.1"></text>
-    <text id="d35" class="SD" x="1110" y="479" font-size="7.0"></text>
-    <rect id="s36" class="RS" x="1145" y="394" width="70" height="126"/>
-    <text id="l36" class="SN" x="1150" y="404" font-size="9">36</text>
-    <text id="p36" class="SP" x="1180" y="441" font-size="9.1"></text>
-    <text id="d36" class="SD" x="1180" y="479" font-size="7.0"></text>
-    <rect id="s37" class="RS" x="1219" y="15" width="56" height="295"/>
-    <text id="l37" class="SN" x="1224" y="25" font-size="9">37</text>
-    <text id="p37" class="SP" x="1247" y="127" font-size="7.3"></text>
-    <text id="d37" class="SD" x="1247" y="215" font-size="5.6"></text>
-    <rect id="s38" class="RS" x="1219" y="313" width="56" height="207"/>
-    <text id="l38" class="SN" x="1224" y="323" font-size="9">38</text>
-    <text id="p38" class="SP" x="1247" y="391" font-size="7.3"></text>
-    <text id="d38" class="SD" x="1247" y="453" font-size="5.6"></text>
-    <text class="SC" x="125" y="9">A</text>
-    <text class="SC" x="349" y="257">B</text>
-    <text class="SC" x="535" y="9">C</text>
-    <text class="SC" x="701" y="9">D</text>
-    <text class="SC" x="1001" y="9">E</text>
-    <text class="SC" x="1247" y="9">F</text>
+  <svg id="rsv" viewBox="0 0 1296 525" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <ellipse cx="648" cy="520" rx="640" ry="5" fill="rgba(0,0,0,.5)"/>
+    <!-- Orange cart (embedded, scaled down) in dead space above slots 9-10 -->
+    <g id="cart-group" transform="translate(350,3) scale(0.6)">
+      <ellipse cx="123" cy="367" rx="100" ry="7" fill="rgba(0,0,0,.4)"/>
+      <rect x="13" y="326" width="220" height="11" rx="2" fill="#180900" stroke="#5a2800" stroke-width="1.2"/>
+      <rect class="cf" x="11" y="11" width="224" height="318" rx="5"/>
+      <line class="cd" x1="67" y1="11" x2="67" y2="329"/>
+      <line class="cd" x1="123" y1="11" x2="123" y2="329"/>
+      <line class="cd" x1="179" y1="11" x2="179" y2="329"/>
+      <line class="cd" x1="11" y1="175" x2="235" y2="175"/>
+      <rect class="cg" x="14" y="14" width="50" height="158"/>
+      <rect class="cg" x="70" y="14" width="50" height="158"/>
+      <rect class="cg" x="126" y="14" width="50" height="158"/>
+      <rect class="cg" x="182" y="14" width="50" height="158"/>
+      <rect class="cg" x="14" y="178" width="50" height="158"/>
+      <rect class="cg" x="70" y="178" width="50" height="158"/>
+      <rect class="cg" x="126" y="178" width="50" height="158"/>
+      <rect class="cg" x="182" y="178" width="50" height="158"/>
+      <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
+      <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
+      <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
+      <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
+      <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
+      <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
+      <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
+      <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
+      <text class="cn" x="39"  y="35">1</text><text class="cn" x="95"  y="35">2</text>
+      <text class="cn" x="151" y="35">3</text><text class="cn" x="207" y="35">4</text>
+      <text class="cn" x="39"  y="199">5</text><text class="cn" x="95"  y="199">6</text>
+      <text class="cn" x="151" y="199">7</text><text class="cn" x="207" y="199">8</text>
+      <!-- Part number + description per cart slot (populated by JS) -->
+      <text id="cp1" class="CPT" x="39"  y="108"></text>
+      <text id="cd1" class="CDT" x="39"  y="108"></text>
+      <text id="cp2" class="CPT" x="95"  y="108"></text>
+      <text id="cd2" class="CDT" x="95"  y="108"></text>
+      <text id="cp3" class="CPT" x="151" y="108"></text>
+      <text id="cd3" class="CDT" x="151" y="108"></text>
+      <text id="cp4" class="CPT" x="207" y="108"></text>
+      <text id="cd4" class="CDT" x="207" y="108"></text>
+      <text id="cp5" class="CPT" x="39"  y="272"></text>
+      <text id="cd5" class="CDT" x="39"  y="272"></text>
+      <text id="cp6" class="CPT" x="95"  y="272"></text>
+      <text id="cd6" class="CDT" x="95"  y="272"></text>
+      <text id="cp7" class="CPT" x="151" y="272"></text>
+      <text id="cd7" class="CDT" x="151" y="272"></text>
+      <text id="cp8" class="CPT" x="207" y="272"></text>
+      <text id="cd8" class="CDT" x="207" y="272"></text>
+      <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
+      <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
+      <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
+      <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="207" y="323">BOT&#xB7;R</text>
+      <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="194" y="5" width="10" height="8" rx="2"/>
+      <circle class="cw" cx="43" cy="349" r="13"/><circle class="ch" cx="43" cy="349" r="5"/>
+      <circle class="cw" cx="203" cy="349" r="13"/><circle class="ch" cx="203" cy="349" r="5"/>
+      <line x1="43" y1="336" x2="43" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="30" y1="349" x2="56" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="203" y1="336" x2="203" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="190" y1="349" x2="216" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+    </g>
+    <!-- Per-group frames (common bottom y=515, rack shifted down 80px) -->
+    <rect class="RF" x="4"    y="95"  width="280" height="420" rx="4"/><!-- A -->
+    <rect class="RF" x="284"  y="235" width="280" height="280" rx="4"/><!-- B -->
+    <rect class="RF" x="564"  y="207" width="140" height="308" rx="4"/><!-- C -->
+    <rect class="RF" x="704"  y="179" width="140" height="336" rx="4"/><!-- D -->
+    <rect class="RF" x="844"  y="179" width="336" height="336" rx="4"/><!-- E -->
+    <rect class="RF" x="1180" y="151" width="112" height="364" rx="4"/><!-- F -->
+    <!-- Cells generated by JS -->
     <g id="badge-layer"></g>
   </svg>
 </section>
@@ -360,49 +191,52 @@ const ORANGE_PARTS={
   8:{p:"PARTNUMBER_SLOT_08",d:"PARTDESC_SLOT_08"},
 };
 /*
-   Yellow rack section part numbers and descriptions (38 sections).
+   Yellow rack section part numbers and descriptions (39 sections).
    Replace PARTNUMBER_RACK_01 with the actual part number (max 30 chars).
    Replace PARTDESC_RACK_01  with the human-readable label (max 30 chars).
 */
 const RACK_PARTS={
-   1:{p:"PARTNUMBER_RACK_01",d:"PARTDESC_RACK_01"},
-   2:{p:"PARTNUMBER_RACK_02",d:"PARTDESC_RACK_02"},
-   3:{p:"PARTNUMBER_RACK_03",d:"PARTDESC_RACK_03"},
-   4:{p:"PARTNUMBER_RACK_04",d:"PARTDESC_RACK_04"},
-   5:{p:"PARTNUMBER_RACK_05",d:"PARTDESC_RACK_05"},
-   6:{p:"PARTNUMBER_RACK_06",d:"PARTDESC_RACK_06"},
-   7:{p:"PARTNUMBER_RACK_07",d:"PARTDESC_RACK_07"},
-   8:{p:"PARTNUMBER_RACK_08",d:"PARTDESC_RACK_08"},
-   9:{p:"PARTNUMBER_RACK_09",d:"PARTDESC_RACK_09"},
-  10:{p:"PARTNUMBER_RACK_10",d:"PARTDESC_RACK_10"},
-  11:{p:"PARTNUMBER_RACK_11",d:"PARTDESC_RACK_11"},
-  12:{p:"PARTNUMBER_RACK_12",d:"PARTDESC_RACK_12"},
-  13:{p:"PARTNUMBER_RACK_13",d:"PARTDESC_RACK_13"},
-  14:{p:"PARTNUMBER_RACK_14",d:"PARTDESC_RACK_14"},
-  15:{p:"PARTNUMBER_RACK_15",d:"PARTDESC_RACK_15"},
-  16:{p:"PARTNUMBER_RACK_16",d:"PARTDESC_RACK_16"},
-  17:{p:"PARTNUMBER_RACK_17",d:"PARTDESC_RACK_17"},
-  18:{p:"PARTNUMBER_RACK_18",d:"PARTDESC_RACK_18"},
-  19:{p:"PARTNUMBER_RACK_19",d:"PARTDESC_RACK_19"},
-  20:{p:"PARTNUMBER_RACK_20",d:"PARTDESC_RACK_20"},
-  21:{p:"PARTNUMBER_RACK_21",d:"PARTDESC_RACK_21"},
-  22:{p:"PARTNUMBER_RACK_22",d:"PARTDESC_RACK_22"},
-  23:{p:"PARTNUMBER_RACK_23",d:"PARTDESC_RACK_23"},
-  24:{p:"PARTNUMBER_RACK_24",d:"PARTDESC_RACK_24"},
-  25:{p:"PARTNUMBER_RACK_25",d:"PARTDESC_RACK_25"},
-  26:{p:"PARTNUMBER_RACK_26",d:"PARTDESC_RACK_26"},
-  27:{p:"PARTNUMBER_RACK_27",d:"PARTDESC_RACK_27"},
-  28:{p:"PARTNUMBER_RACK_28",d:"PARTDESC_RACK_28"},
-  29:{p:"PARTNUMBER_RACK_29",d:"PARTDESC_RACK_29"},
-  30:{p:"PARTNUMBER_RACK_30",d:"PARTDESC_RACK_30"},
-  31:{p:"PARTNUMBER_RACK_31",d:"PARTDESC_RACK_31"},
-  32:{p:"PARTNUMBER_RACK_32",d:"PARTDESC_RACK_32"},
-  33:{p:"PARTNUMBER_RACK_33",d:"PARTDESC_RACK_33"},
-  34:{p:"PARTNUMBER_RACK_34",d:"PARTDESC_RACK_34"},
-  35:{p:"PARTNUMBER_RACK_35",d:"PARTDESC_RACK_35"},
-  36:{p:"PARTNUMBER_RACK_36",d:"PARTDESC_RACK_36"},
-  37:{p:"PARTNUMBER_RACK_37",d:"PARTDESC_RACK_37"},
-  38:{p:"PARTNUMBER_RACK_38",d:"PARTDESC_RACK_38"}
+   1:{p:"PCPE23942IN01.H",d:"INSERT EBONY SOHO"},
+   2:{p:"PCPE27406IN01.H",d:"INSERT EBONY SOHO"},
+   3:{p:"PCPE23942IN02.H",d:"INSERT SAND SOHO"},
+   4:{p:"PCPE23942IN03.H",d:"INSERT EBONY SUPER SMOOTH"},
+   5:{p:"PCPE27406IN02.H",d:"INSERT SAND STONE"},
+   6:{p:"PCPE27406IN03.H",d:"INSERT EBONY S.SMOOTH"},
+   7:{p:"",d:""},
+   8:{p:"",d:""},
+   9:{p:"PCPE27406AR01.H",d:"RR EBONY NO/STITCH"},
+  10:{p:"PCPE27406AR02.H",d:"RR EBONY W/STITCH"},
+  11:{p:"PCPE27406AR05.H",d:"REAR BLACK PACK"},
+  12:{p:"PCPE27406AR04.H",d:"RR S.SMOOTH"},
+  13:{p:"PCP14E072AE",d:"AMBIENT LIGHT BLUE"},
+  14:{p:"",d:""},
+  15:{p:"PCPE14E072AE",d:"AMBIENT LIGHT BLUE"},
+  16:{p:"PCPE14E072EF",d:"AMBIENT LIGHT ORANGE"},
+  17:{p:"PCPE237W28APIA70",d:"FRONT APPLIQUE"},
+  18:{p:"PCPE237W28APIA91",d:"FRONT APPLIQUE"},
+  19:{p:"",d:""},
+  20:{p:"PCPE23942APIA30A",d:"FRONT I/P EXTENSION MIC"},
+  21:{p:"",d:""},
+  22:{p:"PCPE23942APIA201MY",d:"I/P EXTENSION 1MY"},
+  23:{p:"",d:""},
+  24:{p:"PCPE23942APIA20JA6",d:"I/P EXTENSION JA6"},
+  25:{p:"",d:""},
+  26:{p:"",d:""},
+  27:{p:"",d:""},
+  28:{p:"PCPE23942AR01.H",d:"FRONT EBONY NO-STICH"},
+  29:{p:"PCPE23942AR02.H",d:"FRONT EBONY W/STITCH"},
+  30:{p:"PCPE23942AR04.H",d:"FRONT S.SMOOTH"},
+  31:{p:"PCPE23942AR05.H",d:"FRONT BLACK PACK"},
+  32:{p:"PCPE23942AR03.H",d:"FRONT SAND W/STITCH"},
+  33:{p:"",d:""},
+  34:{p:"",d:""},
+  35:{p:"",d:""},
+  36:{p:"ASYE23900ASE",d:"Soho Ebony W/ Urban Gray"},
+  37:{p:"ASYE23900ATS",d:"Terra Suede Ebony W/ BLK"},
+  38:{p:"ASYE23900AMIC",d:"Hard Top Roll W REINF"},
+  39:{p:"",d:""}
+  //WE NEED TO ADD THESE PART NUMBERS: PCPE27406AR03.HA, PCPE237WAPIA71, PCP14017E, ASYE23900ABP
+
 };
 /*
    Pick routes: which yellow rack sections illuminate for each cart slot.
@@ -410,57 +244,64 @@ const RACK_PARTS={
    Example: change [1,2,3,4,5] to [14,17,21,22,28]
 */
 const PICK_ROUTES={
-  1:[1,2,3,4,5],
-  2:[6,7,8,9,10],
-  3:[11,12,13,14,15],
-  4:[16,17,18,19,20],
-  5:[21,22,23,24,25],
-  6:[26,27,28,29,30],
-  7:[31,32,33,34,35],
-  8:[36,37,38,1,2],
+  1:[1,10,13,3],
+  2:[1,2],
+  3:[1,10,13,3],
+  4:[1,2],
+  5:[1,10,13,3],
+  6:[1,2],
+  7:[1,10,13,3],
+  8:[1,2],
 };
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
 const GEO={
-  1:{x:4,y:15,w:120,h:120},
-  2:{x:127,y:15,w:120,h:120},
-  3:{x:4,y:138,w:120,h:120},
-  4:{x:127,y:138,w:120,h:120},
-  5:{x:4,y:261,w:120,h:120},
-  6:{x:127,y:261,w:120,h:120},
-  7:{x:4,y:384,w:120,h:120},
-  8:{x:127,y:384,w:120,h:120},
-  9:{x:255,y:261,w:93,h:120},
-  10:{x:351,y:261,w:93,h:120},
-  11:{x:255,y:384,w:93,h:120},
-  12:{x:351,y:384,w:93,h:120},
-  13:{x:455,y:15,w:79,h:120},
-  14:{x:537,y:15,w:79,h:120},
-  15:{x:455,y:138,w:79,h:120},
-  16:{x:537,y:138,w:79,h:120},
-  17:{x:455,y:261,w:79,h:120},
-  18:{x:537,y:261,w:79,h:120},
-  19:{x:455,y:384,w:79,h:120},
-  20:{x:537,y:384,w:79,h:120},
-  21:{x:627,y:15,w:74,h:120},
-  22:{x:704,y:15,w:74,h:120},
-  23:{x:627,y:138,w:74,h:120},
-  24:{x:704,y:138,w:74,h:120},
-  25:{x:627,y:261,w:74,h:120},
-  26:{x:704,y:261,w:74,h:120},
-  27:{x:627,y:384,w:74,h:120},
-  28:{x:704,y:384,w:74,h:120},
-  29:{x:789,y:15,w:140,h:253},
-  30:{x:932,y:15,w:140,h:253},
-  31:{x:1075,y:15,w:140,h:253},
-  32:{x:789,y:271,w:283,h:120},
-  33:{x:789,y:394,w:283,h:126},
-  34:{x:1075,y:271,w:140,h:120},
-  35:{x:1075,y:394,w:70,h:126},
-  36:{x:1145,y:394,w:70,h:126},
-  37:{x:1219,y:15,w:56,h:295},
-  38:{x:1219,y:313,w:56,h:207}
+  // Group A: Slots 1-8 (2 cols; 1-6 are 2.5u×2u, 7-8 are 2.5u×1.5u) — 7.5u tall
+  1:{x:4,y:95,w:140,h:112},
+  2:{x:144,y:95,w:140,h:112},
+  3:{x:4,y:207,w:140,h:112},
+  4:{x:144,y:207,w:140,h:112},
+  5:{x:4,y:319,w:140,h:112},
+  6:{x:144,y:319,w:140,h:112},
+  7:{x:4,y:431,w:140,h:84},
+  8:{x:144,y:431,w:140,h:84},
+  // Group B: Slots 9-12 (2 cols; 2.5u×2.5u) — 5u tall
+  9:{x:284,y:235,w:140,h:140},
+  10:{x:424,y:235,w:140,h:140},
+  11:{x:284,y:375,w:140,h:140},
+  12:{x:424,y:375,w:140,h:140},
+  // Group C: Slots 13-19 (13-18 are 1.25u×1u; 19 is 2.5u×2.5u) — 5.5u tall
+  13:{x:564,y:207,w:140,h:56},//13:{x:564,y:207,w:70,h:56},
+  14:{x:634,y:207,w:0,h:0},//14:{x:634,y:207,w:70,h:56},
+  15:{x:564,y:263,w:70,h:56},
+  16:{x:634,y:263,w:70,h:56},
+  17:{x:564,y:319,w:70,h:56},
+  18:{x:634,y:319,w:70,h:56},
+  19:{x:564,y:375,w:140,h:140},
+  // Group D: Slots 20-27 (2 cols×4 rows; 1.25u×1.5u) — 6u tall
+  20:{x:704,y:179,w:70,h:84},
+  21:{x:774,y:179,w:70,h:84},
+  22:{x:704,y:263,w:70,h:84},
+  23:{x:774,y:263,w:70,h:84},
+  24:{x:704,y:347,w:70,h:84},
+  25:{x:774,y:347,w:70,h:84},
+  26:{x:704,y:431,w:70,h:84},
+  27:{x:774,y:431,w:70,h:84},
+  // Group E: Slots 28-35 (28-32 are 2u×3u; 33 is 2u×1.5u; 34-35 are 1u×1.5u) — 6u tall
+  28:{x:844,y:179,w:112,h:168},
+  29:{x:956,y:179,w:112,h:168},
+  30:{x:1068,y:179,w:112,h:168},
+  31:{x:844,y:347,w:112,h:168},
+  32:{x:956,y:347,w:112,h:168},
+  33:{x:1068,y:347,w:112,h:84},
+  34:{x:1068,y:431,w:56,h:84},
+  35:{x:1124,y:431,w:56,h:84},
+  // Group F: Slots 36-39 (36-38 are 2u×2u stacked; 39 is 2u×0.5u) — 6.5u tall
+  36:{x:1180,y:151,w:112,h:112},
+  37:{x:1180,y:263,w:112,h:112},
+  38:{x:1180,y:375,w:112,h:112},
+  39:{x:1180,y:487,w:112,h:28}
 };
 const ALL=Object.keys(GEO).map(Number);
 const NS='http://www.w3.org/2000/svg';
@@ -470,6 +311,7 @@ const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
 const BADGE_RADIUS=10;   // px radius of cart-slot number badges
 const BADGE_PADDING=4;   // px from edge of section to badge centre
 const BADGE_GAP=3;       // px gap between adjacent badges
+const MIN_BADGE_R=4;     // smallest badge radius when auto-shrinking
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -478,12 +320,43 @@ function mkEl(tag,a){
 }
 
 /** Shrink font-size of an SVG text element until it fits within maxW pixels. */
-function fitText(el,maxW){
-  let sz=parseFloat(el.getAttribute('font-size'))||10;
-  while(sz>MIN_FONT_SIZE&&el.getComputedTextLength()>maxW){
-    sz=Math.max(MIN_FONT_SIZE,sz-FONT_SHRINK_STEP);
-    el.setAttribute('font-size',sz.toFixed(1));
+function fitText(el, maxW) {
+  if (typeof el.getComputedTextLength !== 'function') return;
+  let sz = parseFloat(el.getAttribute('font-size')) || 10;
+  while (sz > MIN_FONT_SIZE && el.getComputedTextLength() > maxW) {
+    sz = Math.max(MIN_FONT_SIZE, sz - FONT_SHRINK_STEP);
+    el.setAttribute('font-size', sz.toFixed(1));
   }
+}
+
+/** Dynamically create all rack cell rects and text elements from GEO. */
+function generateRackCells(){
+  const svg=document.getElementById('rsv');
+  const bl=document.getElementById('badge-layer');
+  const NARROW_W=90;       // cells narrower than this get smaller fonts (wide≥90: 112-140px, narrow<90: 28-84px)
+  const LABEL_X=5;         // px offset from cell left for section number label
+  const LABEL_Y=12;        // px offset from cell top for section number label
+  const PART_Y_RATIO=0.75; // vertical position ratio for part-number text (was 0.80)
+  const DESC_Y_RATIO=0.89; // vertical position ratio for description text (was 0.92, gap 12%→14%)
+  const frag=document.createDocumentFragment();
+  ALL.forEach(n=>{
+    const g=GEO[n];
+    const narrow=g.w<NARROW_W;
+    const fs=narrow?9:10;
+    const pfs=narrow?8:10;
+    const dfs=narrow?10:12;
+    // Cell rect
+    frag.appendChild(mkEl('rect',{id:'s'+n,class:'RS',x:g.x,y:g.y,width:g.w,height:g.h}));
+    // Section number label (top-left)
+    const lbl=mkEl('text',{id:'l'+n,class:'SN',x:g.x+LABEL_X,y:g.y+LABEL_Y,'font-size':fs});
+    lbl.textContent=n;
+    frag.appendChild(lbl);
+    // Part number text (center)
+    frag.appendChild(mkEl('text',{id:'p'+n,class:'SP',x:g.x+g.w/2,y:g.y+g.h*PART_Y_RATIO,'font-size':pfs}));
+    // Description text (center, below part)
+    frag.appendChild(mkEl('text',{id:'d'+n,class:'SD',x:g.x+g.w/2,y:g.y+g.h*DESC_Y_RATIO,'font-size':dfs}));
+  });
+  svg.insertBefore(frag,bl);
 }
 
 /** Populate part-number and description text into every rack section. */
@@ -504,14 +377,40 @@ function renderRackLabels(){
   });
 }
 
-/** Populate part-number and description text into every orange cart slot. */
+/** Populate part-number and description text into every orange cart slot (vertical). */
 function renderCartLabels(){
+  const SLOT_W=50,SLOT_H=158,NUM_H=35;
+  const AVAIL=SLOT_H-NUM_H-5;
+  const COL_P=0.30,COL_D=0.70;
+  const P_FS=8,D_FS=7;
   for(let s=1;s<=8;s++){
     const op=ORANGE_PARTS[s]||{p:'',d:''};
+    const row=s<=4?0:1;
+    const col=(s-1)%4;
+    const sx=14+col*56;
+    const sy=row===0?14:178;
     const pel=document.getElementById('cp'+s);
     const del_=document.getElementById('cd'+s);
-    if(pel)pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
-    if(del_)del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+    if(pel){
+      pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
+      const px=sx+SLOT_W*COL_P;
+      const py=sy+NUM_H+AVAIL/2;
+      pel.setAttribute('x',px);
+      pel.setAttribute('y',py);
+      pel.setAttribute('font-size',P_FS);
+      pel.setAttribute('transform','rotate(90,'+px+','+py+')');
+      fitText(pel,AVAIL);
+    }
+    if(del_){
+      del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+      const dx=sx+SLOT_W*COL_D;
+      const dy=sy+NUM_H+AVAIL/2;
+      del_.setAttribute('x',dx);
+      del_.setAttribute('y',dy);
+      del_.setAttribute('font-size',D_FS);
+      del_.setAttribute('transform','rotate(90,'+dx+','+dy+')');
+      fitText(del_,AVAIL);
+    }
   }
 }
 
@@ -519,14 +418,35 @@ function renderCartLabels(){
 function drawBadges(slotNum,cartNums){
   const g=GEO[slotNum];if(!g)return;
   const layer=document.getElementById('badge-layer');
-  const STEP=BADGE_RADIUS*2+BADGE_GAP;
-  const baseX=g.x+g.w-BADGE_PADDING-BADGE_RADIUS;
-  const baseY=g.y+BADGE_PADDING+BADGE_RADIUS;
-  cartNums.forEach((num,i)=>{
-    const cx=baseX-i*STEP;if(cx<g.x+BADGE_RADIUS)return;
+  const sorted=[...cartNums].sort((a,b)=>a-b);
+  const count=sorted.length;if(!count)return;
+  // Compute badge radius: start at standard, shrink if needed to fit all badges
+  let R=BADGE_RADIUS,GAP=BADGE_GAP,PAD=BADGE_PADDING;
+  for(let i=0;i<20&&R>MIN_BADGE_R;i++){
+    const step=R*2+GAP;
+    const pR=Math.max(1,Math.floor((g.w-PAD*2+GAP)/step));
+    const rows=Math.ceil(count/pR);
+    if(PAD*2+rows*R*2+(rows-1)*GAP<=g.h) break;
+    R-=0.5;GAP=BADGE_GAP*(R/BADGE_RADIUS);PAD=BADGE_PADDING*(R/BADGE_RADIUS);
+  }
+  const STEP=R*2+GAP;
+  const usableW=g.w-PAD*2;
+  const perRow=Math.max(1,Math.floor((usableW+GAP)/STEP));
+  sorted.forEach((num,i)=>{
+    const col=i%perRow;
+    const row=Math.floor(i/perRow);
+    const rowStart=row*perRow;
+    const inThisRow=Math.min(perRow,count-rowStart);
+    const rowWidth=inThisRow*R*2+(inThisRow-1)*GAP;
+    const rowStartX=g.x+(g.w-rowWidth)/2+R;
+    const cx=rowStartX+col*STEP;
+    const cy=g.y+PAD+R+row*STEP;
+    if(cy+R>g.y+g.h)return;
     const grp=document.createElementNS(NS,'g');
-    const circle=mkEl('circle',{style:'fill:#E8620A;stroke:#000;stroke-width:1.5',cx,cy:baseY,r:BADGE_RADIUS});
-    const text=mkEl('text',{style:'font-family:Arial,sans-serif;font-size:9px;font-weight:900;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none',x:cx,y:baseY});
+    const sw=Math.max(0.8,1.5*(R/BADGE_RADIUS));
+    const circle=mkEl('circle',{fill:'#E8620A',stroke:'#000','stroke-width':sw.toFixed(1),cx,cy,r:R});
+    const fs=Math.max(5,Math.round(9*(R/BADGE_RADIUS)));
+    const text=mkEl('text',{'font-family':'Arial,sans-serif','font-size':fs,'font-weight':'900',fill:'#fff','text-anchor':'middle','dominant-baseline':'central','pointer-events':'none',x:cx,y:cy});
     text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
   });
 }
@@ -579,6 +499,7 @@ function applyPickRoutes(){
 }
 
 // Boot
+generateRackCells();
 renderRackLabels();
 renderCartLabels();
 applyPickRoutes();
