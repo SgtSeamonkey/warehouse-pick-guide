@@ -320,11 +320,12 @@ function mkEl(tag,a){
 }
 
 /** Shrink font-size of an SVG text element until it fits within maxW pixels. */
-function fitText(el,maxW){
-  let sz=parseFloat(el.getAttribute('font-size'))||10;
-  while(sz>MIN_FONT_SIZE&&el.getComputedTextLength()>maxW){
-    sz=Math.max(MIN_FONT_SIZE,sz-FONT_SHRINK_STEP);
-    el.setAttribute('font-size',sz.toFixed(1));
+function fitText(el, maxW) {
+  if (typeof el.getComputedTextLength !== 'function') return;
+  let sz = parseFloat(el.getAttribute('font-size')) || 10;
+  while (sz > MIN_FONT_SIZE && el.getComputedTextLength() > maxW) {
+    sz = Math.max(MIN_FONT_SIZE, sz - FONT_SHRINK_STEP);
+    el.setAttribute('font-size', sz.toFixed(1));
   }
 }
 
