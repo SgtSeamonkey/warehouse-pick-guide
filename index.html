@@ -311,6 +311,7 @@ const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
 const BADGE_RADIUS=10;   // px radius of cart-slot number badges
 const BADGE_PADDING=4;   // px from edge of section to badge centre
 const BADGE_GAP=3;       // px gap between adjacent badges
+const MIN_BADGE_R=4;     // smallest badge radius when auto-shrinking
 
 function mkEl(tag,a){
   const e=document.createElementNS(NS,tag);
@@ -334,8 +335,8 @@ function generateRackCells(){
   const NARROW_W=90;       // cells narrower than this get smaller fonts (wide≥90: 112-140px, narrow<90: 28-84px)
   const LABEL_X=5;         // px offset from cell left for section number label
   const LABEL_Y=12;        // px offset from cell top for section number label
-  const PART_Y_RATIO=0.75; // vertical position ratio for part-number text
-  const DESC_Y_RATIO=0.89; // vertical position ratio for description text
+  const PART_Y_RATIO=0.75; // vertical position ratio for part-number text (was 0.80)
+  const DESC_Y_RATIO=0.89; // vertical position ratio for description text (was 0.92, gap 12%→14%)
   const frag=document.createDocumentFragment();
   ALL.forEach(n=>{
     const g=GEO[n];
@@ -420,7 +421,7 @@ function drawBadges(slotNum,cartNums){
   const count=sorted.length;if(!count)return;
   // Compute badge radius: start at standard, shrink if needed to fit all badges
   let R=BADGE_RADIUS,GAP=BADGE_GAP,PAD=BADGE_PADDING;
-  for(let i=0;i<20&&R>4;i++){
+  for(let i=0;i<20&&R>MIN_BADGE_R;i++){
     const step=R*2+GAP;
     const pR=Math.max(1,Math.floor((g.w-PAD*2+GAP)/step));
     const rows=Math.ceil(count/pR);
