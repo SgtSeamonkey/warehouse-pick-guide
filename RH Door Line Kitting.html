@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Door Line RH Side Kitting Pick Guide</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --or:#E8620A;--ord:#7A3305;
+  --yw:#F5C800;--ywh:#FFE840;--ywd:#4a3800;
+  --bg:#141c28;--pb:#111820;--tx:#dde3ec;--gn:#00e676;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
+  font-family:'Segoe UI',Arial,sans-serif;overflow:hidden}
+#app{display:grid;grid-template-rows:50px 1fr 50px;
+  grid-template-columns:1fr;height:100vh}
+#hd{grid-column:1/-1;background:#0a1220;border-bottom:2px solid var(--yw);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+#hd h1{font-size:.95rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--yw)}
+#hr{display:flex;align-items:center;gap:10px;font-size:.75rem}
+#sd{width:8px;height:8px;border-radius:50%;background:var(--gn);
+  box-shadow:0 0 8px 2px rgba(0,230,118,.7)}
+#lu{color:#445;font-size:.68rem}
+.hb{background:#182435;border:1px solid #2a3a55;color:var(--yw);
+  padding:4px 10px;border-radius:4px;font-size:.7rem;cursor:pointer}
+.hb:hover{background:#203050;border-color:var(--yw)}
+#pr{background:#0d151f;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:6px 8px;overflow:hidden}
+#ft{grid-column:1/-1;background:#080f18;border-top:2px solid #1a2840;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;gap:12px}
+#fl{color:#334;font-size:.68rem;white-space:nowrap}
+#fm{flex:1;text-align:center;font-size:.8rem;font-weight:600;
+  color:var(--yw);letter-spacing:.03em}
+#fx{color:#445;font-size:.65rem;white-space:nowrap;text-align:right}
+.cf{fill:none;stroke:var(--or);stroke-width:5;stroke-linejoin:round}
+.cd{stroke:#5a2800;stroke-width:2.5}
+.cs{stroke:#242424;stroke-width:1;stroke-dasharray:3 3}
+.cg{fill:#181818;stroke:#222;stroke-width:1}
+.cn{font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:900;
+  fill:var(--or);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cb{font-family:'Segoe UI',Arial,sans-serif;font-size:6px;fill:#3a2010;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.cw{fill:#111;stroke:var(--or);stroke-width:2.5}
+.ch{fill:var(--ord)}
+.ck{fill:#1a1a1a;stroke:var(--or);stroke-width:1.5}
+#rsv{width:100%;height:auto;display:block}
+.RF{fill:rgba(20,28,42,.55);stroke:var(--yw);stroke-width:3;stroke-linejoin:round}
+.RS{fill:#0c1824;stroke:#263a52;stroke-width:1.5}
+.RS.on{fill:rgba(245,200,0,.18);stroke:var(--ywh);stroke-width:2.5;
+  animation:rg 1.4s ease-in-out infinite}
+@keyframes rg{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.8))}
+  50%{filter:drop-shadow(0 0 20px rgba(245,200,0,1))}
+}
+/* SN = rack section number (small, top-left of each cell) */
+.SN{font-family:'Segoe UI',Arial,sans-serif;fill:#304a66;font-weight:900;
+  text-anchor:start;dominant-baseline:auto;pointer-events:none}
+.SN.on{fill:rgba(245,200,0,.7)}
+/* SP = part number text inside rack cell */
+.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#3a6e9a;font-weight:400;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
+.SP.on{fill:rgba(240,180,0,.82)}
+/* SD = part description text inside rack cell */
+.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#26506e;font-weight:700;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.SD.on{fill:rgba(245,200,0,.95)}
+/* CPT/CDT = part number / description inside orange cart slots */
+.CPT{font-family:'Segoe UI',Arial,sans-serif;fill:#b04515;font-weight:700;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.CDT{font-family:'Segoe UI',Arial,sans-serif;fill:#7a3820;font-weight:500;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
+.CPT.on{fill:rgba(245,200,0,.9)}.CDT.on{fill:rgba(240,175,0,.75)}
+</style>
+</head>
+<body>
+<div id="app">
+<header id="hd">
+  <h1>&#9881; Door Line RH Side Kitting Pick Guide</h1>
+  <div id="hr">
+    <div id="sd"></div>
+    <span style="color:#556">ACTIVE</span>
+    <span id="lu">&#8212;</span>
+  </div>
+</header>
+<section id="pr">
+  <svg id="rsv" viewBox="0 0 1296 525" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <ellipse cx="648" cy="520" rx="640" ry="5" fill="rgba(0,0,0,.5)"/>
+    <!-- Orange cart (embedded, scaled down) in dead space above slots 9-10 -->
+    <g id="cart-group" transform="translate(350,3) scale(0.6)">
+      <ellipse cx="123" cy="367" rx="100" ry="7" fill="rgba(0,0,0,.4)"/>
+      <rect x="13" y="326" width="220" height="11" rx="2" fill="#180900" stroke="#5a2800" stroke-width="1.2"/>
+      <rect class="cf" x="11" y="11" width="224" height="318" rx="5"/>
+      <line class="cd" x1="67" y1="11" x2="67" y2="329"/>
+      <line class="cd" x1="123" y1="11" x2="123" y2="329"/>
+      <line class="cd" x1="179" y1="11" x2="179" y2="329"/>
+      <line class="cd" x1="11" y1="175" x2="235" y2="175"/>
+      <rect class="cg" x="14" y="14" width="50" height="158"/>
+      <rect class="cg" x="70" y="14" width="50" height="158"/>
+      <rect class="cg" x="126" y="14" width="50" height="158"/>
+      <rect class="cg" x="182" y="14" width="50" height="158"/>
+      <rect class="cg" x="14" y="178" width="50" height="158"/>
+      <rect class="cg" x="70" y="178" width="50" height="158"/>
+      <rect class="cg" x="126" y="178" width="50" height="158"/>
+      <rect class="cg" x="182" y="178" width="50" height="158"/>
+      <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
+      <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
+      <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
+      <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
+      <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
+      <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
+      <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
+      <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
+	  <text class="cn" x="39"  y="199">1</text><text class="cn" x="39"  y="35">2</text>
+	  <text class="cn" x="95"  y="199">3</text><text class="cn" x="95"  y="35">4</text>
+	  <text class="cn" x="151" y="199">5</text><text class="cn" x="151" y="35">6</text>
+	  <text class="cn" x="207" y="199">7</text><text class="cn" x="207" y="35">8</text>
+      <!-- Part number + description per cart slot (populated by JS) -->
+      <text id="cp1" class="CPT" x="39"  y="108"></text>
+      <text id="cd1" class="CDT" x="39"  y="108"></text>
+      <text id="cp2" class="CPT" x="95"  y="108"></text>
+      <text id="cd2" class="CDT" x="95"  y="108"></text>
+      <text id="cp3" class="CPT" x="151" y="108"></text>
+      <text id="cd3" class="CDT" x="151" y="108"></text>
+      <text id="cp4" class="CPT" x="207" y="108"></text>
+      <text id="cd4" class="CDT" x="207" y="108"></text>
+      <text id="cp5" class="CPT" x="39"  y="272"></text>
+      <text id="cd5" class="CDT" x="39"  y="272"></text>
+      <text id="cp6" class="CPT" x="95"  y="272"></text>
+      <text id="cd6" class="CDT" x="95"  y="272"></text>
+      <text id="cp7" class="CPT" x="151" y="272"></text>
+      <text id="cd7" class="CDT" x="151" y="272"></text>
+      <text id="cp8" class="CPT" x="207" y="272"></text>
+      <text id="cd8" class="CDT" x="207" y="272"></text>
+	  <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="39" y="161">TOP&#xB7;L</text>
+	  <text class="cb" x="95" y="323">BOT&#xB7;LC</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
+	  <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="151" y="161">TOP&#xB7;RC</text>
+	  <text class="cb" x="207" y="323">BOT&#xB7;R</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
+      <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
+      <rect class="ck" x="194" y="5" width="10" height="8" rx="2"/>
+      <circle class="cw" cx="43" cy="349" r="13"/><circle class="ch" cx="43" cy="349" r="5"/>
+      <circle class="cw" cx="203" cy="349" r="13"/><circle class="ch" cx="203" cy="349" r="5"/>
+      <line x1="43" y1="336" x2="43" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="30" y1="349" x2="56" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="203" y1="336" x2="203" y2="362" stroke="#5a2800" stroke-width="1.5"/>
+      <line x1="190" y1="349" x2="216" y2="349" stroke="#5a2800" stroke-width="1.5"/>
+    </g>
+    <!-- Per-group frames (common bottom y=515, rack shifted down 80px) -->
+    <rect class="RF" x="4"    y="95"  width="280" height="420" rx="4"/><!-- A -->
+    <rect class="RF" x="284"  y="235" width="280" height="280" rx="4"/><!-- B -->
+    <rect class="RF" x="564"  y="207" width="140" height="308" rx="4"/><!-- C -->
+    <rect class="RF" x="704"  y="179" width="140" height="336" rx="4"/><!-- D -->
+    <rect class="RF" x="844"  y="179" width="336" height="336" rx="4"/><!-- E -->
+    <rect class="RF" x="1180" y="151" width="112" height="364" rx="4"/><!-- F -->
+    <!-- Cells generated by JS -->
+    <g id="badge-layer"></g>
+  </svg>
+</section>
+<footer id="ft">
+  <span id="fl">&#9660; Pick Guide</span>
+  <span id="fm">Loading&#8230;</span>
+  <span id="fx"></span>
+</footer>
+</div>
+<script>
+(function(){
+'use strict';
+
+/* ================================================================
+   PICK DATA — Edit ONLY this section to configure the pick guide.
+   Use your text editor's Find+Replace to swap PLACEHOLDER_ values.
+   ================================================================
+
+   Orange cart part numbers and descriptions (8 slots).
+   Replace PARTNUMBER_SLOT_01 with the actual part number (max 30 chars).
+   Replace PARTDESC_SLOT_01  with the human-readable label (max 30 chars).
+*/
+const ORANGE_PARTS={
+  1:{p:"REAR DBL",d:"N1WB E27406 UL1G1C"},
+  2:{p:"FRONT DBL",d:"N1WB E23942 SF1G1C"},
+  3:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
+  4:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
+  5:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
+  6:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
+  7:{p:"REAR DBL",d:"N1WB E27406 SL1G1C"},
+  8:{p:"FRONT DBL",d:"N1WB E23942 TK1G1C"},
+};
+/*
+   Yellow rack section part numbers and descriptions (39 sections).
+   Replace PARTNUMBER_RACK_01 with the actual part number (max 30 chars).
+   Replace PARTDESC_RACK_01  with the human-readable label (max 30 chars).
+*/
+const RACK_PARTS={
+   1:{p:"PCPE23942IN01.H",d:"INSERT EBONY SOHO"},
+   2:{p:"PCPE27406IN01.H",d:"INSERT EBONY SOHO"},
+   3:{p:"PCPE23942IN03.HA",d:"INSERT EBONY SUPER SMOOTH"},
+   4:{p:"PCPE23942IN03.HA",d:"INSERT EBONY SUPER SMOOTH"},
+   5:{p:"PCPE27406IN03.HA",d:"INSERT EBONY S.SMOOTH"},
+   6:{p:"PCPE27406IN03.HA",d:"INSERT EBONY S.SMOOTH"},
+   7:{p:"",d:""},
+   8:{p:"",d:""},
+   9:{p:"PCPE27406AR01.HA",d:"RR EBONY NO/STITCH"},
+  10:{p:"PCPE27406AR02.HA",d:"RR EBONY W/STITCH"},
+  11:{p:"PCPE27406AR03.HA",d:"RR SAND W/STITCH"},
+  12:{p:"PCPE27406AR04.HA",d:"RR S.SMOOTH"},
+  13:{p:"PCP14017E",d:"FRONT LOCK SWITCH"},
+  14:{p:"",d:""},
+  15:{p:"PCP14E072AF",d:"AMBIENT LIGHT BLUE"},
+  16:{p:"PCP14E072EF",d:"AMBIENT LIGHT ORANGE"},
+  17:{p:"PCPE237W28APIA70",d:"FRONT APPLIQUE"},
+  18:{p:"PCPE237W28APIA71",d:"MAGNALIUM 3659APPLIQUE"},
+  19:{p:"PCPE27406AR05.HA",d:"REAR BLACK PACK"},
+  20:{p:"ASYE23900ABP",d:"BLACK PACK VERSION"},
+  21:{p:"",d:""},
+  22:{p:"PCPE23942APIA30",d:"FRONT IP EXT MIC"},
+  23:{p:"",d:""},
+  24:{p:"",d:""},
+  25:{p:"",d:""},
+  26:{p:"MLDE23942APIA32",d:"FRONT IP EXT MIC"},
+  27:{p:"",d:""},
+  28:{p:"PCPE23942AR01.HA",d:"FRONT EBONY NO-STICH"},
+  29:{p:"PCPE23942AR02.HA",d:"FRONT EBONY W/STITCH"},
+  30:{p:"PCPE23942AR03.HA",d:"FRONT S.SMOOTH"},
+  31:{p:"PCPE23942AR04.HA",d:"FRONT BLACK PACK"},
+  32:{p:"PCPE23942AR05.HA",d:"FRONT SAND W/STITCH"},
+  33:{p:"",d:""},
+  34:{p:"",d:""},
+  35:{p:"",d:""},
+  36:{p:"ASYE23900ASE",d:"Soho Ebony W/ Urban Gray"},
+  37:{p:"ASYE23900ATS",d:"Terra Suede Ebony W/ BLK"},
+  38:{p:"ASYE23900AMIC",d:"Hard Top Roll W REINF"},
+  39:{p:"",d:""}
+
+};
+/*
+   Pick routes: which yellow rack sections illuminate for each cart slot.
+   Replace the array contents with real rack section numbers (5-7 per slot).
+   Example: change [1,2,3,4,5] to [14,17,21,22,28]
+*/
+const PICK_ROUTES={
+  1:[19],
+  2:[38,22,13,32],
+  3:[9],
+  4:[38,22,13,28],
+  5:[9],
+  6:[38,22,13,28],
+  7:[5,12],
+  8:[3,37,17,13,31,16,39],
+};
+/* ================================================================
+   ENGINE — Do not edit below this line.
+   ================================================================ */
+const GEO={
+  // Group A: Slots 1-8 (2 cols; 1-6 are 2.5u×2u, 7-8 are 2.5u×1.5u) — 7.5u tall
+  1:{x:4,y:95,w:140,h:112},
+  2:{x:144,y:95,w:140,h:112},
+  3:{x:4,y:207,w:140,h:112},
+  4:{x:144,y:207,w:140,h:112},
+  5:{x:4,y:319,w:140,h:112},
+  6:{x:144,y:319,w:140,h:112},
+  7:{x:4,y:431,w:140,h:84},
+  8:{x:144,y:431,w:140,h:84},
+  // Group B: Slots 9-12 (2 cols; 2.5u×2.5u) — 5u tall
+  9:{x:284,y:235,w:140,h:140},
+  10:{x:424,y:235,w:140,h:140},
+  11:{x:284,y:375,w:140,h:140},
+  12:{x:424,y:375,w:140,h:140},
+  // Group C: Slots 13-19 (13-18 are 1.25u×1u; 19 is 2.5u×2.5u) — 5.5u tall
+  13:{x:564,y:207,w:140,h:56},//13:{x:564,y:207,w:70,h:56},
+  14:{x:634,y:207,w:0,h:0},//14:{x:634,y:207,w:70,h:56},
+  15:{x:564,y:263,w:70,h:56},
+  16:{x:634,y:263,w:70,h:56},
+  17:{x:564,y:319,w:70,h:56},
+  18:{x:634,y:319,w:70,h:56},
+  19:{x:564,y:375,w:140,h:140},
+  // Group D: Slots 20-27 (2 cols×4 rows; 1.25u×1.5u) — 6u tall
+  20:{x:704,y:179,w:140,h:84},
+  21:{x:774,y:179,w:0,h:84},
+  22:{x:704,y:263,w:140,h:168},
+  23:{x:774,y:263,w:0,h:0},
+  24:{x:704,y:347,w:0,h:0},
+  25:{x:774,y:347,w:0,h:0},
+  26:{x:704,y:431,w:140,h:84},
+  27:{x:774,y:431,w:0,h:0},
+  // Group E: Slots 28-35 (28-32 are 2u×3u; 33 is 2u×1.5u; 34-35 are 1u×1.5u) — 6u tall
+  28:{x:844,y:179,w:112,h:168},
+  29:{x:956,y:179,w:112,h:168},
+  30:{x:1068,y:179,w:112,h:168},
+  31:{x:844,y:347,w:112,h:168},
+  32:{x:956,y:347,w:112,h:168},
+  33:{x:1068,y:347,w:112,h:84},
+  34:{x:1068,y:431,w:56,h:84},
+  35:{x:1124,y:431,w:56,h:84},
+  // Group F: Slots 36-39 (36-38 are 2u×2u stacked; 39 is 2u×0.5u) — 6.5u tall
+  36:{x:1180,y:151,w:112,h:112},
+  37:{x:1180,y:263,w:112,h:112},
+  38:{x:1180,y:375,w:112,h:112},
+  39:{x:1180,y:487,w:112,h:28}
+};
+const ALL=Object.keys(GEO).map(Number);
+const NS='http://www.w3.org/2000/svg';
+const MAX_TEXT_LEN=30;   // max characters displayed per label
+const MIN_FONT_SIZE=4;   // smallest font-size (px) fitText will shrink to
+const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
+const BADGE_RADIUS=10;   // px radius of cart-slot number badges
+const BADGE_PADDING=4;   // px from edge of section to badge centre
+const BADGE_GAP=3;       // px gap between adjacent badges
+const MIN_BADGE_R=4;     // smallest badge radius when auto-shrinking
+
+function mkEl(tag,a){
+  const e=document.createElementNS(NS,tag);
+  for(const[k,v]of Object.entries(a))e.setAttribute(k,v);
+  return e;
+}
+
+/** Shrink font-size of an SVG text element until it fits within maxW pixels. */
+function fitText(el, maxW) {
+  if (typeof el.getComputedTextLength !== 'function') return;
+  let sz = parseFloat(el.getAttribute('font-size')) || 10;
+  while (sz > MIN_FONT_SIZE && el.getComputedTextLength() > maxW) {
+    sz = Math.max(MIN_FONT_SIZE, sz - FONT_SHRINK_STEP);
+    el.setAttribute('font-size', sz.toFixed(1));
+  }
+}
+
+/** Dynamically create all rack cell rects and text elements from GEO. */
+function generateRackCells(){
+  const svg=document.getElementById('rsv');
+  const bl=document.getElementById('badge-layer');
+  const NARROW_W=90;       // cells narrower than this get smaller fonts (wide≥90: 112-140px, narrow<90: 28-84px)
+  const LABEL_X=5;         // px offset from cell left for section number label
+  const LABEL_Y=12;        // px offset from cell top for section number label
+  const MIN_TEXT_GAP = 10; // minimum px between part# and desc baselines
+  const BOTTOM_PAD   = 6;  // minimum px from desc baseline to cell bottom
+  const frag = document.createDocumentFragment();
+  ALL.forEach(n => {
+    const g = GEO[n];
+    const narrow = g.w < NARROW_W;
+    const fs  = narrow ? 9  : 10;
+    const pfs = narrow ? 8  : 10;
+    const dfs = narrow ? 10 : 12;
+    // Clamp desc to stay inside cell, then place part# above it by MIN_TEXT_GAP
+    const descY = Math.min(g.y + g.h * 0.89, g.y + g.h - BOTTOM_PAD);
+    const partY = Math.min(g.y + g.h * 0.75, descY - MIN_TEXT_GAP);
+    // Cell rect
+    frag.appendChild(mkEl('rect', {id:'s'+n, class:'RS', x:g.x, y:g.y, width:g.w, height:g.h}));
+    // Section number label (top-left)
+    const lbl = mkEl('text', {id:'l'+n, class:'SN', x:g.x+LABEL_X, y:g.y+LABEL_Y, 'font-size':fs});
+    lbl.textContent = n;
+    frag.appendChild(lbl);
+    // Part number text (bottom area)
+    frag.appendChild(mkEl('text', {id:'p'+n, class:'SP', x:g.x+g.w/2, y:partY, 'font-size':pfs}));
+    // Description text (bottom area, below part)
+    frag.appendChild(mkEl('text', {id:'d'+n, class:'SD', x:g.x+g.w/2, y:descY, 'font-size':dfs}));
+  });
+  svg.insertBefore(frag,bl);
+}
+
+/** Populate part-number and description text into every rack section. */
+function renderRackLabels(){
+  ALL.forEach(n=>{
+    const g=GEO[n];
+    const rp=RACK_PARTS[n]||{p:'',d:''};
+    const pel=document.getElementById('p'+n);
+    const del_=document.getElementById('d'+n);
+    if(pel){
+      pel.textContent=String(rp.p).slice(0,MAX_TEXT_LEN);
+      fitText(pel,g.w-8);
+    }
+    if(del_){
+      del_.textContent=String(rp.d).slice(0,MAX_TEXT_LEN);
+      fitText(del_,g.w-8);
+    }
+  });
+}
+
+/** Populate part-number and description text into every orange cart slot (vertical). */
+function renderCartLabels(){
+  const SLOT_W=50,SLOT_H=158,NUM_H=35;
+  const AVAIL=SLOT_H-NUM_H-5;
+  const COL_P=0.30,COL_D=0.70;
+  const P_FS=15,D_FS=12;
+  const SLOT_POS={1:{col:0,row:1},2:{col:0,row:0},3:{col:1,row:1},4:{col:1,row:0},5:{col:2,row:1},6:{col:2,row:0},7:{col:3,row:1},8:{col:3,row:0}};
+  for(let s=1;s<=8;s++){
+    const op=ORANGE_PARTS[s]||{p:'',d:''};
+    const sp=SLOT_POS[s];
+    const col=sp.col;
+    const sx=14+col*56;
+    const sy=sp.row===0?14:178;
+    const pel=document.getElementById('cp'+s);
+    const del_=document.getElementById('cd'+s);
+    if(pel){
+      pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
+      const px=sx+SLOT_W*COL_P;
+      const py=sy+NUM_H+AVAIL/2;
+      pel.setAttribute('x',px);
+      pel.setAttribute('y',py);
+      pel.setAttribute('font-size',P_FS);
+      pel.setAttribute('transform','rotate(90,'+px+','+py+')');
+      fitText(pel,AVAIL);
+    }
+    if(del_){
+      del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
+      const dx=sx+SLOT_W*COL_D;
+      const dy=sy+NUM_H+AVAIL/2;
+      del_.setAttribute('x',dx);
+      del_.setAttribute('y',dy);
+      del_.setAttribute('font-size',D_FS);
+      del_.setAttribute('transform','rotate(90,'+dx+','+dy+')');
+      fitText(del_,AVAIL);
+    }
+  }
+}
+
+/** Draw orange cart-slot number badges on an illuminated rack section. */
+function drawBadges(slotNum,cartNums){
+  const g=GEO[slotNum];if(!g)return;
+  const layer=document.getElementById('badge-layer');
+  const sorted=[...cartNums].sort((a,b)=>a-b);
+  const count=sorted.length;if(!count)return;
+  // Compute badge radius: start at standard, shrink if needed to fit all badges
+  let R=BADGE_RADIUS,GAP=BADGE_GAP,PAD=BADGE_PADDING;
+  for(let i=0;i<20&&R>MIN_BADGE_R;i++){
+    const step=R*2+GAP;
+    const pR=Math.max(1,Math.floor((g.w-PAD*2+GAP)/step));
+    const rows=Math.ceil(count/pR);
+    if(PAD*2+rows*R*2+(rows-1)*GAP<=g.h) break;
+    R-=0.5;GAP=BADGE_GAP*(R/BADGE_RADIUS);PAD=BADGE_PADDING*(R/BADGE_RADIUS);
+  }
+  const STEP=R*2+GAP;
+  const usableW=g.w-PAD*2;
+  const perRow=Math.max(1,Math.floor((usableW+GAP)/STEP));
+  sorted.forEach((num,i)=>{
+    const col=i%perRow;
+    const row=Math.floor(i/perRow);
+    const rowStart=row*perRow;
+    const inThisRow=Math.min(perRow,count-rowStart);
+    const rowWidth=inThisRow*R*2+(inThisRow-1)*GAP;
+    const rowStartX=g.x+(g.w-rowWidth)/2+R;
+    const cx=rowStartX+col*STEP;
+    const cy=g.y+PAD+R+row*STEP;
+    if(cy+R>g.y+g.h)return;
+    const grp=document.createElementNS(NS,'g');
+    const sw=Math.max(0.8,1.5*(R/BADGE_RADIUS));
+    const circle=mkEl('circle',{fill:'#E8620A',stroke:'#000','stroke-width':sw.toFixed(1),cx,cy,r:R});
+    const fs=Math.max(5,Math.round(9*(R/BADGE_RADIUS)));
+    const text=mkEl('text',{'font-family':'Arial,sans-serif','font-size':fs,'font-weight':'900',fill:'#fff','text-anchor':'middle','dominant-baseline':'central','pointer-events':'none',x:cx,y:cy});
+    text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
+  });
+}
+
+/** Apply active highlights and badges from PICK_ROUTES. */
+function applyPickRoutes(){
+  // Clear all active states
+  ALL.forEach(n=>{
+    ['s','l','p','d'].forEach(pfx=>{
+      const el=document.getElementById(pfx+n);
+      if(el)el.classList.remove('on');
+    });
+  });
+  const bl=document.getElementById('badge-layer');
+  if(bl)bl.innerHTML='';
+
+  // Build section→[cartSlots] reverse map
+  const map={};
+  for(const[slot,racks]of Object.entries(PICK_ROUTES)){
+    racks.forEach(rn=>{
+      const k=Number(rn);
+      if(!map[k])map[k]=[];
+      if(!map[k].includes(Number(slot)))map[k].push(Number(slot));
+    });
+  }
+
+  Object.entries(map).forEach(([rn,slots])=>{
+    const n=Number(rn);
+    ['s','l','p','d'].forEach(pfx=>{
+      const el=document.getElementById(pfx+n);
+      if(el)el.classList.add('on');
+    });
+    drawBadges(n,slots);
+  });
+
+  // Footer status
+  const activeSlots=Object.keys(PICK_ROUTES).map(Number).filter(s=>{
+    const r=PICK_ROUTES[s];return r&&r.length>0;
+  });
+  document.getElementById('fm').textContent=
+    activeSlots.length>0
+      ?'Pick from highlighted sections — place parts in numbered cart slots'
+      :'No active picks configured';
+
+  const partList=Object.keys(ORANGE_PARTS).map(s=>{
+    const op=ORANGE_PARTS[s];
+    return op&&op.p?s+':'+op.p:null;
+  }).filter(Boolean).join(' · ');
+  document.getElementById('fx').textContent=partList;
+}
+
+// Boot
+generateRackCells();
+renderRackLabels();
+renderCartLabels();
+applyPickRoutes();
+document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+})();
+</script>
+</body>
+</html>
