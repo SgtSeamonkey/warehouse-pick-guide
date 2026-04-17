@@ -592,11 +592,9 @@ function renderRackImages(){
     if(!imgEl)return;
     const src=RACK_IMAGES[n]||'';
     if(src){
-      imgEl.setAttributeNS('http://www.w3.org/1999/xlink','xlink:href',src);
       imgEl.setAttribute('href',src);
     }else{
       imgEl.removeAttribute('href');
-      imgEl.removeAttributeNS('http://www.w3.org/1999/xlink','href');
     }
   });
 }
