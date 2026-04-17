@@ -91,8 +91,22 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 #edit-modal .btn-save{background:var(--yw);color:#1a2540;font-weight:700}
 #edit-modal .btn-cancel{background:#2a3a55;color:var(--tx)}
 #edit-modal .btn-remove{background:#6a2020;color:#fff;font-size:.7rem}
+#edit-modal .btn-reset{background:#6a4020;color:#fff;font-size:.7rem}
 .dim-row{display:flex;gap:8px}
 .dim-row>div{flex:1}
+/* Slot picker modal */
+#slot-picker{position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
+#slot-picker .modal-body{background:#1a2540;border:2px solid var(--yw);border-radius:8px;
+  padding:20px;min-width:340px;max-width:90vw;max-height:80vh;color:var(--tx);overflow-y:auto}
+#slot-picker h2{margin:0 0 12px;font-size:1rem;color:var(--yw)}
+#slot-picker .slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px}
+#slot-picker .slot-btn{padding:8px 4px;border:1px solid #2a3a55;border-radius:4px;
+  background:#0d151f;color:var(--tx);font-size:.8rem;cursor:pointer;text-align:center}
+#slot-picker .slot-btn:hover{background:#203050;border-color:var(--yw)}
+#slot-picker .slot-btn.zero{border-color:#6a2020;color:#ff6666}
+#slot-picker .sp-close{margin-top:12px;padding:6px 16px;border:none;border-radius:4px;
+  font-size:.8rem;cursor:pointer;background:#2a3a55;color:var(--tx)}
 </style>
 </head>
 <body>
@@ -100,6 +114,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 <header id="hd">
   <h1>&#9881; Door Line LH Side Kitting Pick Guide</h1>
   <div id="hr">
+    <button class="hb" id="btn-slots">&#9998; Edit Slots</button>
+    <button class="hb" id="btn-export">&#8681; Export</button>
+    <button class="hb" id="btn-import">&#8679; Import</button>
+    <input type="file" id="import-file" accept=".json" style="display:none">
     <div id="sd"></div>
     <span style="color:#556">ACTIVE</span>
     <span id="lu">&#8212;</span>
@@ -201,10 +219,19 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     <input type="file" id="em-img" accept="image/*">
     <img id="em-preview" class="img-preview" alt="Preview" style="display:none">
     <div class="btn-row">
+      <button class="btn btn-reset" id="em-reset">Reset to Default</button>
       <button class="btn btn-remove" id="em-rm-img" style="display:none">Remove Image</button>
       <button class="btn btn-cancel" id="em-cancel">Cancel</button>
       <button class="btn btn-save" id="em-save">Save</button>
     </div>
+  </div>
+</div>
+<div id="slot-picker" style="display:none">
+  <div class="modal-body">
+    <h2>Select a Slot to Edit</h2>
+    <p style="font-size:.7rem;color:#667;margin-bottom:8px">Red slots have zero size and cannot be clicked on the rack.</p>
+    <div class="slot-grid" id="sp-grid"></div>
+    <div style="text-align:right"><button class="sp-close" id="sp-close">Close</button></div>
   </div>
 </div>
 </div>
@@ -350,6 +377,9 @@ const GEO={
   38:{x:1012,y:431,w:140,h:84},
   39:{x:1152,y:431,w:140,h:84}
 };
+/* Snapshot of original GEO values so slots can be reset to defaults */
+const DEFAULT_GEO={};
+Object.keys(GEO).forEach(k=>{DEFAULT_GEO[k]={x:GEO[k].x,y:GEO[k].y,w:GEO[k].w,h:GEO[k].h};});
 const ALL=Object.keys(GEO).map(Number);
 const NS='http://www.w3.org/2000/svg';
 const MAX_TEXT_LEN=30;   // max characters displayed per label
@@ -617,6 +647,7 @@ function setupClickHandlers(){
 
 /* ---- Edit modal --------------------------------------------------- */
 let currentEditSlot=null;
+let modalMouseDownOnBackdrop=false;
 
 function openEditModal(n){
   currentEditSlot=n;
@@ -653,6 +684,16 @@ function saveEditModal(){
   closeEditModal();
 }
 
+function resetSlotToDefault(){
+  if(currentEditSlot===null)return;
+  const n=currentEditSlot;
+  const def=DEFAULT_GEO[n];
+  if(def){
+    document.getElementById('em-w').value=def.w;
+    document.getElementById('em-h').value=def.h;
+  }
+}
+
 function handleImageUpload(e){
   const file=e.target.files&&e.target.files[0];
   if(!file||currentEditSlot===null)return;
@@ -674,6 +715,78 @@ function removeImage(){
   document.getElementById('em-rm-img').style.display='none';
 }
 
+/* ---- Slot picker -------------------------------------------------- */
+function openSlotPicker(){
+  const grid=document.getElementById('sp-grid');
+  grid.innerHTML='';
+  ALL.forEach(n=>{
+    const btn=document.createElement('button');
+    btn.className='slot-btn';
+    const g=GEO[n];
+    if(g.w===0||g.h===0)btn.classList.add('zero');
+    btn.textContent=n;
+    btn.addEventListener('click',()=>{closeSlotPicker();openEditModal(n);});
+    grid.appendChild(btn);
+  });
+  document.getElementById('slot-picker').style.display='flex';
+}
+function closeSlotPicker(){
+  document.getElementById('slot-picker').style.display='none';
+}
+
+/* ---- Export / Import ----------------------------------------------- */
+function exportSettings(){
+  const data={parts:{},geo:{},images:{}};
+  ALL.forEach(n=>{
+    data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
+    data.geo[n]={w:GEO[n].w,h:GEO[n].h};
+    if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+  });
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=STORAGE_KEY+'-settings.json';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+function importSettings(e){
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(evt){
+    try{
+      const saved=JSON.parse(evt.target.result);
+      if(saved.parts){
+        Object.entries(saved.parts).forEach(([k,v])=>{
+          const n=Number(k);
+          if(RACK_PARTS[n]){
+            if(v.p!==undefined)RACK_PARTS[n].p=v.p;
+            if(v.d!==undefined)RACK_PARTS[n].d=v.d;
+          }
+        });
+      }
+      if(saved.geo){
+        Object.entries(saved.geo).forEach(([k,v])=>{
+          const n=Number(k);
+          if(GEO[n]){
+            if(v.w!==undefined)GEO[n].w=v.w;
+            if(v.h!==undefined)GEO[n].h=v.h;
+          }
+        });
+      }
+      if(saved.images){
+        Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
+        Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
+      }
+      saveToStorage();
+      fullRerender();
+    }catch(err){console.warn('import error',err);alert('Invalid settings file.');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
 function fullRerender(){
   document.getElementById('rack-cells').innerHTML='';
   document.getElementById('badge-layer').innerHTML='';
@@ -693,11 +806,34 @@ applyPickRoutes();
 setupClickHandlers();
 document.getElementById('em-save').addEventListener('click',saveEditModal);
 document.getElementById('em-cancel').addEventListener('click',closeEditModal);
+document.getElementById('em-reset').addEventListener('click',resetSlotToDefault);
 document.getElementById('em-img').addEventListener('change',handleImageUpload);
 document.getElementById('em-rm-img').addEventListener('click',removeImage);
-document.getElementById('edit-modal').addEventListener('click',function(e){
-  if(e.target===this)closeEditModal();
+// Fix: only close modal when BOTH mousedown and mouseup happen on the backdrop
+(function(){
+  const modal=document.getElementById('edit-modal');
+  modal.addEventListener('mousedown',function(e){modalMouseDownOnBackdrop=(e.target===modal);});
+  modal.addEventListener('mouseup',function(e){
+    if(modalMouseDownOnBackdrop&&e.target===modal)closeEditModal();
+    modalMouseDownOnBackdrop=false;
+  });
+})();
+document.getElementById('btn-slots').addEventListener('click',openSlotPicker);
+document.getElementById('sp-close').addEventListener('click',closeSlotPicker);
+(function(){
+  const picker=document.getElementById('slot-picker');
+  let spMouseDown=false;
+  picker.addEventListener('mousedown',function(e){spMouseDown=(e.target===picker);});
+  picker.addEventListener('mouseup',function(e){
+    if(spMouseDown&&e.target===picker)closeSlotPicker();
+    spMouseDown=false;
+  });
+})();
+document.getElementById('btn-export').addEventListener('click',exportSettings);
+document.getElementById('btn-import').addEventListener('click',function(){
+  document.getElementById('import-file').click();
 });
+document.getElementById('import-file').addEventListener('change',importSettings);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
 })();
 </script>
