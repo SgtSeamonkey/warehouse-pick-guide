@@ -264,44 +264,44 @@ const ORANGE_PARTS={
    Replace PARTDESC_RACK_01  with the human-readable label (max 30 chars).
 */
 const RACK_PARTS={
-   1:{p:"PCPE23942IN01.H",d:"INSERT EBONY SOHO"},
-   2:{p:"PCPE27406IN01.H",d:"INSERT EBONY SOHO"},
-   3:{p:"PCPE23942IN03.HA",d:"INSERT EBONY SUPER SMOOTH"},
-   4:{p:"PCPE23942IN03.HA",d:"INSERT EBONY SUPER SMOOTH"},
-   5:{p:"PCPE27406IN03.HA",d:"INSERT EBONY S.SMOOTH"},
-   6:{p:"PCPE27406IN03.HA",d:"INSERT EBONY S.SMOOTH"},
+   1:{p:"PCPE23942IN01.H",d:"FRNT INSERT EBONY SOHO"},
+   2:{p:"",d:""},
+   3:{p:"PCPE23942IN03.H",d:"FRNT INSERT EBONY S.SMOOTH"},
+   4:{p:"",d:""},
+   5:{p:"PCPE27406IN03.H",d:"REAR INSERT EBONY S.SMOOTH"},
+   6:{p:"",d:""},
    7:{p:"",d:""},
    8:{p:"",d:""},
-   9:{p:"PCPE27406AR01.HA",d:"RR EBONY NO/STITCH"},
-  10:{p:"PCPE27406AR02.HA",d:"RR EBONY W/STITCH"},
-  11:{p:"PCPE27406AR03.HA",d:"RR SAND W/STITCH"},
-  12:{p:"PCPE27406AR04.HA",d:"RR S.SMOOTH"},
+   9:{p:"PCPE27406AR01.HA",d:"REAR ARM EBONY"},
+  10:{p:"PCPE27406AR02.HA",d:"REAR ARM EBONY STITCH"},
+  11:{p:"PCPE27406AR03.HA",d:"REAR ARM SAND STITCH"},
+  12:{p:"PCPE27406AR04.HA",d:"REAR ARM EBONY S.SMOOTH"},
   13:{p:"PCP14017E",d:"FRONT LOCK SWITCH"},
   14:{p:"",d:""},
-  15:{p:"PCP14E072AF",d:"AMBIENT LIGHT BLUE"},
-  16:{p:"PCP14E072EF",d:"AMBIENT LIGHT ORANGE"},
-  17:{p:"PCPE237W28APIA70",d:"FRONT APPLIQUE"},
-  18:{p:"PCPE237W28APIA71",d:"MAGNALIUM 3659APPLIQUE"},
-  19:{p:"PCPE27406AR05.HA",d:"REAR BLACK PACK"},
-  20:{p:"PCPE23942AR01.HA",d:"FRONT EBONY NO-STICH"},
-  21:{p:"PCPE23942AR02.HA",d:"FRONT EBONY W/STITCH"},
-  22:{p:"PCPE23942AR03.HA",d:"FRONT S.SMOOTH"},
-  23:{p:"PCPE23942AR04.HA",d:"FRONT BLACK PACK"},
-  24:{p:"PCPE23942AR05.HA",d:"FRONT SAND W/STITCH"},
+  15:{p:"PCP14E072AF",d:"BLUE LIGHT"},
+  16:{p:"PCP14E072EF",d:"ORANGE LIGHT"},
+  17:{p:"PCPE237W28APIA70",d:"P.GREY APPLIQUE"},
+  18:{p:"PCPE237W28APIA71",d:"MAG. APPLIQUE"},
+  19:{p:"PCPE27406AR05.HA",d:"REAR ARM BLACK PACK"},
+  20:{p:"PCPE23942AR01.HA",d:"FRNT ARM EBONY"},
+  21:{p:"PCPE23942AR02.HA",d:"FRNT ARM EBONY STITCH"},
+  22:{p:"PCPE23942AR03.HA",d:"FRNT ARM S.SMOOTH"},
+  23:{p:"PCPE23942AR04.HA",d:"FRNT ARM BLACK PACK"},
+  24:{p:"PCPE23942AR05.HA",d:"FRNT ARM SAND STITCH"},
   25:{p:"",d:""},
   26:{p:"",d:""},
   27:{p:"",d:""},
-  28:{p:"ASYE23900ASE",d:"Soho Ebony W/ Urban Gray"},
-  29:{p:"ASYE23900ATS",d:"Terra Suede Ebony W/ BLK"},
-  30:{p:"ASYE23900AMIC",d:"Hard Top Roll W REINF"},
+  28:{p:"ASYE23900ASE",d:"SOFT TOP ROLL EB.SOHO, U.GRAY STITCH"},
+  29:{p:"ASYE23900ATS",d:"SOFT TOP ROLL EB.T.SUEDE, BLACK STITCH"},
+  30:{p:"ASYE23900AMIC",d:"HARD TOP ROLL W/ REINF"},
   31:{p:"",d:""},
-  32:{p:"ASYE23900ABP",d:"BLACK PACK VERSION"},
+  32:{p:"ASYE23900ABP",d:"SOFT TOP ROLL EB.SOHO, BLACK STITCH"},
   33:{p:"",d:""},
-  34:{p:"PCPE23942APIA30",d:"FRONT IP EXT MIC"},
+  34:{p:"PCPE23942APIA30",d:"FRONT MIC"},
   35:{p:"",d:""},
   36:{p:"",d:""},
   37:{p:"",d:""},
-  38:{p:"MLDE23942APIA32",d:"FRONT IP EXT MIC"},
+  38:{p:"MLDE23942APIA32",d:"FRONT MIC, MEMORY"},
   39:{p:"",d:""}
 };
 /*
@@ -324,12 +324,12 @@ const PICK_ROUTES={
    ================================================================ */
 const GEO={
   // Rack A: Slots 1-8 (unchanged)
-  1:{x:4,y:95,w:140,h:112},
-  2:{x:144,y:95,w:140,h:112},
-  3:{x:4,y:207,w:140,h:112},
-  4:{x:144,y:207,w:140,h:112},
-  5:{x:4,y:319,w:140,h:112},
-  6:{x:144,y:319,w:140,h:112},
+  1:{x:4,y:95,w:280,h:112},
+  2:{x:144,y:95,w:0,h:112},
+  3:{x:4,y:207,w:280,h:112},
+  4:{x:144,y:207,w:0,h:112},
+  5:{x:4,y:319,w:280,h:112},
+  6:{x:144,y:319,w:0,h:112},
   7:{x:4,y:431,w:140,h:84},
   8:{x:144,y:431,w:140,h:84},
   // Rack B: Slots 9-19 (unchanged)
@@ -345,28 +345,28 @@ const GEO={
   18:{x:634,y:319,w:70,h:56},
   19:{x:564,y:375,w:140,h:140},
   // Old Rack D (28-35) → new 20-27, shifted left 140px
-  20:{x:704,y:179,w:112,h:168},  // was 28 at x=844
-  21:{x:816,y:179,w:112,h:168},  // was 29 at x=956
-  22:{x:928,y:179,w:112,h:168},  // was 30 at x=1068
-  23:{x:704,y:347,w:112,h:168},  // was 31 at x=844
-  24:{x:816,y:347,w:112,h:168},  // was 32 at x=956
-  25:{x:928,y:347,w:112,h:84},   // was 33 at x=1068
-  26:{x:928,y:431,w:56,h:84},    // was 34 at x=1068
-  27:{x:984,y:431,w:56,h:84},    // was 35 at x=1124
+  20:{x:704,y:179,w:112,h:168},
+  21:{x:816,y:179,w:112,h:168},
+  22:{x:928,y:179,w:112,h:168},
+  23:{x:704,y:347,w:112,h:168},
+  24:{x:816,y:347,w:112,h:168},
+  25:{x:928,y:347,w:112,h:84},
+  26:{x:928,y:431,w:56,h:84},
+  27:{x:984,y:431,w:56,h:84},
   // Old Rack D cont. (36-39) → new 28-31, shifted left 140px
-  28:{x:1040,y:151,w:112,h:112}, // was 36 at x=1180
-  29:{x:1040,y:263,w:112,h:112}, // was 37 at x=1180
-  30:{x:1040,y:375,w:112,h:112}, // was 38 at x=1180
-  31:{x:1040,y:487,w:112,h:28},  // was 39 at x=1180
+  28:{x:1040,y:151,w:112,h:112},
+  29:{x:1040,y:263,w:112,h:112},
+  30:{x:1040,y:375,w:112,h:112},
+  31:{x:1040,y:487,w:112,h:28},
   // Old Rack C (20-27) → new 32-39, moved to right edge at x=1152
-  32:{x:1152,y:179,w:140,h:84},  // was 20 at x=704
-  33:{x:1222,y:179,w:0,h:84},    // was 21 at x=774
-  34:{x:1152,y:263,w:140,h:168},  // was 22 at x=704
-  35:{x:1222,y:263,w:0,h:0},    // was 23 at x=774
-  36:{x:1152,y:347,w:0,h:0},  // was 24 at x=704
-  37:{x:1222,y:347,w:0,h:0},    // was 25 at x=774
-  38:{x:1152,y:431,w:140,h:84},   // was 26 at x=704
-  39:{x:1222,y:431,w:0,h:0}    // was 27 at x=774
+  32:{x:1152,y:179,w:140,h:84},
+  33:{x:1222,y:179,w:0,h:84},
+  34:{x:1152,y:263,w:140,h:168},
+  35:{x:1222,y:263,w:0,h:0},
+  36:{x:1152,y:347,w:0,h:0},
+  37:{x:1222,y:347,w:0,h:0},
+  38:{x:1152,y:431,w:140,h:84},
+  39:{x:1222,y:431,w:0,h:0}
 };
 /* Snapshot of original GEO values so slots can be reset to defaults */
 const DEFAULT_GEO={};
