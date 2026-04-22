@@ -151,10 +151,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
       <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
       <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
       <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
-	  <text class="cn" x="39"  y="199">1</text><text class="cn" x="39"  y="35">2</text>
-	  <text class="cn" x="95"  y="199">3</text><text class="cn" x="95"  y="35">4</text>
-	  <text class="cn" x="151" y="199">5</text><text class="cn" x="151" y="35">6</text>
-	  <text class="cn" x="207" y="199">7</text><text class="cn" x="207" y="35">8</text>
+	  <text class="cn" x="39"  y="199">7</text><text class="cn" x="39"  y="35">8</text>
+	  <text class="cn" x="95"  y="199">5</text><text class="cn" x="95"  y="35">6</text>
+	  <text class="cn" x="151" y="199">3</text><text class="cn" x="151" y="35">4</text>
+	  <text class="cn" x="207" y="199">1</text><text class="cn" x="207" y="35">2</text>
       <!-- Part number + description per cart slot (populated by JS) -->
       <text id="cp1" class="CPT" x="39"  y="108"></text>
       <text id="cd1" class="CDT" x="39"  y="108"></text>
@@ -249,14 +249,14 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
    Replace PARTDESC_SLOT_01  with the human-readable label (max 30 chars).
 */
 const ORANGE_PARTS={
-  1:{p:"REAR DBL",d:"N1WB E27406 UL1G1C"},
-  2:{p:"FRONT DBL",d:"N1WB E23942 SF1G1C"},
+  1:{p:"REAR DBL",d:"N1WB E27406 SL1G1C"},
+  2:{p:"FRONT DBL",d:"N1WB E23942 TK1G1C"},
   3:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
   4:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
   5:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
   6:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
-  7:{p:"REAR DBL",d:"N1WB E27406 SL1G1C"},
-  8:{p:"FRONT DBL",d:"N1WB E23942 TK1G1C"},
+  7:{p:"REAR DBL",d:"N1WB E27406 UL1G1C"},
+  8:{p:"FRONT DBL",d:"N1WB E23942 SF1G1C"},
 };
 /*
    Yellow rack section part numbers and descriptions (39 sections).
@@ -310,14 +310,14 @@ const RACK_PARTS={
    Example: change [1,2,3,4,5] to [14,17,21,22,28]
 */
 const PICK_ROUTES={
-  1:[19],
-  2:[30,34,13,24],
+  1:[5,12],
+  2:[3,29,17,13,23,16,31],
   3:[9],
   4:[30,34,13,20],
   5:[9],
   6:[30,34,13,20],
-  7:[5,12],
-  8:[3,29,17,13,23,16,31],
+  7:[19],
+  8:[30,34,13,24],
 };
 /* ================================================================
    ENGINE — Do not edit below this line.
@@ -499,7 +499,7 @@ function renderCartLabels(){
   const AVAIL=SLOT_H-NUM_H-5;
   const COL_P=0.30,COL_D=0.70;
   const P_FS=15,D_FS=12;
-  const SLOT_POS={1:{col:0,row:1},2:{col:0,row:0},3:{col:1,row:1},4:{col:1,row:0},5:{col:2,row:1},6:{col:2,row:0},7:{col:3,row:1},8:{col:3,row:0}};
+  const SLOT_POS={1:{col:3,row:1},2:{col:3,row:0},3:{col:2,row:1},4:{col:2,row:0},5:{col:1,row:1},6:{col:1,row:0},7:{col:0,row:1},8:{col:0,row:0}};
   for(let s=1;s<=8;s++){
     const op=ORANGE_PARTS[s]||{p:'',d:''};
     const sp=SLOT_POS[s];
