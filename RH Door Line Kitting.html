@@ -770,12 +770,15 @@ function fullRerender(){
   setupClickHandlers();
 }
 
-// Boot — rack geometry, labels and images render immediately from RACK_PARTS/GEO.
-// renderCartLabels() and applyPickRoutes() are deferred to pollLiveData() below,
-// which fires at once and supplies ORANGE_PARTS and PICK_ROUTES from the data file.
+// Boot — all rendering runs synchronously so the page always shows a
+// consistent initial state (empty cart / "No active picks configured")
+// regardless of whether the async data fetch succeeds.
+// pollLiveData() below updates ORANGE_PARTS/PICK_ROUTES then re-renders.
 generateRackCells();
 renderRackLabels();
 renderRackImages();
+renderCartLabels();
+applyPickRoutes();
 setupClickHandlers();
 document.getElementById('em-save').addEventListener('click',saveEditModal);
 document.getElementById('em-cancel').addEventListener('click',closeEditModal);
@@ -814,10 +817,14 @@ document.getElementById('lu').textContent=new Date().toLocaleTimeString();
    regenerate. The main HTML page is never touched, so all yellow-rack
    edits (labels, sizes, images) in localStorage are never at risk.
    Fires immediately on page load to populate ORANGE_PARTS/PICK_ROUTES,
-   then repeats every 15 s.  Requires HTTP/HTTPS; silently skips on
-   file:// URLs where fetch() is blocked by the browser.
+   then repeats every 15 s.  Requires HTTP/HTTPS; shows a status message
+   on file:// URLs where fetch() is blocked by the browser.
    --------------------------------------------------------------------- */
 async function pollLiveData(){
+  if(location.protocol==='file:'){
+    document.getElementById('fm').textContent='Live data requires a web server (not file://)';
+    return;
+  }
   try{
     const resp=await fetch('RH-live-data.js',{cache:'no-cache'});
     if(!resp.ok)return;
