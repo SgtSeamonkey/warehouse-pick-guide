@@ -240,24 +240,19 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 'use strict';
 
 /* ================================================================
-   PICK DATA — Edit ONLY this section to configure the pick guide.
-   Use your text editor's Find+Replace to swap PLACEHOLDER_ values.
-   ================================================================
-
-   Orange cart part numbers and descriptions (8 slots).
-   Replace PARTNUMBER_SLOT_01 with the actual part number (max 30 chars).
-   Replace PARTDESC_SLOT_01  with the human-readable label (max 30 chars).
-*/
-const ORANGE_PARTS={
-  1:{p:"FRONT DBL",d:"N1WB E23942 TK1G1C"},
-  2:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
-  3:{p:"REAR DBL",d:"N1WB E27406 SL1G1C"},
-  4:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
-  5:{p:"FRONT DBL",d:"N1WB E23942 HF3ZHE"},
-  6:{p:"FRONT DBL",d:"N1WB E23942 SF1G1C"},
-  7:{p:"REAR DBL",d:"N1WB E27406 CL3ZHE"},
-  8:{p:"REAR DBL",d:"N1WB E27406 UL1G1C"},
-};
+   PICK DATA
+   - ORANGE_PARTS and PICK_ROUTES are loaded from LH-live-data.js.
+     The external pick system regenerates ONLY that file; this HTML
+     page is never touched by the external system, so all yellow rack
+     edits (labels, sizes, images) survive indefinitely.
+   - RACK_PARTS below are the yellow rack baseline labels.
+     Edit via the click-to-edit UI on each slot; changes persist in
+     localStorage and survive page reloads and data-file updates.
+   ================================================================ */
+/* Orange cart slots and pick routes — populated by the first pollLiveData()
+   call below (async, fires immediately at boot from LH-live-data.js). */
+const ORANGE_PARTS={};
+const PICK_ROUTES={};
 /*
    Yellow rack section part numbers and descriptions (39 sections).
    Replace PARTNUMBER_RACK_01 with the actual part number (max 30 chars).
@@ -312,21 +307,7 @@ const RACK_PARTS={
   //WE NEED TO ADD THESE PART NUMBERS: PCPE27406AR03.HA, PCPE237WAPIA71, PCP14017E, ASYE23900ABP
 
 };
-/*
-   Pick routes: which yellow rack sections illuminate for each cart slot.
-   Replace the array contents with real rack section numbers (5-7 per slot).
-   Example: change [1,2,3,4,5] to [14,17,21,22,28]
-*/
-const PICK_ROUTES={
-  1:[35,10,29,12,15,12,3],
-  2:[11,13,12,1],
-  3:[37,24],
-  4:[21],
-  5:[11,13,12,1],
-  6:[11,13,4,12],
-  7:[21],
-  8:[23],
-};
+
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
@@ -836,78 +817,31 @@ document.getElementById('btn-import').addEventListener('click',function(){
 document.getElementById('import-file').addEventListener('change',importSettings);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
 
-/* ---- Live data polling (replaces need for external page refresh) --------
-   Every 15 s the page fetches its own HTML, re-parses the three live-data
-   objects (ORANGE_PARTS, RACK_PARTS, PICK_ROUTES) from the updated file, and
-   re-renders — without ever reloading the page.  User customisations stored
-   in localStorage (slot labels, sizes, images) are re-applied on top so they
-   are never lost.  Requires the page to be served over HTTP/HTTPS; fetch() is
-   blocked by browsers for file:// URLs, in which case polling silently skips.
-   ------------------------------------------------------------------------- */
-function extractPickObj(html,varName){
-  const s=html.indexOf('const '+varName+'=');
-  if(s===-1)return null;
-  const b=html.indexOf('{',s);
-  if(b===-1)return null;
-  let depth=0,i=b;
-  while(i<html.length){
-    const c=html[i];
-    if(c==='{'){depth++;i++;}
-    else if(c==='}'){if(--depth===0)break;i++;}
-    else if(c==='"'||c==="'"){
-      const q=c;i++;
-      while(i<html.length&&html[i]!==q){if(html[i]==='\\')i++;i++;}
-      i++;
-    }else if(c==='/'&&html[i+1]==='/'){
-      while(i<html.length&&html[i]!=='\n')i++;
-    }else{i++;}
-  }
-  if(depth!==0)return null;
-  try{return new Function('return '+html.slice(b,i+1))();}catch(e){return null;}
-}
+/* ---- Live data polling -----------------------------------------------
+   LH-live-data.js (JSON) is the ONLY file the external system needs to
+   regenerate. The main HTML page is never touched, so all yellow-rack
+   edits (labels, sizes, images) in localStorage are never at risk.
+   Fires immediately on page load to populate ORANGE_PARTS/PICK_ROUTES,
+   then repeats every 15 s.  Requires HTTP/HTTPS; silently skips on
+   file:// URLs where fetch() is blocked by the browser.
+   --------------------------------------------------------------------- */
 async function pollLiveData(){
   try{
-    const resp=await fetch(window.location.href,{cache:'no-cache'});
+    const resp=await fetch('LH-live-data.js',{cache:'no-cache'});
     if(!resp.ok)return;
-    const html=await resp.text();
-    const fO=extractPickObj(html,'ORANGE_PARTS');
-    const fR=extractPickObj(html,'RACK_PARTS');
-    const fP=extractPickObj(html,'PICK_ROUTES');
+    const data=await resp.json();
+    function mergeObj(target,src){
+      Object.keys(target).forEach(k=>delete target[+k]);
+      Object.entries(src).forEach(([k,v])=>{target[+k]=v;});
+    }
     let changed=false;
-    // ORANGE_PARTS: always take fresh injection data
-    if(fO){
-      Object.keys(ORANGE_PARTS).forEach(k=>delete ORANGE_PARTS[+k]);
-      Object.entries(fO).forEach(([k,v])=>{ORANGE_PARTS[+k]=v;});
-      changed=true;
-    }
-    // PICK_ROUTES: always take fresh injection data
-    if(fP){
-      Object.keys(PICK_ROUTES).forEach(k=>delete PICK_ROUTES[+k]);
-      Object.entries(fP).forEach(([k,v])=>{PICK_ROUTES[+k]=v;});
-      changed=true;
-    }
-    // RACK_PARTS: fresh injection is the baseline; localStorage user edits win
-    if(fR){
-      Object.entries(fR).forEach(([k,v])=>{
-        const n=+k;
-        if(RACK_PARTS[n]){RACK_PARTS[n].p=v.p;RACK_PARTS[n].d=v.d;}
-      });
-      try{
-        const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
-        if(saved.parts)Object.entries(saved.parts).forEach(([k,v])=>{
-          const n=+k;
-          if(RACK_PARTS[n]){
-            if(v.p!=null)RACK_PARTS[n].p=v.p;
-            if(v.d!=null)RACK_PARTS[n].d=v.d;
-          }
-        });
-      }catch(e){}
-      changed=true;
-    }
+    if(data.ORANGE_PARTS){mergeObj(ORANGE_PARTS,data.ORANGE_PARTS);changed=true;}
+    if(data.PICK_ROUTES){mergeObj(PICK_ROUTES,data.PICK_ROUTES);changed=true;}
     if(changed){fullRerender();renderCartLabels();}
     document.getElementById('lu').textContent=new Date().toLocaleTimeString();
   }catch(e){console.warn('Data poll failed:',e);}
 }
+pollLiveData();
 setInterval(pollLiveData,15000);
 })();
 </script>
