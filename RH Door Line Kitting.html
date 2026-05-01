@@ -770,12 +770,12 @@ function fullRerender(){
   setupClickHandlers();
 }
 
-// Boot
+// Boot — rack geometry, labels and images render immediately from RACK_PARTS/GEO.
+// renderCartLabels() and applyPickRoutes() are deferred to pollLiveData() below,
+// which fires at once and supplies ORANGE_PARTS and PICK_ROUTES from the data file.
 generateRackCells();
 renderRackLabels();
 renderRackImages();
-renderCartLabels();
-applyPickRoutes();
 setupClickHandlers();
 document.getElementById('em-save').addEventListener('click',saveEditModal);
 document.getElementById('em-cancel').addEventListener('click',closeEditModal);
