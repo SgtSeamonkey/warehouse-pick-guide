@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MICHIGAN STATE GENERAL 2026 - Oakland County, Auburn Hills Precinct 6</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-alt: #eef3ff;
+      --ink: #1c2430;
+      --muted: #5b6777;
+      --good: #1d7a4c;
+      --bad: #b23636;
+      --neutral: #55657d;
+      --accent: #0b5ed7;
+      --line: #dfe6f2;
+      --warning: #fff5d1;
+      --shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #0f172a;
+      color: white;
+      box-shadow: var(--shadow);
+      border-bottom: 2px solid #1e293b;
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 16px;
+    }
+
+    .title {
+      font-size: clamp(1rem, 2vw, 1.45rem);
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .subhead {
+      color: #dbe4f4;
+      font-size: 0.9rem;
+      margin-top: 3px;
+    }
+
+    .summary-box {
+      max-width: 1200px;
+      margin: 16px auto 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .stat {
+      background: var(--panel-alt);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .stat-value {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 18px auto 56px;
+      padding: 0 16px;
+    }
+
+    details.race {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    details.race > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 1.02rem;
+      background: linear-gradient(180deg, #f8fbff, #eff7ff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    details.race > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .race-body {
+      padding: 12px 14px 16px;
+    }
+
+    .candidate {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcff;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .candidate summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 12px 14px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: #f7fafd;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .candidate summary::-webkit-details-marker { display: none; }
+
+    .candidate-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .candidate-party {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .candidate-body {
+      padding: 12px 14px 14px;
+      background: white;
+    }
+
+    .fact-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .fact-item {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f9fbff;
+      padding: 10px 12px;
+    }
+
+    .fact-label {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+      color: #1e293b;
+    }
+
+    .fact-text {
+      font-size: 0.95rem;
+      color: #233044;
+      margin-bottom: 8px;
+    }
+
+    .score-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: white;
+      color: var(--ink);
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+    }
+
+    .chip.positive.active {
+      background: rgba(29, 122, 76, 0.1);
+      color: var(--good);
+      border-color: rgba(29, 122, 76, 0.35);
+    }
+
+    .chip.negative.active {
+      background: rgba(178, 54, 54, 0.1);
+      color: var(--bad);
+      border-color: rgba(178, 54, 54, 0.35);
+    }
+
+    .chip.neutral.active {
+      background: rgba(85, 101, 125, 0.12);
+      color: var(--neutral);
+      border-color: rgba(85, 101, 125, 0.3);
+    }
+
+    .proposal-box {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fffdf9;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+
+    .proposal-box h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .proposal-box p {
+      margin: 0 0 8px;
+      color: #253041;
+    }
+
+    .proposal-issues {
+      padding-left: 18px;
+      margin: 0;
+      color: #33425d;
+    }
+
+    .proposal-issues li { margin-bottom: 6px; }
+
+    .warning {
+      background: var(--warning);
+      border: 1px solid #f0d77e;
+      color: #5f4c00;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-top: 8px;
+    }
+
+    .smallprint {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .summary-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .summary-list li {
+      border: 1px solid var(--line);
+      background: #f8fbff;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #263447;
+      font-size: 0.9rem;
+    }
+
+    .score-sum {
+      font-weight: 700;
+    }
+
+    .reset-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 620px) {
+      .candidate summary {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .score-controls {
+        width: 100%;
+      }
+      .chip { flex: 1 1 96px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="title">MICHIGAN STATE GENERAL 2026</div>
+      <div class="subhead">Oakland County, Michigan • Auburn Hills City, Precinct 6 • Interactive Voter Guide</div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+      <div style="font-weight:700; font-size:1.02rem;">Running summary</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="reset-btn" id="expandAll" style="background:#334155;">Expand all</button>
+        <button class="reset-btn" id="collapseAll" style="background:#334155;">Collapse all</button>
+        <button class="reset-btn" id="resetScores">Reset scores</button>
+      </div>
+    </div>
+    <div class="summary-grid">
+      <div class="stat">
+        <div class="stat-label">Positive</div>
+        <div class="stat-value" id="positiveCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Negative</div>
+        <div class="stat-value" id="negativeCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Net</div>
+        <div class="stat-value" id="netScore">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Items Rated</div>
+        <div class="stat-value" id="candidateCount">0</div>
+      </div>
+    </div>
+    <ul class="summary-list" id="candidateSummaryList"></ul>
+    <div class="warning" style="margin-top:12px;">
+      <strong>How to read this guide:</strong> Compiled from public sources for quick ballot review as of late October 2026 — not an official or definitive fact-check.
+      Items labeled “likely,” “general pattern,” or “no clear public record” are best-effort inferences (often from party affiliation), <em>not</em> verified facts.
+      Campaign “ad profile” notes describe typical patterns, not measured ad-spending data. Confirm details with your county clerk, the Michigan Secretary of State, Ballotpedia, and candidate websites before voting.
+    </div>
+  </div>
+
+  <div class="layout" id="app"></div>
+
+  <script>
+    const races = [
+      {
+        name: 'Governor and Lieutenant Governor',
+        candidates: [
+          {
+            name: 'Jocelyn Benson / Winnie Brinks',
+            party: 'Democratic (Governor / Lieutenant Governor)',
+            facts: [
+              { label: 'Ticket — who you are voting for', text: 'You vote for the pair together. Jocelyn Benson is the candidate for Governor; Winnie Brinks (Michigan Senate Majority Leader) is the candidate for Lieutenant Governor. This is the first all-female major-party gubernatorial ticket in Michigan history.' },
+              { label: 'What the ticket is running on', text: 'Voting rights and election administration, public education, reproductive/abortion rights, lowering the cost of living, and defending democratic institutions. Running to succeed term-limited Gov. Gretchen Whitmer.' },
+              { label: 'Governor candidate — background', text: 'Jocelyn Benson has been Michigan Secretary of State since 2019 and is a former dean of Wayne State University Law School. She is nationally known for defending election administration and resisting efforts to overturn Michigan’s 2020 results.' },
+              { label: 'Lt. Governor candidate — background', text: 'Winnie Brinks is a state senator from Grand Rapids and Michigan’s first female Senate Majority Leader, with over a decade of legislative experience.' },
+              { label: 'Employment history', text: 'Benson: attorney, law professor and law-school dean, and former nonprofit leader (RISE). Brinks: state legislator with a prior background in nonprofit and social-services work.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Strongly opposed to Trump. Benson was pressured to overturn Michigan’s 2020 results and faced armed protests at her home. Trump has publicly criticized Benson and has not endorsed this ticket.' },
+              { label: 'Publicized attack claims / fact-check', text: 'Conservative attacks frame Benson as responsible for “election mismanagement” or fraud. No court or audit has substantiated fraud claims against Michigan elections under her tenure — these are partisan characterizations, not proven findings.' },
+              { label: 'Integrity score', text: 'No standardized public “integrity index” exists for candidates; judge on record, endorsements, and campaign-finance filings.' },
+              { label: 'Campaign ad profile (general pattern, not measured)', text: 'Typically a mix of positive/issue ads and contrast ads on democracy, abortion rights, and cost of living. General pattern, not measured ad-spending data.' }
+            ]
+          },
+          {
+            name: 'John James / Jay DeBoyer',
+            party: 'Republican (Governor / Lieutenant Governor)',
+            facts: [
+              { label: 'Ticket — who you are voting for', text: 'You vote for the pair together. U.S. Rep. John James (MI-10) is the candidate for Governor; state Rep. Jay DeBoyer is the candidate for Lieutenant Governor. If elected, James would be Michigan’s first Black governor.' },
+              { label: 'What the ticket is running on', text: 'Lower taxes and cost of living, jobs and the economy, public safety, education, and energy — a “Freedom Agenda.” Running to succeed term-limited Gov. Whitmer.' },
+              { label: 'Governor candidate — background', text: 'John James is the current U.S. Representative for Michigan’s 10th District (since 2023, re-elected 2024) and won the 2026 GOP gubernatorial primary. He was the Republican U.S. Senate nominee in 2018 and 2020, losing both narrowly.' },
+              { label: 'Lt. Governor candidate — background', text: 'Jay DeBoyer has been a state representative (63rd District, St. Clair/Macomb) since 2022 and chairs the House Oversight Committee; he previously served 12 years as St. Clair County Clerk and Register of Deeds.' },
+              { label: 'Employment history', text: 'James: West Point graduate (2004), U.S. Army Apache helicopter pilot (captain, Ranger-qualified, Iraq tours), and president of James Group International / CEO of Renaissance Global Logistics. DeBoyer: longtime elected county clerk and local official.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Strongly Trump-aligned. Trump gave James a “total endorsement” on June 22, 2026, which cleared the GOP primary field (rivals included Perry Johnson and Mike Cox; Aric Nesbitt dropped out to back James). James backed Trump in prior campaigns.' },
+              { label: 'Publicized attack claims / fact-check', text: 'Democrats attack James over his abortion stance, past statements, and voting record. No major substantiated scandal or criminal allegation is established in the public record.' },
+              { label: 'Integrity score', text: 'No standardized public “integrity index” exists for candidates; judge on record, endorsements, and campaign-finance filings.' },
+              { label: 'Campaign ad profile (general pattern, not measured)', text: 'Typically a mix of positive issue ads and negative contrast ads; fear-based themes (crime, inflation, border) are common in competitive races. General pattern, not measured ad-spending data.' }
+            ]
+          },
+          {
+            name: 'Anthony Hudson / Beau Parmenter',
+            party: 'Libertarian (Governor / Lieutenant Governor)',
+            facts: [
+              { label: 'Ticket — who you are voting for', text: 'You vote for the pair together. Anthony Hudson is the candidate for Governor; Beau Parmenter is the candidate for Lieutenant Governor.' },
+              { label: 'What the ticket is running on', text: 'Limited government, lower taxes, civil liberties, gun rights, and personal freedom.' },
+              { label: 'Candidates — background', text: 'Libertarian nominees with limited widely documented public records in the available sources.' },
+              { label: 'Employment history', text: 'No clearly documented public employment record was found for the ticket in the available sources.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Not a Trump-aligned ticket; Libertarian candidates generally reject both major parties. No Trump endorsement.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' },
+              { label: 'Integrity score', text: 'No standardized public integrity score found.' },
+              { label: 'Campaign ad profile (general pattern, not measured)', text: 'Typically low-budget, positive/principle-based messaging. General pattern, not measured data.' }
+            ]
+          },
+          {
+            name: 'Donna Brandenburg / Robert Donald Cowper II',
+            party: 'U.S. Taxpayers (Governor / Lieutenant Governor)',
+            facts: [
+              { label: 'Ticket — who you are voting for', text: 'You vote for the pair together. Donna Brandenburg is the candidate for Governor; Robert Donald Cowper II is the candidate for Lieutenant Governor. The U.S. Taxpayers Party is the Michigan affiliate of the national Constitution Party.' },
+              { label: 'What the ticket is running on', text: 'Taxpayer-first and constitutionalist governance, limited government, and anti-establishment reform.' },
+              { label: 'Governor candidate — background', text: 'Donna Brandenburg also ran for governor in 2022. That year she was one of five GOP candidates disqualified from the Republican primary ballot after a paid-circulator forged-signature scandal, then ran as the U.S. Taxpayers Party nominee. She is associated with 2020 election-fraud activism.' },
+              { label: 'Lt. Governor candidate — background', text: 'Robert Donald Cowper II is the ticket’s Lt. Governor nominee; limited widely documented public record.' },
+              { label: 'Employment history', text: 'Brandenburg has a business background; otherwise limited documented public record for the ticket.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Populist and anti-establishment but not an official Trump ticket; no Trump endorsement. Sympathetic to 2020 election-fraud claims that Trump promoted.' },
+              { label: 'Publicized attack claims / fact-check', text: 'The notable verified item is the 2022 forged-signature disqualification: investigators treated candidates as victims of paid circulators, but she was still barred for insufficient valid signatures.' },
+              { label: 'Integrity score', text: 'No standardized public integrity score found.' },
+              { label: 'Campaign ad profile (general pattern, not measured)', text: 'Typically low-budget, issue- and grievance-focused messaging. General pattern, not measured data.' }
+            ]
+          },
+          {
+            name: 'Douglas Campbell / Bobbie Clay',
+            party: 'Green (Governor / Lieutenant Governor)',
+            facts: [
+              { label: 'Ticket — who you are voting for', text: 'You vote for the pair together. Douglas Campbell is the candidate for Governor; Bobbie Clay is the candidate for Lieutenant Governor.' },
+              { label: 'What the ticket is running on', text: 'Climate action and environmental justice, workers’ rights, universal healthcare, and anti-corporate democratic reform.' },
+              { label: 'Candidates — background', text: 'Green Party nominees with an environmental and public-interest orientation; limited broad public record in the available sources.' },
+              { label: 'Employment history', text: 'Activist and public-interest background; limited otherwise-documented employment record found.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Strongly opposed to Trump and to the two-party establishment; no Trump endorsement.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' },
+              { label: 'Integrity score', text: 'No standardized public integrity score found.' },
+              { label: 'Campaign ad profile (general pattern, not measured)', text: 'Typically positive, issue-based messaging with minimal attack advertising. General pattern, not measured data.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Secretary of State',
+        candidates: [
+          {
+            name: 'Garlin Gilchrist II',
+            party: 'Democratic',
+            facts: [
+              { label: 'What he is running on', text: 'Election administration, voting access, and public trust in democratic institutions.' },
+              { label: 'Political history', text: 'Michigan Lieutenant Governor since 2019 (elected with Gov. Whitmer); running for Secretary of State in 2026.' },
+              { label: 'Employment history', text: 'Software engineer by training (earlier work at Microsoft and on civic-tech projects), former community organizer, and state executive.' },
+              { label: 'Trump alignment', text: 'Opposed to Trump’s election falsehoods and attacks on democratic institutions.' },
+              { label: 'Publicized attack claims / fact-check', text: 'Publicized attacks usually involve partisan framing around election security and democratic norms. No major substantiated scandal is the core narrative.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely informational, issue-focused ads; fear-based attack messaging is secondary.' }
+            ]
+          },
+          {
+            name: 'Anthony G. Forlini',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'Election integrity, governmental efficiency, and administrative accountability.' },
+              { label: 'Political history', text: 'Macomb County Clerk / Register of Deeds and a former Republican member of the Michigan House of Representatives.' },
+              { label: 'Employment history', text: 'Longtime local-government official (county clerk / register of deeds) and former state legislator.' },
+              { label: 'Trump alignment', text: 'Likely aligned with conservative and Trump-era election reform messaging.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major widely substantiated attack claim is established in the public record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Issue-focused and contrast-based ads, with potential fear messaging if the race is competitive.' }
+            ]
+          },
+          {
+            name: 'Christine Sloan',
+            party: 'Libertarian',
+            facts: [
+              { label: 'What she is running on', text: 'Limited government and civil-liberty-oriented administrative reform.' },
+              { label: 'Political history', text: 'Libertarian candidate with a limited public record.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'No clear public alignment.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major recurring public attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Principle-driven, usually low-attack.' }
+            ]
+          },
+          {
+            name: 'Scott E. Aughney',
+            party: 'U.S. Taxpayers',
+            facts: [
+              { label: 'What he is running on', text: 'Taxpayer accountability and administrative reform.' },
+              { label: 'Political history', text: 'Limited public record.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim noted.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely low-budget issue ads.' }
+            ]
+          },
+          {
+            name: 'Eric Borregard',
+            party: 'Green',
+            facts: [
+              { label: 'What he is running on', text: 'Green and democratic governance priorities.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'Likely anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim established in the public record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely positive and issue-focused.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Attorney General',
+        candidates: [
+          {
+            name: 'Eli Savit',
+            party: 'Democratic',
+            facts: [
+              { label: 'What he is running on', text: 'Consumer protection, civil rights, and public safety enforcement.' },
+              { label: 'Political history', text: 'Washtenaw County Prosecutor (elected 2020); previously a lawyer, educator, and legal adviser.' },
+              { label: 'Employment history', text: 'Prosecutor and public legal leadership.' },
+              { label: 'Trump alignment', text: 'No evidence of Trump support; generally aligned with Democratic legal reform positions.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major widely substantiated attack claim is the dominant public narrative.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely a mix of positive issue ads and legal-competence contrast ads.' }
+            ]
+          },
+          {
+            name: 'Doug Lloyd',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'Public safety, law-and-order, conservative legal philosophy.' },
+              { label: 'Political history', text: 'Eaton County Prosecutor; career prosecutor and the Republican nominee for Attorney General.' },
+              { label: 'Employment history', text: 'County prosecutor and legal/public service leadership.' },
+              { label: 'Trump alignment', text: 'Generally aligned with Republican law-and-order politics.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major widely substantiated attack claim is established in the public record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely contrast ads around public safety and legal competence.' }
+            ]
+          },
+          {
+            name: 'Jason Dye',
+            party: 'Libertarian',
+            facts: [
+              { label: 'What he is running on', text: 'Limited government, civil liberties, and legal reform.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Principle-driven, low-attack.' }
+            ]
+          },
+          {
+            name: 'John Perry Ludtke Jr',
+            party: 'U.S. Taxpayers',
+            facts: [
+              { label: 'What he is running on', text: 'Taxpayer-first governance and anti-bureaucratic legal reform.' },
+              { label: 'Political history', text: 'Small-party reform candidate with limited public profile.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major attack claim established.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely low-budget and issue-focused.' }
+            ]
+          },
+          {
+            name: 'Jeff Polonowski',
+            party: 'Green',
+            facts: [
+              { label: 'What he is running on', text: 'Progressive legal reform and public accountability.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'Likely anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Usually constructive issue advertising rather than attack-heavy messaging.' }
+            ]
+          },
+          {
+            name: 'Doug Dern',
+            party: 'Natural Law',
+            facts: [
+              { label: 'What he is running on', text: 'Natural-law ethics and legal philosophy.' },
+              { label: 'Political history', text: 'Natural Law candidate with limited record.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major attack claim established.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely low-attack and philosophy-driven.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'United States Senator',
+        candidates: [
+          {
+            name: 'Abdul El-Sayed',
+            party: 'Democratic',
+            facts: [
+              { label: 'What he is running on', text: 'Health care affordability, public health, labor, and progressive reform.' },
+              { label: 'Political history', text: 'Former executive director of the Detroit Health Department and later Wayne County’s health director; ran for the Democratic nomination for governor in 2018 (lost the primary to Gretchen Whitmer). 2026 Democratic U.S. Senate nominee.' },
+              { label: 'Employment history', text: 'Physician and epidemiologist; former Detroit and Wayne County public-health official; author and policy advocate.' },
+              { label: 'Trump alignment', text: 'Strongly anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'The claim that he has “Muslim Brotherhood / Hamas connections” first spread during his 2018 run for governor. Fact-checkers and reporting treated it as an unsubstantiated, Islamophobic smear — no credible investigation or reliable evidence has established any such ties.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely a mix of positive issue ads and contrast ads; attack ads may use fear themes around healthcare, affordability, or ideological framing.' }
+            ]
+          },
+          {
+            name: 'Mike Rogers',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'National security, border and immigration enforcement, conservative governance, and economic growth.' },
+              { label: 'Political history', text: 'Former U.S. Representative for Michigan’s 8th District (2001–2015) and former chair of the House Intelligence Committee. Was the Republican U.S. Senate nominee in 2024, narrowly losing to Elissa Slotkin. Running again in 2026 for the open seat being vacated by retiring Sen. Gary Peters.' },
+              { label: 'Employment history', text: 'Former FBI special agent and former U.S. Army officer; after Congress worked in cybersecurity, consulting, and as a national-security media commentator.' },
+              { label: 'Trump support / Trump’s support for them', text: 'Runs as a Trump-aligned Republican; Trump endorsed Rogers in the 2024 Senate race. He has courted both Trump voters and some Democrats in this swing-state contest.' },
+              { label: 'Publicized attack claims / fact-check', text: 'The claim that he is “in bed with Big Pharma” is a political attack rooted in his post-Congress lobbying and consulting work and industry ties (it was used against him in the 2024 race). There is no public evidence of illegal quid pro quo or criminal corruption — it is a characterization of industry relationships, not a proven scandal.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely heavy use of both issue ads and negative contrast ads, with fear-based messaging more common than in local races.' }
+            ]
+          },
+          {
+            name: 'Lydia Christensen',
+            party: 'Libertarian',
+            facts: [
+              { label: 'What she is running on', text: 'Liberty, smaller government, and individual freedom.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'No clear record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major recurring attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely issue-driven and low-attack.' }
+            ]
+          },
+          {
+            name: 'Tim Long',
+            party: 'U.S. Taxpayers',
+            facts: [
+              { label: 'What he is running on', text: 'Taxpayer rights and reduced government.' },
+              { label: 'Political history', text: 'Limited public record.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'No public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major recurring attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Low-budget issue ads, usually minimal negative content.' }
+            ]
+          },
+          {
+            name: 'Douglas P. Marsh',
+            party: 'Green',
+            facts: [
+              { label: 'What he is running on', text: 'Public-interest reform, ecological priorities, and anti-corruption themes.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'Likely anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated public attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely positive and issue-focused.' }
+            ]
+          },
+          {
+            name: 'Walter P. Kristy',
+            party: 'Natural Law',
+            facts: [
+              { label: 'What he is running on', text: 'Natural-law ethics and civic reform.' },
+              { label: 'Political history', text: 'Limited public record.' },
+              { label: 'Employment history', text: 'No clear public record found.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major recurring public attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely low-attack and principle-based.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Representative in Congress, 11th District',
+        candidates: [
+          {
+            name: 'Jeremy Moss',
+            party: 'Democratic',
+            facts: [
+              { label: 'What he is running on', text: 'Progressive policy, civil rights, transportation, and local governance.' },
+              { label: 'Political history', text: 'Current public official with legislative experience.' },
+              { label: 'Employment history', text: 'Government and policy leadership.' },
+              { label: 'Trump alignment', text: 'Generally anti-Trump and aligned with Democratic politics.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated smears or scandal dominate the public record. Criticism is mostly ideological contrast.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely issue-based and contrast-heavy, but less fear-based than some statewide campaigns.' }
+            ]
+          },
+          {
+            name: 'Ethan Baker',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'Conservative district priorities, public safety, and economic focus.' },
+              { label: 'Political history', text: 'Republican candidate with district-level profile.' },
+              { label: 'Employment history', text: 'Local government/public leadership background.' },
+              { label: 'Trump alignment', text: 'Likely aligned with Republican and Trump-era conservative politics.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim established in the current record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Blend of positive issue ads and contrast ads. Fear-based issues possible in a competitive race.' }
+            ]
+          },
+          {
+            name: 'Farid Ishac',
+            party: 'Libertarian',
+            facts: [
+              { label: 'What he is running on', text: 'Libertarian reform, limited government, and civil liberties.' },
+              { label: 'Political history', text: 'Limited public profile.' },
+              { label: 'Employment history', text: 'No clear public record.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Positive and issue-driven; not likely attack-heavy.' }
+            ]
+          },
+          {
+            name: 'Ryan Teasdale',
+            party: 'Green',
+            facts: [
+              { label: 'What he is running on', text: 'Environmental protection and democratic reform.' },
+              { label: 'Political history', text: 'Limited public record.' },
+              { label: 'Employment history', text: 'No clear record found.' },
+              { label: 'Trump alignment', text: 'Likely anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely issue-focused and low-attack.' }
+            ]
+          },
+          {
+            name: 'Anil Kumar',
+            party: 'No Party Affiliation',
+            facts: [
+              { label: 'What he is running on', text: 'Independent representation and local issue focus.' },
+              { label: 'Political history', text: 'Independent candidate with limited public record.' },
+              { label: 'Employment history', text: 'No clear public record.' },
+              { label: 'Trump alignment', text: 'No clear public record.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely local, positive, and issue-based.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'State Senator, 7th District',
+        candidates: [
+          {
+            name: 'Jason Hoskins',
+            party: 'Democratic',
+            facts: [
+              { label: 'What he is running on', text: 'Democratic district priorities and local policy.' },
+              { label: 'Political history', text: 'Candidate with a public-service profile.' },
+              { label: 'Employment history', text: 'public policy and government service.' },
+              { label: 'Trump alignment', text: 'Anti-Trump and aligned with Democratic priorities.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major public smear or scandal claim established in the public record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely positive and local-issue focused.' }
+            ]
+          },
+          {
+            name: 'Anthony Paesano',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'Conservative district priorities and local governance.' },
+              { label: 'Political history', text: 'Republican district candidate.' },
+              { label: 'Employment history', text: 'Local professional and public-service background; details limited.' },
+              { label: 'Trump alignment', text: 'Likely aligned with conservative Republican politics.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely utility-style issue ads with some contrast messaging.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Representative in State Legislature, 54th District',
+        candidates: [
+          {
+            name: 'Sarah Pounds',
+            party: 'Democratic',
+            facts: [
+              { label: 'What she is running on', text: 'Democratic local priorities and public service.' },
+              { label: 'Political history', text: 'Local Democratic candidate.' },
+              { label: 'Employment history', text: 'Public service and policy work.' },
+              { label: 'Trump alignment', text: 'Likely anti-Trump.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major public attack allegation in the current record.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely local issue-focused ads with limited negative messaging.' }
+            ]
+          },
+          {
+            name: 'Roman Gaskey',
+            party: 'Republican',
+            facts: [
+              { label: 'What he is running on', text: 'Conservative district priorities, local governance, and Republican values.' },
+              { label: 'Political history', text: 'Republican legislative candidate.' },
+              { label: 'Employment history', text: 'Local professional/political background; details limited.' },
+              { label: 'Trump alignment', text: 'Likely aligned with Republican politics.' },
+              { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' },
+              { label: 'Integrity score', text: 'No verified public integrity score found.' },
+              { label: 'Ad profile', text: 'Likely issue-based and contrast-driven if the race tightens.' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'State Board of Education',
+        candidates: [
+          { name: 'Judith Pritchett', party: 'Democratic', facts: [{ label: 'What she is running on', text: 'Public education, schools, and democratic educational priorities.' }, { label: 'Political history', text: 'Democratic candidate with a public-service profile.' }, { label: 'Employment history', text: 'Education/public-sector background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump and aligned with Democratic school policy.' }, { label: 'Publicized attack claims / fact-check', text: 'No major publicized attack claim established.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive, education-focused ads.' }] },
+          { name: 'Tiffany Tilley', party: 'Democratic', facts: [{ label: 'What she is running on', text: 'Education quality, public school support, and democratic policy values.' }, { label: 'Political history', text: 'Democratic candidate with public-service/employment profile.' }, { label: 'Employment history', text: 'Education and civic/public service background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim is established.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely education-focused and positive.' }] },
+          { name: 'Terence Collins', party: 'Republican', facts: [{ label: 'What he is running on', text: 'Conservative educational policy, accountability, and school choice themes.' }, { label: 'Political history', text: 'Republican candidate.' }, { label: 'Employment history', text: 'Public/professional background not fully documented.' }, { label: 'Trump alignment', text: 'Likely aligned with conservative Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major substantiated attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based school-accountability ads.' }] },
+          { name: 'Bree Moeggenberg', party: 'Republican', facts: [{ label: 'What she is running on', text: 'School accountability, parental engagement, and conservative education reform.' }, { label: 'Political history', text: 'Republican candidate.' }, { label: 'Employment history', text: 'Limited public record.' }, { label: 'Trump alignment', text: 'Likely aligned with conservative Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based and contrast-focused.' }] },
+          { name: 'Charles Essner', party: 'Libertarian', facts: [{ label: 'What he is running on', text: 'Limited-government and local control.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Principle-driven, low-attack.' }] },
+          { name: 'William Mohr II', party: 'U.S. Taxpayers', facts: [{ label: 'What he is running on', text: 'Taxpayer accountability and governance reform.' }, { label: 'Political history', text: 'Small-party taxpayer-focused candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely low-budget reform messaging.' }] },
+          { name: 'Christine C. Schwartz', party: 'U.S. Taxpayers', facts: [{ label: 'What she is running on', text: 'Taxpayer-first governance and reform.' }, { label: 'Political history', text: 'Small-party reform candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely low-budget reform messaging.' }] },
+          { name: 'Wissam Charafeddine', party: 'Green', facts: [{ label: 'What he is running on', text: 'Green and progressive priorities, including education quality and public accountability.' }, { label: 'Political history', text: 'Green candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Issue-focused and generally low-attack.' }] },
+          { name: 'Mary Anne Hering', party: 'Working Class', facts: [{ label: 'What she is running on', text: 'Working-class and labor-oriented political priorities.' }, { label: 'Political history', text: 'Working-class candidate with limited public record.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely not aligned with Trump politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-focused and local-populist.' }] },
+          { name: 'Kelli Monroe', party: 'Natural Law', facts: [{ label: 'What she is running on', text: 'Natural-law ethics and governance values.' }, { label: 'Political history', text: 'Natural-law candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely low-attack and ethics-focused.' }] }
+        ]
+      },
+      {
+        name: 'Regent of the University of Michigan',
+        candidates: [
+          { name: 'Paul Brown', party: 'Democratic', facts: [{ label: 'What he is running on', text: 'Public university access, affordability, and governance.' }, { label: 'Political history', text: 'Democratic candidate with policy/governance orientation.' }, { label: 'Employment history', text: 'Public and policy leadership background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive and higher-ed issue-based.' }] },
+          { name: 'Amir Makled', party: 'Democratic', facts: [{ label: 'What he is running on', text: 'Affordability, access, and public university oversight.' }, { label: 'Political history', text: 'Democratic governance candidate.' }, { label: 'Employment history', text: 'Public/policy-oriented background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive and issue-based.' }] },
+          { name: 'Lena Epstein', party: 'Republican', facts: [{ label: 'What she is running on', text: 'Conservative governance and accountability in higher education.' }, { label: 'Political history', text: 'Republican candidate.' }, { label: 'Employment history', text: 'Professional and civic background; details limited.' }, { label: 'Trump alignment', text: 'Likely aligned with Republican/Trump-era conservative politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based plus contrast messaging.' }] },
+          { name: 'Michael Schostak', party: 'Republican', facts: [{ label: 'What he is running on', text: 'Conservative higher-ed oversight and accountability.' }, { label: 'Political history', text: 'Republican candidate with limited public record.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely aligned with Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely governance-oriented contrast ads.' }] },
+          { name: 'Andrew Chadderdon', party: 'Libertarian', facts: [{ label: 'What he is running on', text: 'Libertarian governance, local oversight, and civil liberties.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Positive and principle-based.' }] },
+          { name: 'Kyle Maas', party: 'U.S. Taxpayers', facts: [{ label: 'What he is running on', text: 'Fiscal accountability and government reform.' }, { label: 'Political history', text: 'Small-party candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely low-budget reform messaging.' }] }
+        ]
+      },
+      {
+        name: 'Trustee of Michigan State University',
+        candidates: [
+          { name: 'Brianna Scott', party: 'Democratic', facts: [{ label: 'What she is running on', text: 'Student access, affordability, and democratic governance.' }, { label: 'Political history', text: 'Democratic candidate with a public-interest profile.' }, { label: 'Employment history', text: 'Public/service-oriented background; details limited.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive and affordability-based.' }] },
+          { name: 'Kelly Tebay Zemke', party: 'Democratic', facts: [{ label: 'What she is running on', text: 'Student support, affordability, and public university accountability.' }, { label: 'Political history', text: 'Democratic governance candidate.' }, { label: 'Employment history', text: 'Education/public-service background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive and issue-focused.' }] },
+          { name: 'Julie Maday', party: 'Republican', facts: [{ label: 'What she is running on', text: 'Conservative governance and higher-ed accountability.' }, { label: 'Political history', text: 'Republican candidate with a public-service profile.' }, { label: 'Employment history', text: 'Public and professional background; details limited.' }, { label: 'Trump alignment', text: 'Likely aligned with Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based and contrast messaging.' }] },
+          { name: 'Roger Victory', party: 'Republican', facts: [{ label: 'What he is running on', text: 'Conservative governance and public accountability.' }, { label: 'Political history', text: 'Republican candidate with public-service profile.' }, { label: 'Employment history', text: 'Professional and public service background; limited detail.' }, { label: 'Trump alignment', text: 'Likely aligned with Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based and contrast messaging.' }] },
+          { name: 'Daniel R. Patterson', party: 'Libertarian', facts: [{ label: 'What he is running on', text: 'Civil liberties and reduced bureaucracy.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Positive principle-based ads.' }] },
+          { name: 'Will Tyler White', party: 'Libertarian', facts: [{ label: 'What he is running on', text: 'Small-government and civil-liberties-based education oversight.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Positive and principle-based.' }] },
+          { name: 'Janet Sanger', party: 'U.S. Taxpayers', facts: [{ label: 'What she is running on', text: 'Fiscal responsibility and taxpayer accountability.' }, { label: 'Political history', text: 'Small-party reform candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Low-budget issue ads.' }] },
+          { name: 'John Sanger', party: 'U.S. Taxpayers', facts: [{ label: 'What he is running on', text: 'Taxpayer and governance reform.' }, { label: 'Political history', text: 'Small-party candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Low-budget issue ads.' }] },
+          { name: 'John Anthony La Pietra', party: 'Green', facts: [{ label: 'What he is running on', text: 'Green values and public university accountability.' }, { label: 'Political history', text: 'Green candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Issue-focused and constructive.' }] },
+          { name: 'Yaz Ozbek', party: 'Working Class', facts: [{ label: 'What he is running on', text: 'Working-class and labor-oriented reforms.' }, { label: 'Political history', text: 'Working-class candidate with limited public record.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely not aligned with Trump politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-focused and local-populist.' }] }
+        ]
+      },
+      {
+        name: 'Governor of Wayne State University',
+        candidates: [
+          { name: 'Shereef Akeel', party: 'Democratic', facts: [{ label: 'What he is running on', text: 'Student concerns and university governance.' }, { label: 'Political history', text: 'Democratic candidate with public-interest orientation.' }, { label: 'Employment history', text: 'Public-facing and professional background.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely positive and governance-focused.' }] },
+          { name: 'Richard Mack', party: 'Democratic', facts: [{ label: 'What he is running on', text: 'University oversight and academic accountability.' }, { label: 'Political history', text: 'Democratic candidate.' }, { label: 'Employment history', text: 'Professional/public-service background; details limited.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely governance-oriented and positive.' }] },
+          { name: 'Andy Anuzis', party: 'Republican', facts: [{ label: 'What he is running on', text: 'Conservative university governance and institutional accountability.' }, { label: 'Political history', text: 'Republican political operative and campaign leader.' }, { label: 'Employment history', text: 'Political leadership and conservative public affairs.' }, { label: 'Trump alignment', text: 'Strongly aligned with conservative and Trump-positive politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major substantiated scandal; attacks are usually ideological and contrast-based.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely contrast-heavy ads if the race is competitive.' }] },
+          { name: 'Christa Murphy', party: 'Republican', facts: [{ label: 'What she is running on', text: 'Conservative university governance and public accountability.' }, { label: 'Political history', text: 'Republican candidate with a governance profile.' }, { label: 'Employment history', text: 'Professional and public-service background; details limited.' }, { label: 'Trump alignment', text: 'Likely aligned with Republican politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based and some contrast messaging.' }] },
+          { name: 'Alex Avery', party: 'Libertarian', facts: [{ label: 'What he is running on', text: 'Limited government and civil-liberties-oriented governance.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Positive and principle-based.' }] },
+          { name: 'Jami Van Alstine', party: 'Libertarian', facts: [{ label: 'What she is running on', text: 'Libertarian and decentralization-oriented governance.' }, { label: 'Political history', text: 'Libertarian candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Principle-driven; low attack volume.' }] },
+          { name: 'Jeff McDonald', party: 'U.S. Taxpayers', facts: [{ label: 'What he is running on', text: 'Taxpayer accountability and reform.' }, { label: 'Political history', text: 'Small-party candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Low-budget reform messaging.' }] },
+          { name: 'Paul M. Ragan', party: 'Green', facts: [{ label: 'What he is running on', text: 'Green values and social justice in higher education.' }, { label: 'Political history', text: 'Green candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely anti-Trump.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Issue-focused and civic-minded.' }] },
+          { name: 'Suzanne Roehrig', party: 'Working Class', facts: [{ label: 'What she is running on', text: 'Working-class oversight and governance.' }, { label: 'Political history', text: 'Working-class candidate with limited public record.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'Likely not aligned with Trump politics.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Likely issue-based and local-populist.' }] },
+          { name: 'Kathleen Oakford', party: 'Natural Law', facts: [{ label: 'What she is running on', text: 'Natural-law governance and ethics in higher education.' }, { label: 'Political history', text: 'Natural-law candidate.' }, { label: 'Employment history', text: 'No clear public record found.' }, { label: 'Trump alignment', text: 'No clear public record.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No verified public integrity score found.' }, { label: 'Ad profile', text: 'Ethics-focused and low-attack.' }] }
+        ]
+      },
+      {
+        name: 'Judicial and local office races',
+        candidates: [
+          { name: 'Megan Kathleen Cavanagh', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial service and legal interpretation.' }, { label: 'Political history', text: 'Judicial candidate; public record tied to legal service.' }, { label: 'Employment history', text: 'Legal and judicial career.' }, { label: 'Trump alignment', text: 'Judicial candidates are usually not meaningfully judged by Trump support in the same way as partisan races.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually less attack-heavy than partisan races; focus is on judicial record and legal philosophy.' }, { label: 'Integrity score', text: 'No standardized public integrity score generally used for judicial candidates.' }, { label: 'Ad profile', text: 'Usually low-key and issue- or record-focused.' }] },
+          { name: 'Noah P. Hood', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial service and legal interpretation.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal career.' }, { label: 'Trump alignment', text: 'No significant standard partisan alignment.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually low-attack; campaign style focuses on legal competence.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Typically positive and professional.' }] },
+          { name: 'Thomas W. Howe', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Low-attack, usually more about judicial record and competence.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low attack volume.' }] },
+          { name: 'Casandra Morse-Bills', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually not fear-based.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-attack and credentials-focused.' }] },
+          { name: 'Michael Warren', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Separate from standard partisan politics.' }, { label: 'Publicized attack claims / fact-check', text: 'Few major public smear claims.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-attack and professional.' }] },
+          { name: 'Jody White', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major recurring public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Typically low-attack.' }] },
+          { name: 'Sima G. Patel', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office and appellate service.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal and judicial background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually not fear-based.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Credentials-focused, low attack volume.' }] },
+          { name: 'Christopher M. Trebilcock', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal and judicial background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major publicized smear claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low attack volume.' }] },
+          { name: 'Mary Ellen T. Brennan', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Generally not fear-based or smear-heavy.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually positive or informational.' }] },
+          { name: 'David M. Cohen', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public smear claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-attack and credentials-based.' }] },
+          { name: 'Lisa Gorcyca', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually not fear-based.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually positive and credential-focused.' }] },
+          { name: 'Nanci Grant', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major smear claim is common.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low attack volume.' }] },
+          { name: 'Jeffery S. Matis', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major publicized attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually information-focused.' }] },
+          { name: 'Lorie N. Savin', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public smear claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-attack and professional.' }] },
+          { name: 'Victoria King', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'No standard partisan relevance.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-attack.' }] },
+          { name: 'Lisa Marie Neilson', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Judicial office.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'No standard partisan relevance.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-attack and credentials-focused.' }] },
+          { name: 'Nicole S. Huddleston', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Probate court service.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'Usually low-attack.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-attack and professional.' }] },
+          { name: 'Elisabeth Dery', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Probate court service.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major recurring public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-attack and competency-based.' }] },
+          { name: 'Jessica Ann Hallmark', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Probate court service.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-attack, credentials-focused.' }] },
+          { name: 'Laura E. Polizzi', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'District court service.' }, { label: 'Political history', text: 'Judicial candidate.' }, { label: 'Employment history', text: 'Legal background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major regular smear claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-attack.' }] },
+          { name: 'Jose F. Aliaga', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'Community college board oversight and education access.' }, { label: 'Political history', text: 'Community college trustee candidate.' }, { label: 'Employment history', text: 'Professional background; details limited.' }, { label: 'Trump alignment', text: 'Not usually a central issue in local board races.' }, { label: 'Publicized attack claims / fact-check', text: 'No major publicized smear claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually informational and issue-based.' }] },
+          { name: 'Marian Blocker', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college board oversight.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background; details limited.' }, { label: 'Trump alignment', text: 'No standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-budget issue ads and mailers.' }] },
+          { name: 'MiVida M. Burrus', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college leadership and workforce development.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background; details limited.' }, { label: 'Trump alignment', text: 'No standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-budget and issue-focused.' }] },
+          { name: 'Jacqueline A. Kelly', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college oversight and education access.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background; details limited.' }, { label: 'Trump alignment', text: 'Not usually a central issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Local issue-based messaging.' }] },
+          { name: 'Robin L. McGregor', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college board oversight.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background.' }, { label: 'Trump alignment', text: 'Not a central issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-budget community outreach.' }] },
+          { name: 'Alexandra Morgan', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college leadership and educational access.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background; details limited.' }, { label: 'Trump alignment', text: 'No standard partisan issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually community issue-based messaging.' }] },
+          { name: 'Deborah Snyder', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'Community college board oversight.' }, { label: 'Political history', text: 'Local civic candidate.' }, { label: 'Employment history', text: 'Professional background.' }, { label: 'Trump alignment', text: 'Not a central issue.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Issue-based and low-attack.' }] },
+          { name: 'Jessica Enderle', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'School board leadership, district priorities, and education quality.' }, { label: 'Political history', text: 'Local school board candidate.' }, { label: 'Employment history', text: 'Professional/community background.' }, { label: 'Trump alignment', text: 'Not a standard partisan issue in local school races.' }, { label: 'Publicized attack claims / fact-check', text: 'Few if any major smear claims; local races usually focus on school priorities.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually low-budget and local issue-focused.' }] },
+          { name: 'Terry Lang', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'School board governance and district priorities.' }, { label: 'Political history', text: 'Local school board candidate.' }, { label: 'Employment history', text: 'Professional/community background.' }, { label: 'Trump alignment', text: 'Low relevance in a local school race.' }, { label: 'Publicized attack claims / fact-check', text: 'No major recurring attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually local and issue-driven.' }] },
+          { name: 'Amanda MacCormick', party: 'Nonpartisan', facts: [{ label: 'What she is running on', text: 'School governance and education priorities.' }, { label: 'Political history', text: 'Local school board candidate.' }, { label: 'Employment history', text: 'Community and professional background.' }, { label: 'Trump alignment', text: 'Usually not central to school board races.' }, { label: 'Publicized attack claims / fact-check', text: 'No major attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Low-budget local issue messaging.' }] },
+          { name: 'Richard Peake', party: 'Nonpartisan', facts: [{ label: 'What he is running on', text: 'School board improvement and district governance.' }, { label: 'Political history', text: 'Local school board candidate.' }, { label: 'Employment history', text: 'Professional/community background.' }, { label: 'Trump alignment', text: 'Generally not central.' }, { label: 'Publicized attack claims / fact-check', text: 'No major public attack claim found.' }, { label: 'Integrity score', text: 'No standardized public integrity score.' }, { label: 'Ad profile', text: 'Usually local, issue-based, and low-attack.' }] }
+        ]
+      },
+      {
+        name: 'Proposals and Millages',
+        candidates: [],
+        proposals: [
+          {
+            name: 'Proposal 2026-1: Constitutional Convention',
+            details: [
+              { label: 'What it is', text: 'A proposal to convene a constitutional convention to consider broad revisions to the state constitution.' },
+              { label: 'Ballot question', text: 'Shall a convention of elected delegates be convened in 2027 to draft a general revision of the State Constitution for presentation to the state’s voters for their approval or rejection?' },
+              { label: 'Pros / arguments for yes', text: 'Allows meaningful constitutional reform if the state constitution is seen as outdated or unresponsive. May address structural issues and provide voters a direct say.' },
+              { label: 'Counterpoints / concerns', text: 'Major downside risk: broad constitutional rewrite can create unexpected outcomes that are larger than the original complaint. It can affect taxes, rights, local power, elections, and government structure in ways voters cannot fully predict in advance. The risks are not just financial; they are structural and legal.' },
+              { label: 'Fact-check lens', text: 'The real question is whether the convention is a narrow fix or a broad rewrite. If it is the latter, the proposal could trigger issues far beyond the original problem.' },
+              { label: 'Ad profile', text: 'Usually framed as either institutional reform or a dangerous broad rewrite. Fear-based ads can focus on “statewide chaos,” “radical rewrite,” or “special interests.”' }
+            ]
+          },
+          {
+            name: 'Proposal 2026-2: Campaign finance and communications disclosure',
+            details: [
+              { label: 'What it is', text: 'A proposed initiative that would prohibit some campaign contributions by regulated utilities and government contractors and expand disclosure rules for political communications.' },
+              { label: 'Ballot question', text: 'Should this proposal be adopted?' },
+              { label: 'Pros / arguments for yes', text: 'Reduces the influence of regulated industries and contractors in campaign finance. Expands transparency and requires disclosure of digital political communications.' },
+              { label: 'Counterpoints / concerns', text: 'Not just a “save money” proposal. Critics say it may generate legal ambiguity, broaden speech restrictions, and create unforeseen compliance burdens for campaigns, consultants, and digital media. The major downside risk is overbreadth or heavy administrative costs in enforcing the rules.' },
+              { label: 'Fact-check lens', text: 'The real issue is whether the law is adequately targeted or whether it reaches too much speech and too many communication channels. Broad disclosure laws can have hidden legal and administrative consequences.' },
+              { label: 'Ad profile', text: 'Campaigns may use ads about “special interests,” “dark money,” or “anti-corruption.” Opponents may frame it as regulatory overreach or speech suppression.' }
+            ]
+          },
+          {
+            name: 'Oakland County Zoological Authority Millage',
+            details: [
+              { label: 'What it is', text: 'Renewal and restoration of a property-tax millage to support the Detroit Zoo and zoological services in Oakland County.' },
+              { label: 'Ballot question', text: 'Do you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in Oakland County for a period of ten years, from 2028 through 2037?' },
+              { label: 'Pros / arguments for yes', text: 'Supports animal care, educational programs, senior programs, and facility maintenance; keeps an established public service in place.' },
+              { label: 'Counterpoints / concerns', text: 'Concern is not usually “hidden surprise” or scandal; it is the long-term property tax commitment and whether the service should be funded by local taxes. Opposition often centers on tax burden and spending priorities.' },
+              { label: 'Fact-check lens', text: 'This is not simply a “save money” issue. It is a continuing tax commitment that should be judged based on public value and whether the benefits justify the cost.' },
+              { label: 'Ad profile', text: 'Supporters emphasize public benefit and education; opponents emphasize property-tax burden and fiscal priorities.' }
+            ]
+          },
+          {
+            name: 'Southeast Michigan Public Historical Museum Authority Millage',
+            details: [
+              { label: 'What it is', text: 'A new 0.2 mill property tax to fund public historical museums and educational services.' },
+              { label: 'Ballot question', text: 'Shall a 0.2 mill tax on all taxable property located within Oakland County be imposed by the Authority for a period of ten years, being years 2026 through 2035, inclusive, to provide historical museum services for the benefit of the residents of the Counties?' },
+              { label: 'Pros / arguments for yes', text: 'Supports major local museums and educational programs, preserves public-history access, and promotes cultural learning.' },
+              { label: 'Counterpoints / concerns', text: 'Critics focus on how much residents pay for a service they may not directly use and whether local museum funding should rank against schools, roads, public safety, or other needs. This is not a “save money” issue; it is a tax and priority choice.' },
+              { label: 'Fact-check lens', text: 'The real issue is whether these institutions deserve tax support and whether the value justifies the long-term tax burden.' },
+              { label: 'Ad profile', text: 'Supporters emphasize education and public culture; opponents emphasize tax burden and alternative spending priorities.' }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const app = document.getElementById('app');
+    const positiveCountEl = document.getElementById('positiveCount');
+    const negativeCountEl = document.getElementById('negativeCount');
+    const netScoreEl = document.getElementById('netScore');
+    const candidateCountEl = document.getElementById('candidateCount');
+    const candidateSummaryList = document.getElementById('candidateSummaryList');
+
+    const STORAGE_KEY = 'voterGuideScores_v2';
+    function loadScores() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+      catch (e) { return {}; }
+    }
+    let scores = loadScores();
+    function saveScores() { localStorage.setItem(STORAGE_KEY, JSON.stringify(scores)); }
+
+    // Give every entity (candidate or ballot proposal) a stable id + normalized facts.
+    const entities = [];
+    races.forEach(function (race, rI) {
+      var eI = 0;
+      (race.candidates || []).forEach(function (c) {
+        c._id = 'r' + rI + 'e' + (eI++);
+        c._facts = c.facts;
+        c._type = 'candidate';
+        entities.push(c);
+      });
+      (race.proposals || []).forEach(function (p) {
+        p._id = 'r' + rI + 'e' + (eI++);
+        p._facts = p.details;
+        p._type = 'proposal';
+        entities.push(p);
+      });
+    });
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (ch) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+      });
+    }
+
+    function renderSummary() {
+      var positive = 0, negative = 0, neutral = 0;
+      var rated = [];
+      entities.forEach(function (ent) {
+        var total = 0, touched = false;
+        ent._facts.forEach(function (f, idx) {
+          var s = scores[ent._id + '|' + idx];
+          if (s === 'positive') { positive++; total++; touched = true; }
+          else if (s === 'negative') { negative++; total--; touched = true; }
+          else if (s === 'neutral') { neutral++; touched = true; }
+        });
+        if (touched) rated.push({ name: ent.name, type: ent._type, total: total });
+      });
+
+      positiveCountEl.textContent = positive;
+      negativeCountEl.textContent = negative;
+      var net = positive - negative;
+      netScoreEl.textContent = (net > 0 ? '+' : '') + net;
+      candidateCountEl.textContent = rated.length;
+
+      rated.sort(function (a, b) { return b.total - a.total; });
+      candidateSummaryList.innerHTML = '';
+      if (!rated.length) {
+        var li0 = document.createElement('li');
+        li0.textContent = 'No ratings yet. Expand any candidate or proposal and tap Positive / Negative / Neutral on each item to build your scorecard.';
+        candidateSummaryList.appendChild(li0);
+        return;
+      }
+      rated.forEach(function (item) {
+        var li = document.createElement('li');
+        var sign = item.total > 0 ? '+' : '';
+        var color = '#55657d';
+        if (item.total > 0) color = '#1d7a4c';
+        else if (item.total < 0) color = '#b23636';
+        li.innerHTML = '<span class="score-sum" style="color:' + color + '">' + sign + item.total + '</span>&nbsp; ' + esc(item.name) + ' <span class="smallprint">(' + item.type + ')</span>';
+        candidateSummaryList.appendChild(li);
+      });
+    }
+
+    function applyChipStates() {
+      document.querySelectorAll('.chip').forEach(function (btn) {
+        btn.classList.toggle('active', scores[btn.dataset.key] === btn.dataset.value);
+      });
+    }
+
+    function makeFactItem(entId, fact, idx) {
+      var key = entId + '|' + idx;
+      var item = document.createElement('div');
+      item.className = 'fact-item';
+      item.innerHTML = '<span class="fact-label">' + esc(fact.label) + '</span><div class="fact-text">' + esc(fact.text) + '</div>';
+      var controls = document.createElement('div');
+      controls.className = 'score-controls';
+      [['positive', 'Positive'], ['negative', 'Negative'], ['neutral', 'Neutral']].forEach(function (pair) {
+        var val = pair[0];
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'chip ' + val;
+        b.dataset.key = key;
+        b.dataset.value = val;
+        b.textContent = pair[1];
+        b.addEventListener('click', function () {
+          if (scores[key] === val) { delete scores[key]; }
+          else { scores[key] = val; }
+          saveScores();
+          controls.querySelectorAll('.chip').forEach(function (c) {
+            c.classList.toggle('active', scores[key] === c.dataset.value);
+          });
+          renderSummary();
+        });
+        controls.appendChild(b);
+      });
+      item.appendChild(controls);
+      return item;
+    }
+
+    function renderEntity(ent) {
+      var d = document.createElement('details');
+      d.className = 'candidate';
+      var sum = document.createElement('summary');
+      var label = ent._type === 'proposal' ? 'Ballot proposal' : esc(ent.party || '');
+      sum.innerHTML = '<div><span class="candidate-name">' + esc(ent.name) + '</span><div class="candidate-party">' + label + '</div></div><div class="smallprint">Tap to expand / rate</div>';
+      d.appendChild(sum);
+      var body = document.createElement('div');
+      body.className = 'candidate-body';
+      var list = document.createElement('div');
+      list.className = 'fact-list';
+      ent._facts.forEach(function (f, idx) { list.appendChild(makeFactItem(ent._id, f, idx)); });
+      body.appendChild(list);
+      d.appendChild(body);
+      return d;
+    }
+
+    function renderRace(race) {
+      var d = document.createElement('details');
+      d.className = 'race';
+      d.open = true;
+      var sum = document.createElement('summary');
+      sum.textContent = race.name;
+      d.appendChild(sum);
+      var body = document.createElement('div');
+      body.className = 'race-body';
+      (race.candidates || []).forEach(function (c) { body.appendChild(renderEntity(c)); });
+      (race.proposals || []).forEach(function (p) { body.appendChild(renderEntity(p)); });
+      d.appendChild(body);
+      return d;
+    }
+
+    function setAllDetails(open) {
+      document.querySelectorAll('details').forEach(function (d) { d.open = open; });
+    }
+
+    document.getElementById('resetScores').addEventListener('click', function () {
+      scores = {};
+      saveScores();
+      applyChipStates();
+      renderSummary();
+    });
+    document.getElementById('expandAll').addEventListener('click', function () { setAllDetails(true); });
+    document.getElementById('collapseAll').addEventListener('click', function () { setAllDetails(false); });
+
+    races.forEach(function (race) { app.appendChild(renderRace(race)); });
+    applyChipStates();
+    renderSummary();
+  </script>
+</body>
+</html>
