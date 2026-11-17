@@ -319,9 +319,22 @@ const PICK_ROUTES={
   7:[3,10,11],
   8:[3,5,17],
 };
+/*
+   AUTO-UPDATE: your query script rewrites ORANGE_PARTS and PICK_ROUTES
+   above in this file. The page re-reads its own file every
+   CHECK_FOR_UPDATES_SECONDS and, only if the doors/routes changed, redraws
+   the cart and highlighted sections in place. Do NOT reload the page:
+   no reload means edits, sizes, pictures and any open edit window are kept.
+   Set to 0 to turn auto-update off.
+*/
+const CHECK_FOR_UPDATES_SECONDS=10;
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
+if(/[?&]probe=/.test(location.search)&&window.parent!==window){
+  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES},'*');
+  return;
+}
 const GEO={
   // Rack A: Slots 1-8 (unchanged)
   1:{x:4,y:95,w:280,h:112},
@@ -384,44 +397,94 @@ const MIN_BADGE_R=4;     // smallest badge radius when auto-shrinking
 /* ---- Persistence -------------------------------------------------- */
 const STORAGE_KEY='warehouse-pick-RH';
 const RACK_IMAGES={};
-(function loadSaved(){
-  try{
-    const raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw)return;
-    const saved=JSON.parse(raw);
-    if(saved.parts){
-      Object.entries(saved.parts).forEach(([k,v])=>{
-        const n=Number(k);
-        if(RACK_PARTS[n]){
-          if(v.p!==undefined)RACK_PARTS[n].p=v.p;
-          if(v.d!==undefined)RACK_PARTS[n].d=v.d;
-        }
-      });
-    }
-    if(saved.geo){
-      Object.entries(saved.geo).forEach(([k,v])=>{
-        const n=Number(k);
-        if(GEO[n]){
-          if(v.w!==undefined)GEO[n].w=v.w;
-          if(v.h!==undefined)GEO[n].h=v.h;
-        }
-      });
-    }
-    if(saved.images){
-      Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
-    }
-  }catch(e){console.warn('load error',e);}
-})();
-function saveToStorage(){
-  try{
-    const data={parts:{},geo:{},images:{}};
-    ALL.forEach(n=>{
-      data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
-      data.geo[n]={w:GEO[n].w,h:GEO[n].h};
-      if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+/* Settings are stored in IndexedDB (hundreds of MB available) because
+   localStorage only holds ~5 MB; pictures used to overflow it, the save
+   silently failed, and every reload came back with default settings. */
+const IDB_NAME='warehouse-pick-guide', IDB_STORE='settings';
+function idbOpen(){
+  return new Promise((res,rej)=>{
+    if(!window.indexedDB)return rej(new Error('IndexedDB unavailable'));
+    const r=indexedDB.open(IDB_NAME,1);
+    r.onupgradeneeded=()=>r.result.createObjectStore(IDB_STORE);
+    r.onsuccess=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+  });
+}
+function idbGet(key){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const t=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key);
+    t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);
+  }));
+}
+function idbPut(key,val){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const tx=db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(val,key);
+    tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);
+  }));
+}
+function applySaved(saved,replaceImages){
+  if(!saved)return;
+  if(saved.parts){
+    Object.entries(saved.parts).forEach(([k,v])=>{
+      const n=Number(k);
+      if(RACK_PARTS[n]){
+        if(v.p!==undefined)RACK_PARTS[n].p=v.p;
+        if(v.d!==undefined)RACK_PARTS[n].d=v.d;
+      }
     });
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-  }catch(e){console.warn('save error',e);}
+  }
+  if(saved.geo){
+    Object.entries(saved.geo).forEach(([k,v])=>{
+      const n=Number(k);
+      if(GEO[n]){
+        if(v.w!==undefined)GEO[n].w=v.w;
+        if(v.h!==undefined)GEO[n].h=v.h;
+      }
+    });
+  }
+  if(saved.images){
+    if(replaceImages)Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
+    Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
+  }
+}
+function collectSettings(){
+  const data={parts:{},geo:{},images:{}};
+  ALL.forEach(n=>{
+    data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
+    data.geo[n]={w:GEO[n].w,h:GEO[n].h};
+    if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+  });
+  return data;
+}
+async function loadSaved(){
+  let saved=null;
+  try{saved=await idbGet(STORAGE_KEY);}catch(e){console.warn('IndexedDB load error',e);}
+  if(!saved){
+    // First run after upgrade: migrate whatever is in localStorage
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(raw){saved=JSON.parse(raw);idbPut(STORAGE_KEY,saved).catch(()=>{});}
+    }catch(e){console.warn('load error',e);}
+  }
+  applySaved(saved,true);
+}
+function showStatus(msg,isError){
+  const fm=document.getElementById('fm');
+  if(!fm)return;
+  fm.textContent=msg;
+  fm.style.color=isError?'#ff6666':'';
+}
+function saveToStorage(){
+  const data=collectSettings();
+  idbPut(STORAGE_KEY,data).catch(e=>{
+    console.warn('save error',e);
+    showStatus('WARNING: settings could not be saved. Use Export to back them up.',true);
+  });
+  // Small text-only backup (no pictures) so it always fits in localStorage
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({parts:data.parts,geo:data.geo}));
+  }catch(e){/* ignore: IndexedDB copy is the real store */}
 }
 
 function mkEl(tag,a){
@@ -728,12 +791,7 @@ function closeSlotPicker(){
 
 /* ---- Export / Import ----------------------------------------------- */
 function exportSettings(){
-  const data={parts:{},geo:{},images:{}};
-  ALL.forEach(n=>{
-    data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
-    data.geo[n]={w:GEO[n].w,h:GEO[n].h};
-    if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
-  });
+  const data=collectSettings();
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -749,34 +807,72 @@ function importSettings(e){
   reader.onload=function(evt){
     try{
       const saved=JSON.parse(evt.target.result);
-      if(saved.parts){
-        Object.entries(saved.parts).forEach(([k,v])=>{
-          const n=Number(k);
-          if(RACK_PARTS[n]){
-            if(v.p!==undefined)RACK_PARTS[n].p=v.p;
-            if(v.d!==undefined)RACK_PARTS[n].d=v.d;
-          }
-        });
-      }
-      if(saved.geo){
-        Object.entries(saved.geo).forEach(([k,v])=>{
-          const n=Number(k);
-          if(GEO[n]){
-            if(v.w!==undefined)GEO[n].w=v.w;
-            if(v.h!==undefined)GEO[n].h=v.h;
-          }
-        });
-      }
-      if(saved.images){
-        Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
-        Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
-      }
+      applySaved(saved,true);
       saveToStorage();
       fullRerender();
     }catch(err){console.warn('import error',err);alert('Invalid settings file.');}
   };
   reader.readAsText(file);
   e.target.value='';
+}
+
+/* ---- Live data (next 8 doors) ------------------------------------- */
+let lastLiveSig='';
+function applyLiveData(data){
+  if(!data||typeof data!=='object')return false;
+  const orange=data.orange||data.ORANGE_PARTS;
+  const routes=data.routes||data.PICK_ROUTES;
+  if(!orange&&!routes)return false;
+  const sig=JSON.stringify([orange||null,routes||null]);
+  if(sig===lastLiveSig)return false;   // nothing changed: touch nothing
+  lastLiveSig=sig;
+  if(orange){
+    Object.keys(ORANGE_PARTS).forEach(k=>{delete ORANGE_PARTS[k];});
+    Object.entries(orange).forEach(([k,v])=>{
+      ORANGE_PARTS[Number(k)]={p:String((v&&v.p)||''),d:String((v&&v.d)||'')};
+    });
+  }
+  if(routes){
+    Object.keys(PICK_ROUTES).forEach(k=>{delete PICK_ROUTES[k];});
+    Object.entries(routes).forEach(([k,v])=>{
+      PICK_ROUTES[Number(k)]=(Array.isArray(v)?v:String(v||'').split(','))
+        .map(Number).filter(x=>x>0);
+    });
+  }
+  // Only redraw the cart labels and highlights; rack cells, edits,
+  // sizes, pictures and any open edit window stay exactly as they are.
+  renderCartLabels();
+  applyPickRoutes();
+  document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+  return true;
+}
+window.updatePickData=applyLiveData;
+/* Re-read this same HTML file in a hidden frame (works when opened as a
+   local file or from a server) and apply its doors/routes if changed. */
+function startLivePolling(){
+  if(!(CHECK_FOR_UPDATES_SECONDS>0))return;
+  const sd=document.getElementById('sd');
+  let frame=null,timer=null;
+  function done(ok){
+    if(timer){clearTimeout(timer);timer=null;}
+    if(frame){frame.remove();frame=null;}
+    if(sd)sd.style.background=ok?'':'#ff4444';  // red dot = file could not be read
+  }
+  window.addEventListener('message',e=>{
+    if(!frame||e.source!==frame.contentWindow)return;
+    const d=e.data;
+    if(d&&d.type==='pick-guide-data'){applyLiveData(d);done(true);}
+  });
+  function check(){
+    if(frame)return;  // previous check still running
+    frame=document.createElement('iframe');
+    frame.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
+    frame.setAttribute('aria-hidden','true');
+    frame.src=location.pathname.split('/').pop()+'?probe='+Date.now();
+    timer=setTimeout(()=>done(false),15000);
+    document.body.appendChild(frame);
+  }
+  setInterval(check,CHECK_FOR_UPDATES_SECONDS*1000);
 }
 
 function fullRerender(){
@@ -827,6 +923,8 @@ document.getElementById('btn-import').addEventListener('click',function(){
 });
 document.getElementById('import-file').addEventListener('change',importSettings);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+lastLiveSig=JSON.stringify([ORANGE_PARTS,PICK_ROUTES]);
+loadSaved().finally(()=>{fullRerender();startLivePolling();});
 })();
 </script>
 </body>

@@ -132,6 +132,26 @@ $html | Set-Content .\pick-guide-$(Get-Date -f yyyyMMdd).html
 
 ---
 
+## Auto-Update (next 8 doors) Without Reloading
+
+Your query script keeps rewriting `ORANGE_PARTS` and `PICK_ROUTES` in the HTML
+file as before. **Stop reloading the page afterwards.** The open page re-reads
+its own file every `CHECK_FOR_UPDATES_SECONDS` (default 10) and, only when the
+doors or routes actually changed, redraws the orange cart and highlighted rack
+sections in place. Rack edits, sizes, pictures and an open edit window are not
+touched. This works whether the page is opened as a local file or from a server.
+
+- Keep the file name and folder the same; the page re-reads the file it was opened from.
+- The status dot turns red if the file could not be read.
+- Set `CHECK_FOR_UPDATES_SECONDS=0` to turn it off.
+- Other code on the page can also push data directly: `window.updatePickData({orange:{...},routes:{...}})`.
+
+Rack edits, sizes and pictures are stored in the browser's IndexedDB, which has
+room for many photos, so they also survive an actual reload. (The old
+localStorage store held only ~5 MB and silently failed once pictures filled it.)
+
+---
+
 ## Rack Section Reference
 
 | Group | Sections | Physical location |
