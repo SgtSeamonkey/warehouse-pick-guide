@@ -132,6 +132,25 @@ $html | Set-Content .\pick-guide-$(Get-Date -f yyyyMMdd).html
 
 ---
 
+## Live Data (next 8 doors) Without Reloading
+
+Do **not** reload the page to pick up new doors. A reload is what used to wipe
+edits and pictures. Instead, point the page at a JSON feed and it updates the
+orange cart and highlighted sections in place every few seconds:
+
+- Set `LIVE_DATA_URL` (and `LIVE_POLL_SECONDS`) in the PICK DATA block, or open
+  the page as `RH Door Line Kitting.html?data=<feed url>`.
+- Feed format: `{"orange":{"1":{"p":"FRONT","d":"N1WB..."}},"routes":{"1":[1,2,3]}}`
+  (`ORANGE_PARTS` / `PICK_ROUTES` keys also work; routes may be `"1,2,3"` strings).
+- Or push data from your own script: `window.updatePickData(json)`.
+- The status dot turns red when the feed cannot be reached.
+
+Rack edits, sizes and pictures are stored in the browser's IndexedDB, which has
+room for many photos (the old localStorage store held only ~5 MB and silently
+failed once pictures filled it).
+
+---
+
 ## Rack Section Reference
 
 | Group | Sections | Physical location |
