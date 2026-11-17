@@ -33,6 +33,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 .hb{background:transparent;border:1px solid #2a3a55;color:#8ea2bb;
   padding:4px 9px;border-radius:4px;font-size:.7rem;cursor:pointer;opacity:.75}
 .hb:hover{opacity:1;border-color:var(--yw);color:var(--yw)}
+.hb.ok{color:#7ee2a8;border-color:#2e6b4a;opacity:.9}
+.hb.warn{background:var(--yw);color:#111;border-color:var(--yw);opacity:1;font-weight:800}
+#toast{position:fixed;left:50%;bottom:44px;transform:translateX(-50%);max-width:min(900px,92vw);background:#14213a;border:2px solid #00b8d4;color:#fff;padding:10px 16px;border-radius:8px;font-size:.9rem;z-index:2000;box-shadow:0 6px 24px rgba(0,0,0,.5);display:none}
+#toast.err{border-color:#ff5252}
 
 /* ---- Main layout: yellow rack gets the space ---- */
 #main{display:grid;grid-template-rows:auto minmax(120px,1fr);gap:8px;padding:8px 12px;min-height:0}
@@ -158,6 +162,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     <button class="hb" id="btn-slots">&#9998; Edit Slots</button>
     <button class="hb" id="btn-export">&#8681; Export</button>
     <button class="hb" id="btn-import">&#8679; Import</button>
+    <button class="hb" id="btn-folder" style="display:none">&#128193; Link folder</button>
     <input type="file" id="import-file" accept=".json" style="display:none">
     <div id="sd" title="Green = up to date, red = could not read the file"></div>
     <span id="lu">&#8212;</span>
@@ -189,6 +194,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
     </div>
   </div>
 </div>
+<div id="toast" role="status" aria-live="polite"></div>
 <footer id="ft">
   <span id="fl"><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
@@ -477,9 +483,10 @@ function showStatus(msg,isError){
   fm.textContent=msg;
   fm.style.color=isError?'#ff6666':'';
 }
-function saveToStorage(){
+function saveToStorage(savedAt){
   const data=collectSettings();
-  idbPut(STORAGE_KEY,data).catch(e=>{
+  data.savedAt=savedAt||Date.now();
+  return idbPut(STORAGE_KEY,data).catch(e=>{
     console.warn('save error',e);
     showStatus('WARNING: settings could not be saved. Use Export to back them up.',true);
   });
@@ -804,12 +811,139 @@ function closeSlotPicker(){
 }
 
 /* ---- Export / Import ----------------------------------------------- */
-function exportSettings(){
-  const data=collectSettings();
+/* ---- Settings file next to this page (Chrome / Edge folder access) ----
+   Link the folder once. On every refresh the page loads SETTINGS_FILE from
+   it; Export writes SETTINGS_FILE and first copies the old one to a dated
+   backup. Other browsers fall back to a normal download. */
+const SETTINGS_FILE=STORAGE_KEY+'-settings.json';
+const DIR_KEY='folder:'+STORAGE_KEY, SYNC_KEY='sync:'+STORAGE_KEY;
+const FS_OK=typeof window.showDirectoryPicker==='function';
+let dirHandle=null, toastTimer=null;
+function toast(msg,isErr){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=isErr?'err':'';t.style.display='block';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.display='none';},isErr?15000:8000);
+}
+function stamp(ms){
+  const d=new Date(ms),z=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())+'_'+z(d.getHours())+'-'+z(d.getMinutes())+'-'+z(d.getSeconds());
+}
+async function permOk(h,ask){
+  if(!h)return false;
+  if(typeof h.queryPermission!=='function')return true;
+  const o={mode:'readwrite'};
+  if(await h.queryPermission(o)==='granted')return true;
+  return ask?(await h.requestPermission(o))==='granted':false;
+}
+async function readFile(dir,name){
+  try{return await (await dir.getFileHandle(name)).getFile();}
+  catch(e){if(e&&(e.name==='NotFoundError'||e.name==='TypeError'))return null;throw e;}
+}
+async function writeFile(dir,name,text){
+  const fh=await dir.getFileHandle(name,{create:true});
+  const w=await fh.createWritable();await w.write(text);await w.close();
+  return (await fh.getFile()).lastModified;
+}
+async function backupName(dir,ms,suffix){
+  const base=SETTINGS_FILE.replace(/\.json$/,'')+'_backup_'+stamp(ms)+(suffix||'');
+  let name=base+'.json',i=2;
+  while(await readFile(dir,name))name=base+'_'+(i++)+'.json';
+  return name;
+}
+function folderBtn(state){
+  const b=document.getElementById('btn-folder');
+  if(!FS_OK){b.style.display='none';return;}
+  b.style.display='';b.classList.remove('ok','warn');
+  if(state==='ok'){b.classList.add('ok');b.textContent='\u{1F4C1} '+(dirHandle.name||'Folder')+' ✓';
+    b.title='Settings load from and export to '+SETTINGS_FILE+' in this folder. Click to choose a different folder.';}
+  else if(state==='reconnect'){b.classList.add('warn');b.textContent='\u{1F4C1} Reconnect folder';
+    b.title='The browser needs one click to allow reading '+SETTINGS_FILE+' again.';}
+  else{b.textContent='\u{1F4C1} Link folder';
+    b.title='Choose the folder that holds this page so '+SETTINGS_FILE+' loads automatically and Export saves there.';}
+}
+async function pickFolder(){
+  dirHandle=await window.showDirectoryPicker({id:'pick-guide-'+STORAGE_KEY,mode:'readwrite'});
+  await idbPut(DIR_KEY,dirHandle);
+  folderBtn('ok');
+}
+/* Load SETTINGS_FILE if it changed since this screen last read or wrote it. */
+async function syncFromFolder(){
+  const file=await readFile(dirHandle,SETTINGS_FILE);
+  if(!file){toast('No '+SETTINGS_FILE+' in "'+dirHandle.name+'" yet. Click Export to create it.');return;}
+  let synced=0,local=null;
+  try{synced=(await idbGet(SYNC_KEY))||0;}catch(e){}
+  try{local=await idbGet(STORAGE_KEY);}catch(e){}
+  const unexported=!!local&&(!synced||(local.savedAt||0)>synced);
+  if(file.lastModified===synced){
+    if(unexported)toast('This screen has changes that are not in '+SETTINGS_FILE+' yet. Click Export to save them.');
+    return;
+  }
+  let data;
+  try{data=JSON.parse(await file.text());}
+  catch(e){toast(SETTINGS_FILE+' is not valid JSON, so it was not loaded. Current settings kept.',true);return;}
+  let note='';
+  if(unexported){   // never drop this screen's edits without a copy
+    const name=await backupName(dirHandle,Date.now(),'_this-screen');
+    await writeFile(dirHandle,name,JSON.stringify(local,null,2));
+    note=' This screen\'s previous settings were saved as '+name+'.';
+  }
+  applySaved(data,true);
+  await saveToStorage(file.lastModified);
+  await idbPut(SYNC_KEY,file.lastModified);
+  fullRerender();
+  toast('Loaded '+SETTINGS_FILE+' (saved '+new Date(file.lastModified).toLocaleString()+').'+note);
+}
+async function initFolder(){
+  if(!FS_OK){folderBtn();return;}
+  try{dirHandle=(await idbGet(DIR_KEY))||null;}catch(e){dirHandle=null;}
+  if(!dirHandle){folderBtn('none');return;}
+  try{
+    if(await permOk(dirHandle,false)){folderBtn('ok');await syncFromFolder();}
+    else folderBtn('reconnect');
+  }catch(e){console.warn('folder error',e);folderBtn('reconnect');}
+}
+async function onFolderClick(){
+  try{
+    const reconnect=document.getElementById('btn-folder').classList.contains('warn');
+    if(reconnect&&dirHandle&&await permOk(dirHandle,true))folderBtn('ok');
+    else await pickFolder();
+    await syncFromFolder();
+  }catch(e){if(!e||e.name!=='AbortError'){console.warn(e);toast('Folder could not be opened: '+(e&&e.message||e),true);}}
+}
+async function exportSettings(){
+  if(FS_OK){
+    try{
+      if(!dirHandle||!(await permOk(dirHandle,true))){
+        toast('Choose the folder that holds this page. '+SETTINGS_FILE+' will be saved there.');
+        await pickFolder();
+      }
+      const data=collectSettings();data.savedAt=Date.now();
+      const old=await readFile(dirHandle,SETTINGS_FILE);
+      let note='';
+      if(old){
+        const name=await backupName(dirHandle,old.lastModified);
+        await writeFile(dirHandle,name,await old.text());
+        note=' Previous version kept as '+name+'.';
+      }
+      const m=await writeFile(dirHandle,SETTINGS_FILE,JSON.stringify(data,null,2));
+      await saveToStorage(m);await idbPut(SYNC_KEY,m);
+      folderBtn('ok');
+      toast('Saved '+SETTINGS_FILE+' in "'+(dirHandle.name||'the linked folder')+'".'+note);
+      return;
+    }catch(e){
+      if(e&&e.name==='AbortError')return;
+      console.warn('export error',e);
+      toast('Could not save into the folder ('+(e&&e.message||e)+'). Downloading the file instead.',true);
+    }
+  }
+  downloadSettings();
+}
+function downloadSettings(){
+  const data=collectSettings();data.savedAt=Date.now();
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=STORAGE_KEY+'-settings.json';
+  a.href=url;a.download=SETTINGS_FILE;
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);URL.revokeObjectURL(url);
 }
@@ -936,9 +1070,10 @@ document.getElementById('btn-import').addEventListener('click',function(){
   document.getElementById('import-file').click();
 });
 document.getElementById('import-file').addEventListener('change',importSettings);
+document.getElementById('btn-folder').addEventListener('click',onFolderClick);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
 lastLiveSig=JSON.stringify([ORANGE_PARTS,PICK_ROUTES]);
-loadSaved().finally(()=>{fullRerender();startLivePolling();});
+loadSaved().finally(()=>{fullRerender();startLivePolling();initFolder();});
 })();
 </script>
 </body>

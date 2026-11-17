@@ -152,6 +152,26 @@ localStorage store held only ~5 MB and silently failed once pictures filled it.)
 
 ---
 
+## Settings File (RH page)
+
+In Chrome or Edge, click **📁 Link folder** in the header once and choose the
+folder that holds `RH Door Line Kitting.html`. After that:
+
+- **Every refresh** loads `warehouse-pick-RH-settings.json` from that folder
+  (if it changed since this screen last loaded or saved it).
+- **Export** saves `warehouse-pick-RH-settings.json` there and first copies the
+  previous version to `warehouse-pick-RH-settings_backup_<date>_<time>.json`.
+  To revert, rename a backup back to `warehouse-pick-RH-settings.json` and refresh.
+- If this screen has edits that were never exported and the file changed
+  elsewhere, the screen's version is saved as `..._backup_<date>_<time>_this-screen.json`
+  before the file is loaded, so nothing is lost.
+- If the browser asks again, the button turns yellow: **Reconnect folder** (one click).
+- Without a linked folder (or in other browsers) Export downloads the file as before.
+
+The LH page will use `warehouse-pick-LH-settings.json` the same way.
+
+---
+
 ## Rack Section Reference
 
 | Group | Sections | Physical location |
