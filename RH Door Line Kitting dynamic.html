@@ -132,6 +132,7 @@ body.mode-frames #rack-cells{pointer-events:none;opacity:.45}
 body.mode-frames #badge-layer{opacity:.3}
 body.mode-frames .RF{pointer-events:all;fill:rgba(245,200,0,.05);cursor:move;opacity:1}
 #edit-layer .eo{fill:none;stroke:#00e5ff;stroke-width:2.5;stroke-dasharray:7 4;pointer-events:none}
+#edit-layer .el{fill:rgba(0,229,255,.08);stroke:#00e5ff;stroke-width:1.5;stroke-dasharray:3 3;pointer-events:none}
 #edit-layer .eh{fill:#fff;stroke:#00b8d4;stroke-width:2}
 /* ---- Footer ---- */
 #ft{background:#060b12;border-top:2px solid #1a2840;display:flex;align-items:center;
@@ -206,7 +207,7 @@ body.mode-frames .RF{pointer-events:all;fill:rgba(245,200,0,.05);cursor:move;opa
       <div id="insp"><b id="in-name">Nothing selected</b>
         X <input type="number" id="in-x" disabled> Y <input type="number" id="in-y" disabled>
         W <input type="number" id="in-w" disabled> H <input type="number" id="in-h" disabled></div>
-      <div id="edhint">Click a section to select it &#183; drag to move &#183; drag the white handles to resize &#183; double-click to edit text or picture &#183; arrow keys nudge, Shift+arrows resize &#183; Ctrl+Z undo &#183; hold Alt while dragging to ignore the grid. Changes save automatically; use Export to keep a copy.</div>
+      <div id="edhint">Click a section to select it &#183; drag to move &#183; drag the white handles to resize (sections sharing that edge resize with it; hold Shift to resize only this one) &#183; double-click to edit text or picture &#183; arrow keys nudge, Shift+arrows resize &#183; Ctrl+Z undo &#183; hold Alt while dragging to ignore the grid. Changes save automatically; use Export to keep a copy.</div>
     </div>
   <svg id="rsv" style="touch-action:none" viewBox="0 88 1296 434" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs><pattern id="gp" x="4" y="95" width="14" height="14" patternUnits="userSpaceOnUse">
@@ -1012,6 +1013,45 @@ function placeCell(n){
   set('p'+n,{x:g.x+g.w/2,y:partY});
   set('d'+n,{x:g.x+g.w/2,y:descY});
 }
+/* ---- Shared edges: sections touching the edge being resized follow it ---- */
+const EDGE_TOL=1.5;
+function findLinks(id){
+  const o=GEO[id], L={e:[],w:[],n:[],s:[]};
+  ALL.forEach(k=>{
+    const g=GEO[k];
+    if(k===id||!g||g.w<=0||g.h<=0)return;
+    const vOver=g.y<o.y+o.h-0.5&&g.y+g.h>o.y+0.5;
+    const hOver=g.x<o.x+o.w-0.5&&g.x+g.w>o.x+0.5;
+    if(vOver&&Math.abs(g.x-(o.x+o.w))<=EDGE_TOL)L.e.push(k);
+    if(vOver&&Math.abs(g.x+g.w-o.x)<=EDGE_TOL)L.w.push(k);
+    if(hOver&&Math.abs(g.y-(o.y+o.h))<=EDGE_TOL)L.s.push(k);
+    if(hOver&&Math.abs(g.y+g.h-o.y)<=EDGE_TOL)L.n.push(k);
+  });
+  const origs={};
+  [...L.e,...L.w,...L.n,...L.s].forEach(k=>{origs[k]=Object.assign({},GEO[k]);});
+  return {L,origs,orig:Object.assign({},o)};
+}
+/* Resize section id to box b; neighbours on a moved edge follow it.
+   links=null resizes the section on its own. */
+function resizeLinked(id,b,links){
+  if(links){
+    const {L,origs,orig:o}=links;
+    // restore neighbours, then keep each at least MIN_SIZE
+    Object.entries(origs).forEach(([k,g])=>{Object.assign(GEO[k],g);});
+    const right=b.x+b.w, bottom=b.y+b.h;
+    if(right!==o.x+o.w)L.e.forEach(k=>{const g=origs[k],mx=g.x+g.w-MIN_SIZE;if(b.x+b.w>mx)b.w=mx-b.x;});
+    if(b.x!==o.x)L.w.forEach(k=>{const g=origs[k],mn=g.x+MIN_SIZE;if(b.x<mn){b.w=right-mn;b.x=mn;}});
+    if(bottom!==o.y+o.h)L.s.forEach(k=>{const g=origs[k],mx=g.y+g.h-MIN_SIZE;if(b.y+b.h>mx)b.h=mx-b.y;});
+    if(b.y!==o.y)L.n.forEach(k=>{const g=origs[k],mn=g.y+MIN_SIZE;if(b.y<mn){b.h=bottom-mn;b.y=mn;}});
+    const nr=b.x+b.w, nb=b.y+b.h;
+    if(nr!==o.x+o.w)L.e.forEach(k=>{const g=origs[k];GEO[k].x=nr;GEO[k].w=g.x+g.w-nr;});
+    if(b.x!==o.x)L.w.forEach(k=>{GEO[k].w=b.x-origs[k].x;});
+    if(nb!==o.y+o.h)L.s.forEach(k=>{const g=origs[k];GEO[k].y=nb;GEO[k].h=g.y+g.h-nb;});
+    if(b.y!==o.y)L.n.forEach(k=>{GEO[k].h=b.y-origs[k].y;});
+    Object.keys(origs).forEach(k=>placeCell(Number(k)));
+  }
+  Object.assign(GEO[id],b);placeCell(id);
+}
 function setBox(t,b){
   const box=getBox(t);Object.assign(box,b);
   if(t.kind==='cell')placeCell(t.id);else renderFrames();
@@ -1022,6 +1062,8 @@ function drawHandles(){
   updateInspector();
   if(!selected||editMode==='off')return;
   const b=getBox(selected);if(!b)return;
+  if(drag&&drag.links&&drag.moved)Object.keys(drag.links.origs).forEach(k=>{const g=GEO[k];
+    layer.appendChild(mkEl('rect',{class:'el',x:g.x+2,y:g.y+2,width:Math.max(0,g.w-4),height:Math.max(0,g.h-4)}));});
   layer.appendChild(mkEl('rect',{class:'eo',x:b.x-2,y:b.y-2,width:b.w+4,height:b.h+4}));
   const svg=document.getElementById('rsv');
   const scale=svg.getScreenCTM()?svg.getScreenCTM().a:1;
@@ -1088,7 +1130,8 @@ function setMode(m){
     e.preventDefault();
     svg.setPointerCapture(e.pointerId);
     if(!h)select(target);
-    drag={target,handle:h||'move',start:svgPt(e),orig:Object.assign({},getBox(target)),moved:false};
+    drag={target,handle:h||'move',start:svgPt(e),orig:Object.assign({},getBox(target)),moved:false,
+          links:(h&&target.kind==='cell')?findLinks(target.id):null};
   });
   svg.addEventListener('pointermove',e=>{
     if(!drag)return;
@@ -1107,7 +1150,10 @@ function setMode(m){
       if(hd.includes('n')){y=snapPos(o.y+dy,e);h=o.y+o.h-y;if(h<MIN_SIZE){y=o.y+o.h-MIN_SIZE;h=MIN_SIZE;}}
       if(hd.includes('s')){h=Math.max(MIN_SIZE,snapLen(o.h+dy,e));}
     }
-    setBox(drag.target,clampBox({x,y,w,h}));
+    const nb=clampBox({x,y,w,h});
+    if(drag.links&&e.shiftKey)Object.entries(drag.links.origs).forEach(([k,g])=>{Object.assign(GEO[k],g);placeCell(Number(k));});
+    if(drag.links)resizeLinked(drag.target.id,nb,e.shiftKey?null:drag.links);   // Shift = this section only
+    else setBox(drag.target,nb);
     drawHandles();
   });
   const end=()=>{if(!drag)return;const m=drag.moved;drag=null;if(m)commit();else drawHandles();};
@@ -1128,7 +1174,10 @@ function setMode(m){
     const step=document.getElementById('ed-snap').checked?SNAP:1;
     const b=Object.assign({},getBox(selected));
     if(e.shiftKey){b.w+=dir[0]*step;b.h+=dir[1]*step;}else{b.x+=dir[0]*step;b.y+=dir[1]*step;}
-    pushUndo();setBox(selected,clampBox(b));drawHandles();commit();
+    pushUndo();
+    if(e.shiftKey&&selected.kind==='cell')resizeLinked(selected.id,clampBox(b),e.altKey?null:findLinks(selected.id));
+    else setBox(selected,clampBox(b));
+    drawHandles();commit();
   });
 
   ['in-x','in-y','in-w','in-h'].forEach((id,i)=>{
@@ -1136,7 +1185,10 @@ function setMode(m){
       if(!selected)return;
       const v=parseInt(ev.target.value,10);if(isNaN(v))return;
       const b=Object.assign({},getBox(selected));b['xywh'[i]]=v;
-      pushUndo();setBox(selected,clampBox(b));commit();
+      pushUndo();
+      if(selected.kind==='cell'&&i>=2)resizeLinked(selected.id,clampBox(b),findLinks(selected.id));
+      else setBox(selected,clampBox(b));
+      commit();
     });
   });
 
