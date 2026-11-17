@@ -7,74 +7,114 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --or:#E8620A;--ord:#7A3305;
-  --yw:#F5C800;--ywh:#FFE840;--ywd:#4a3800;
-  --bg:#141c28;--pb:#111820;--tx:#dde3ec;--gn:#00e676;
+  --or:#FF6A13;--ord:#7A3305;--orbg:#2a1608;
+  --yw:#F5C800;--ywh:#FFE840;
+  --bg:#0b1119;--panel:#111a26;--line:#22334a;--tx:#e8edf3;--mut:#7f93ab;--gn:#00e676;
 }
 html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   font-family:'Segoe UI',Arial,sans-serif;overflow:hidden}
-#app{display:grid;grid-template-rows:50px 1fr 50px;
-  grid-template-columns:1fr;height:100vh}
-#hd{grid-column:1/-1;background:#0a1220;border-bottom:2px solid var(--yw);
-  display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-#hd h1{font-size:.95rem;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--yw)}
-#hr{display:flex;align-items:center;gap:10px;font-size:.75rem}
-#sd{width:8px;height:8px;border-radius:50%;background:var(--gn);
-  box-shadow:0 0 8px 2px rgba(0,230,118,.7)}
-#lu{color:#445;font-size:.68rem}
-.hb{background:#182435;border:1px solid #2a3a55;color:var(--yw);
-  padding:4px 10px;border-radius:4px;font-size:.7rem;cursor:pointer}
-.hb:hover{background:#203050;border-color:var(--yw)}
-#pr{background:#0d151f;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:6px 8px;overflow:hidden}
-#ft{grid-column:1/-1;background:#080f18;border-top:2px solid #1a2840;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;gap:12px}
-#fl{color:#334;font-size:.68rem;white-space:nowrap}
-#fm{flex:1;text-align:center;font-size:.8rem;font-weight:600;
-  color:var(--yw);letter-spacing:.03em}
-#fx{color:#445;font-size:.65rem;white-space:nowrap;text-align:right}
-.cf{fill:none;stroke:var(--or);stroke-width:5;stroke-linejoin:round}
-.cd{stroke:#5a2800;stroke-width:2.5}
-.cs{stroke:#242424;stroke-width:1;stroke-dasharray:3 3}
-.cg{fill:#181818;stroke:#222;stroke-width:1}
-.cn{font-family:'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:900;
-  fill:var(--or);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.cb{font-family:'Segoe UI',Arial,sans-serif;font-size:6px;fill:#3a2010;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.cw{fill:#111;stroke:var(--or);stroke-width:2.5}
-.ch{fill:var(--ord)}
-.ck{fill:#1a1a1a;stroke:var(--or);stroke-width:1.5}
-#rsv{width:100%;height:auto;display:block}
-.RF{fill:rgba(20,28,42,.55);stroke:var(--yw);stroke-width:3;stroke-linejoin:round}
-.RS{fill:#0c1824;stroke:#263a52;stroke-width:1.5}
-.RS.on{fill:rgba(245,200,0,.18);stroke:var(--ywh);stroke-width:2.5;
-  animation:rg 1.4s ease-in-out infinite}
-@keyframes rg{
-  0%,100%{filter:drop-shadow(0 0 8px rgba(245,200,0,.8))}
-  50%{filter:drop-shadow(0 0 20px rgba(245,200,0,1))}
-}
-/* SN = rack section number (small, top-left of each cell) */
-.SN{font-family:'Segoe UI',Arial,sans-serif;fill:#304a66;font-weight:900;
-  text-anchor:start;dominant-baseline:auto;pointer-events:none}
-.SN.on{fill:rgba(245,200,0,.7)}
-/* SP = part number text inside rack cell */
-.SP{font-family:'Segoe UI',Arial,sans-serif;fill:#3a6e9a;font-weight:400;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
-.SP.on{fill:rgba(240,180,0,.82)}
-/* SD = part description text inside rack cell */
-.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#26506e;font-weight:700;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.SD.on{fill:rgba(245,200,0,.95)}
-/* CPT/CDT = part number / description inside orange cart slots */
-.CPT{font-family:'Segoe UI',Arial,sans-serif;fill:#b04515;font-weight:700;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.CDT{font-family:'Segoe UI',Arial,sans-serif;fill:#7a3820;font-weight:500;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none;font-style:italic}
-.CPT.on{fill:rgba(245,200,0,.9)}.CDT.on{fill:rgba(240,175,0,.75)}
-/* Edit modal */
+#app{display:grid;grid-template-rows:auto 1fr auto;height:100vh}
+
+/* ---- Header ---- */
+#hd{background:#060b12;border-bottom:3px solid var(--yw);
+  display:flex;align-items:center;gap:20px;padding:5px 14px}
+#hd h1{font-size:clamp(1rem,1.5vw,1.6rem);font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:#fff;white-space:nowrap;display:flex;align-items:center;gap:12px}
+#hd h1 .side{background:var(--yw);color:#111;padding:2px 12px;border-radius:6px}
+#flow{flex:1;text-align:center;font-size:clamp(.85rem,1.2vw,1.3rem);font-weight:700;
+  color:var(--mut);white-space:nowrap;letter-spacing:.03em}
+#flow .y{color:#111;background:var(--yw);padding:1px 10px;border-radius:5px}
+#flow .o{color:#fff;background:var(--or);padding:1px 10px;border-radius:5px}
+#flow .arr{color:#fff;margin:0 10px}
+#hr{display:flex;align-items:center;gap:8px;font-size:.75rem;white-space:nowrap}
+#sd{width:12px;height:12px;border-radius:50%;background:var(--gn);
+  box-shadow:0 0 8px 2px rgba(0,230,118,.6)}
+#lu{color:var(--mut);font-size:.8rem;min-width:84px}
+.hb{background:transparent;border:1px solid #2a3a55;color:#8ea2bb;
+  padding:4px 9px;border-radius:4px;font-size:.7rem;cursor:pointer;opacity:.75}
+.hb:hover{opacity:1;border-color:var(--yw);color:var(--yw)}
+
+/* ---- Main layout: yellow rack gets the space ---- */
+#main{display:grid;grid-template-rows:auto minmax(120px,1fr);gap:8px;padding:8px 12px;min-height:0}
+.ph{font-size:clamp(.7rem,.85vw,.95rem);font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ph::before{content:'';width:11px;height:11px;border-radius:3px;background:currentColor}
+.ph.o{color:var(--or)}.ph.y{color:var(--yw)}
+
+/* ---- Yellow rack ---- */
+#pr{display:flex;flex-direction:column;min-height:0;min-width:0}
+#rsv{width:100%;height:auto;max-height:calc(100vh - 250px);display:block}
+.RF{fill:none;stroke:var(--yw);stroke-width:4;stroke-linejoin:round;opacity:.55}
+.RS{fill:#101a26;stroke:#2a3d56;stroke-width:1.5}
+.RS.on{fill:var(--yw);stroke:#fff6b0;stroke-width:3;
+  filter:drop-shadow(0 0 10px rgba(245,200,0,.55));animation:rg 1.6s ease-in-out infinite}
+@keyframes rg{0%,100%{stroke-opacity:1}50%{stroke-opacity:.35}}
+/* pictures fade when a section is not being picked */
+#rack-cells image{opacity:.35}
+#rack-cells image.on{opacity:1}
+.SN{font-family:'Segoe UI',Arial,sans-serif;fill:#5b7593;font-weight:900;
+  text-anchor:start;dominant-baseline:auto;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SN.on{fill:#2b2100;stroke:var(--yw)}
+.SP{font-family:Consolas,'Courier New',monospace;fill:#6f8aa8;font-weight:600;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SP.on{fill:#2b2100;font-weight:700;stroke:var(--yw)}
+.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#8aa3bf;font-weight:700;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SD.on{fill:#000;font-weight:900;stroke:var(--yw);stroke-width:4px}
+
+/* ---- Bottom strip ---- */
+#strip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;min-height:0}
+#cart{display:flex;flex-direction:column;min-height:0}
+#cart-frame{flex:1;min-height:0;border:5px solid var(--or);border-radius:6px;
+  background:#1b1d21;padding:4px;display:grid;width:clamp(300px,24vw,440px);
+  grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:4px}
+.slot{background:#33363b;border:1px solid #50555c;border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:3px;gap:2px;min-width:0;overflow:hidden}
+.slot.on{border-color:var(--or)}
+.slot.empty{opacity:.4}
+.slot .hd{display:flex;align-items:center;gap:5px;max-width:100%}
+.slot .sn{width:clamp(20px,1.7vw,30px);height:clamp(20px,1.7vw,30px);border-radius:50%;
+  background:var(--or);color:#fff;font-weight:900;border:2px solid #111;flex:none;
+  font-size:clamp(.8rem,1.1vw,1.15rem);display:flex;align-items:center;justify-content:center}
+.slot .dt{font-size:clamp(.62rem,.8vw,.9rem);font-weight:900;color:#fff;line-height:1.05;
+  text-transform:uppercase;overflow:hidden;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:left}
+.slot .dc{font-size:clamp(.5rem,.6vw,.68rem);color:#ffcfae;line-height:1.1;max-width:100%;
+  font-family:Consolas,'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
+.chip{background:var(--yw);color:#111;font-weight:900;border-radius:3px;
+  font-size:clamp(.6rem,.75vw,.85rem);min-width:1.7em;padding:0 2px}
+#pl-wrap{display:flex;flex-direction:column;min-height:0;min-width:0}
+#picklist{flex:1;min-height:0;overflow:auto;display:grid;align-content:start;gap:4px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
+.pl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
+  background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--yw);
+  border-radius:5px;padding:3px 8px}
+.pl .sec{background:var(--yw);color:#111;font-weight:900;border-radius:5px;
+  font-size:clamp(.85rem,1.05vw,1.2rem);min-width:2em;text-align:center;padding:1px 4px}
+.pl .pt b{display:block;font-size:clamp(.75rem,.9vw,1rem);color:#fff;line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl .pt span{display:block;font-size:clamp(.6rem,.7vw,.8rem);color:var(--mut);
+  font-family:Consolas,'Courier New',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl .to{display:flex;align-items:center;gap:3px}
+.pl .to .ar{color:var(--mut);font-size:1rem;margin-right:2px}
+.dot{width:clamp(20px,1.6vw,28px);height:clamp(20px,1.6vw,28px);border-radius:50%;
+  background:var(--or);color:#fff;border:2px solid #111;font-weight:900;
+  font-size:clamp(.7rem,.9vw,1rem);display:flex;align-items:center;justify-content:center}
+.pl-empty{color:var(--mut);font-size:1rem;padding:10px}
+
+/* ---- Footer ---- */
+#ft{background:#060b12;border-top:2px solid #1a2840;display:flex;align-items:center;
+  justify-content:space-between;padding:3px 14px;gap:12px}
+#fl{display:flex;gap:18px;font-size:clamp(.65rem,.75vw,.85rem);color:var(--mut);white-space:nowrap}
+#fl i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+#fm{flex:1;text-align:center;font-size:clamp(.7rem,.85vw,.95rem);font-weight:700;color:var(--yw)}
+#fx{color:var(--mut);font-size:clamp(.65rem,.75vw,.85rem);white-space:nowrap;text-align:right}
+
+/* ---- Edit modal ---- */
 #edit-modal{position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000}
 #edit-modal .modal-body{background:#1a2540;border:2px solid var(--yw);border-radius:8px;
@@ -112,95 +152,45 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 <body>
 <div id="app">
 <header id="hd">
-  <h1>&#9881; Door Line LH Side Kitting Pick Guide</h1>
+  <h1><span class="side">LH</span> Door Line Kitting</h1>
+  <div id="flow">PICK from <span class="y">YELLOW</span> rack<span class="arr">&#10132;</span>PUT in <span class="o">ORANGE</span> cart slot</div>
   <div id="hr">
     <button class="hb" id="btn-slots">&#9998; Edit Slots</button>
     <button class="hb" id="btn-export">&#8681; Export</button>
     <button class="hb" id="btn-import">&#8679; Import</button>
     <input type="file" id="import-file" accept=".json" style="display:none">
-    <div id="sd"></div>
-    <span style="color:#556">ACTIVE</span>
+    <div id="sd" title="Green = up to date, red = could not read the file"></div>
     <span id="lu">&#8212;</span>
   </div>
 </header>
-<section id="pr">
-  <svg id="rsv" viewBox="0 0 1296 525" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-    <ellipse cx="648" cy="520" rx="640" ry="5" fill="rgba(0,0,0,.5)"/>
-    <!-- Orange cart (embedded, scaled down) — centred above rack B -->
-    <g id="cart-group" transform="translate(638,3) scale(0.6)">
-      <ellipse cx="123" cy="367" rx="100" ry="7" fill="rgba(0,0,0,.4)"/>
-      <rect x="13" y="326" width="220" height="11" rx="2" fill="#180900" stroke="#5a2800" stroke-width="1.2"/>
-      <rect class="cf" x="11" y="11" width="224" height="318" rx="5"/>
-      <line class="cd" x1="67" y1="11" x2="67" y2="329"/>
-      <line class="cd" x1="123" y1="11" x2="123" y2="329"/>
-      <line class="cd" x1="179" y1="11" x2="179" y2="329"/>
-      <line class="cd" x1="11" y1="175" x2="235" y2="175"/>
-      <rect class="cg" x="14" y="14" width="50" height="158"/>
-      <rect class="cg" x="70" y="14" width="50" height="158"/>
-      <rect class="cg" x="126" y="14" width="50" height="158"/>
-      <rect class="cg" x="182" y="14" width="50" height="158"/>
-      <rect class="cg" x="14" y="178" width="50" height="158"/>
-      <rect class="cg" x="70" y="178" width="50" height="158"/>
-      <rect class="cg" x="126" y="178" width="50" height="158"/>
-      <rect class="cg" x="182" y="178" width="50" height="158"/>
-      <line class="cs" x1="15" y1="72" x2="65" y2="72"/><line class="cs" x1="15" y1="126" x2="65" y2="126"/>
-      <line class="cs" x1="71" y1="72" x2="121" y2="72"/><line class="cs" x1="71" y1="126" x2="121" y2="126"/>
-      <line class="cs" x1="127" y1="72" x2="177" y2="72"/><line class="cs" x1="127" y1="126" x2="177" y2="126"/>
-      <line class="cs" x1="183" y1="72" x2="233" y2="72"/><line class="cs" x1="183" y1="126" x2="233" y2="126"/>
-      <line class="cs" x1="15" y1="232" x2="65" y2="232"/><line class="cs" x1="15" y1="288" x2="65" y2="288"/>
-      <line class="cs" x1="71" y1="232" x2="121" y2="232"/><line class="cs" x1="71" y1="288" x2="121" y2="288"/>
-      <line class="cs" x1="127" y1="232" x2="177" y2="232"/><line class="cs" x1="127" y1="288" x2="177" y2="288"/>
-      <line class="cs" x1="183" y1="232" x2="233" y2="232"/><line class="cs" x1="183" y1="288" x2="233" y2="288"/>
-      <text class="cn" x="39"  y="35">8</text><text class="cn" x="95"  y="35">6</text>
-      <text class="cn" x="151" y="35">4</text><text class="cn" x="207" y="35">2</text>
-      <text class="cn" x="39"  y="199">7</text><text class="cn" x="95"  y="199">5</text>
-      <text class="cn" x="151" y="199">3</text><text class="cn" x="207" y="199">1</text>
-      <!-- Part number + description per cart slot (populated by JS) -->
-      <text id="cp1" class="CPT" x="39"  y="108"></text>
-      <text id="cd1" class="CDT" x="39"  y="108"></text>
-      <text id="cp2" class="CPT" x="95"  y="108"></text>
-      <text id="cd2" class="CDT" x="95"  y="108"></text>
-      <text id="cp3" class="CPT" x="151" y="108"></text>
-      <text id="cd3" class="CDT" x="151" y="108"></text>
-      <text id="cp4" class="CPT" x="207" y="108"></text>
-      <text id="cd4" class="CDT" x="207" y="108"></text>
-      <text id="cp5" class="CPT" x="39"  y="272"></text>
-      <text id="cd5" class="CDT" x="39"  y="272"></text>
-      <text id="cp6" class="CPT" x="95"  y="272"></text>
-      <text id="cd6" class="CDT" x="95"  y="272"></text>
-      <text id="cp7" class="CPT" x="151" y="272"></text>
-      <text id="cd7" class="CDT" x="151" y="272"></text>
-      <text id="cp8" class="CPT" x="207" y="272"></text>
-      <text id="cd8" class="CDT" x="207" y="272"></text>
-      <text class="cb" x="39" y="161">TOP&#xB7;L</text><text class="cb" x="95" y="161">TOP&#xB7;LC</text>
-      <text class="cb" x="151" y="161">TOP&#xB7;RC</text><text class="cb" x="207" y="161">TOP&#xB7;R</text>
-      <text class="cb" x="39" y="323">BOT&#xB7;L</text><text class="cb" x="95" y="323">BOT&#xB7;LC</text>
-      <text class="cb" x="151" y="323">BOT&#xB7;RC</text><text class="cb" x="207" y="323">BOT&#xB7;R</text>
-      <rect class="ck" x="26" y="5" width="10" height="8" rx="2"/>
-      <rect class="ck" x="82" y="5" width="10" height="8" rx="2"/>
-      <rect class="ck" x="138" y="5" width="10" height="8" rx="2"/>
-      <rect class="ck" x="194" y="5" width="10" height="8" rx="2"/>
-      <circle class="cw" cx="43" cy="349" r="13"/><circle class="ch" cx="43" cy="349" r="5"/>
-      <circle class="cw" cx="203" cy="349" r="13"/><circle class="ch" cx="203" cy="349" r="5"/>
-      <line x1="43" y1="336" x2="43" y2="362" stroke="#5a2800" stroke-width="1.5"/>
-      <line x1="30" y1="349" x2="56" y2="349" stroke="#5a2800" stroke-width="1.5"/>
-      <line x1="203" y1="336" x2="203" y2="362" stroke="#5a2800" stroke-width="1.5"/>
-      <line x1="190" y1="349" x2="216" y2="349" stroke="#5a2800" stroke-width="1.5"/>
-    </g>
-    <!-- Per-group frames — new order: E, F, D, B, C, A left-to-right -->
-    <rect class="RF" x="4"    y="179" width="336" height="336" rx="4"/><!-- E (slots 1-8) -->
-    <rect class="RF" x="340"  y="151" width="112" height="364" rx="4"/><!-- F (slots 9-12) -->
-    <rect class="RF" x="452"  y="179" width="140" height="336" rx="4"/><!-- D (slots 13-20) -->
-    <rect class="RF" x="592"  y="235" width="280" height="280" rx="4"/><!-- B (slots 21-24) -->
-    <rect class="RF" x="872"  y="207" width="140" height="308" rx="4"/><!-- C (slots 25-31) -->
-    <rect class="RF" x="1012" y="95"  width="280" height="420" rx="4"/><!-- A (slots 32-39) -->
-    <!-- Cells generated by JS -->
-    <g id="rack-cells"></g>
-    <g id="badge-layer"></g>
+<div id="main">
+  <section id="pr">
+    <div class="ph y">Yellow rack</div>
+  <svg id="rsv" viewBox="0 88 1296 434" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <rect class="RF" x="4"    y="179" width="336" height="336" rx="4"/><!-- E (slots 1-8) -->
+  <rect class="RF" x="340"  y="151" width="112" height="364" rx="4"/><!-- F (slots 9-12) -->
+  <rect class="RF" x="452"  y="179" width="140" height="336" rx="4"/><!-- D (slots 13-20) -->
+  <rect class="RF" x="592"  y="235" width="280" height="280" rx="4"/><!-- B (slots 21-24) -->
+  <rect class="RF" x="872"  y="207" width="140" height="308" rx="4"/><!-- C (slots 25-31) -->
+  <rect class="RF" x="1012" y="95"  width="280" height="420" rx="4"/><!-- A (slots 32-39) -->
+  <!-- Cells generated by JS -->
+  <g id="rack-cells"></g>
+  <g id="badge-layer"></g>
   </svg>
-</section>
+  </section>
+  <div id="strip">
+    <aside id="cart">
+      <div class="ph o">Orange cart</div>
+      <div id="cart-frame"></div>
+    </aside>
+    <div id="pl-wrap">
+      <div class="ph y">Pick list</div>
+      <div id="picklist"></div>
+    </div>
+  </div>
+</div>
 <footer id="ft">
-  <span id="fl">&#9660; Pick Guide</span>
+  <span id="fl"><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
   <span id="fx"></span>
 </footer>
@@ -327,9 +317,22 @@ const PICK_ROUTES={
   7:[21],
   8:[23],
 };
+/*
+   AUTO-UPDATE: your query script rewrites ORANGE_PARTS and PICK_ROUTES
+   above in this file. The page re-reads its own file every
+   CHECK_FOR_UPDATES_SECONDS and, only if the doors/routes changed, redraws
+   the cart and highlighted sections in place. Do NOT reload the page:
+   no reload means edits, sizes, pictures and any open edit window are kept.
+   Set to 0 to turn auto-update off.
+*/
+const CHECK_FOR_UPDATES_SECONDS=10;
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
+if(/[?&]probe=/.test(location.search)&&window.parent!==window){
+  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES},'*');
+  return;
+}
 const GEO={
   // E group (old 28-35 → new 1-8): 3 cols, slots 1-5 tall, 6 short, 7-8 small
   1:{x:4,y:179,w:112,h:168},
@@ -385,52 +388,109 @@ const NS='http://www.w3.org/2000/svg';
 const MAX_TEXT_LEN=30;   // max characters displayed per label
 const MIN_FONT_SIZE=4;   // smallest font-size (px) fitText will shrink to
 const FONT_SHRINK_STEP=0.4; // px decrement per fitText iteration
-const BADGE_RADIUS=10;   // px radius of cart-slot number badges
+const BADGE_RADIUS=16;   // px radius of cart-slot number badges
 const BADGE_PADDING=4;   // px from edge of section to badge centre
-const BADGE_GAP=3;       // px gap between adjacent badges
-const MIN_BADGE_R=4;     // smallest badge radius when auto-shrinking
+const BADGE_GAP=4;       // px gap between adjacent badges
+const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 
 /* ---- Persistence -------------------------------------------------- */
 const STORAGE_KEY='warehouse-pick-LH';
-const RACK_IMAGES={};
-(function loadSaved(){
-  try{
-    const raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw)return;
-    const saved=JSON.parse(raw);
-    if(saved.parts){
-      Object.entries(saved.parts).forEach(([k,v])=>{
-        const n=Number(k);
-        if(RACK_PARTS[n]){
-          if(v.p!==undefined)RACK_PARTS[n].p=v.p;
-          if(v.d!==undefined)RACK_PARTS[n].d=v.d;
-        }
-      });
-    }
-    if(saved.geo){
-      Object.entries(saved.geo).forEach(([k,v])=>{
-        const n=Number(k);
-        if(GEO[n]){
-          if(v.w!==undefined)GEO[n].w=v.w;
-          if(v.h!==undefined)GEO[n].h=v.h;
-        }
-      });
-    }
-    if(saved.images){
-      Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
-    }
-  }catch(e){console.warn('load error',e);}
-})();
-function saveToStorage(){
-  try{
-    const data={parts:{},geo:{},images:{}};
-    ALL.forEach(n=>{
-      data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
-      data.geo[n]={w:GEO[n].w,h:GEO[n].h};
-      if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+/* Built-in pictures (window.RACK_DEFAULT_IMAGES, in the script block just
+   above this one). A browser's own saved pictures are applied on top. */
+const DEFAULT_IMAGES=window.RACK_DEFAULT_IMAGES||{};
+const RACK_IMAGES=Object.assign({},DEFAULT_IMAGES);
+/* Settings are stored in IndexedDB (hundreds of MB available) because
+   localStorage only holds ~5 MB; pictures used to overflow it, the save
+   silently failed, and every reload came back with default settings. */
+const IDB_NAME='warehouse-pick-guide', IDB_STORE='settings';
+function idbOpen(){
+  return new Promise((res,rej)=>{
+    if(!window.indexedDB)return rej(new Error('IndexedDB unavailable'));
+    const r=indexedDB.open(IDB_NAME,1);
+    r.onupgradeneeded=()=>r.result.createObjectStore(IDB_STORE);
+    r.onsuccess=()=>res(r.result);
+    r.onerror=()=>rej(r.error);
+  });
+}
+function idbGet(key){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const t=db.transaction(IDB_STORE,'readonly').objectStore(IDB_STORE).get(key);
+    t.onsuccess=()=>res(t.result);t.onerror=()=>rej(t.error);
+  }));
+}
+function idbPut(key,val){
+  return idbOpen().then(db=>new Promise((res,rej)=>{
+    const tx=db.transaction(IDB_STORE,'readwrite');
+    tx.objectStore(IDB_STORE).put(val,key);
+    tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);
+  }));
+}
+function applySaved(saved,replaceImages){
+  if(!saved)return;
+  if(saved.parts){
+    Object.entries(saved.parts).forEach(([k,v])=>{
+      const n=Number(k);
+      if(RACK_PARTS[n]){
+        if(v.p!==undefined)RACK_PARTS[n].p=v.p;
+        if(v.d!==undefined)RACK_PARTS[n].d=v.d;
+      }
     });
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-  }catch(e){console.warn('save error',e);}
+  }
+  if(saved.geo){
+    Object.entries(saved.geo).forEach(([k,v])=>{
+      const n=Number(k);
+      if(GEO[n]){
+        if(v.w!==undefined)GEO[n].w=v.w;
+        if(v.h!==undefined)GEO[n].h=v.h;
+      }
+    });
+  }
+  if(saved.images){
+    if(replaceImages)Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
+    Object.entries(saved.images).forEach(([k,v])=>{
+      if(v)RACK_IMAGES[Number(k)]=v;else delete RACK_IMAGES[Number(k)];
+    });
+  }
+}
+function collectSettings(){
+  const data={parts:{},geo:{},images:{}};
+  ALL.forEach(n=>{
+    data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
+    data.geo[n]={w:GEO[n].w,h:GEO[n].h};
+    if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+    else if(DEFAULT_IMAGES[n])data.images[n]='';
+  });
+  return data;
+}
+async function loadSaved(){
+  let saved=null;
+  try{saved=await idbGet(STORAGE_KEY);}catch(e){console.warn('IndexedDB load error',e);}
+  if(!saved){
+    // First run after upgrade: migrate whatever is in localStorage
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(raw){saved=JSON.parse(raw);idbPut(STORAGE_KEY,saved).catch(()=>{});}
+    }catch(e){console.warn('load error',e);}
+  }
+  if(saved&&saved.images)Object.assign(RACK_IMAGES,DEFAULT_IMAGES);
+  applySaved(saved,false);
+}
+function showStatus(msg,isError){
+  const fm=document.getElementById('fm');
+  if(!fm)return;
+  fm.textContent=msg;
+  fm.style.color=isError?'#ff6666':'';
+}
+function saveToStorage(){
+  const data=collectSettings();
+  idbPut(STORAGE_KEY,data).catch(e=>{
+    console.warn('save error',e);
+    showStatus('WARNING: settings could not be saved. Use Export to back them up.',true);
+  });
+  // Small text-only backup (no pictures) so it always fits in localStorage
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({parts:data.parts,geo:data.geo}));
+  }catch(e){/* ignore: IndexedDB copy is the real store */}
 }
 
 function mkEl(tag,a){
@@ -454,16 +514,16 @@ function generateRackCells(){
   const container=document.getElementById('rack-cells');
   const NARROW_W=90;
   const LABEL_X=5;
-  const LABEL_Y=12;
+  const LABEL_Y=16;
   const MIN_TEXT_GAP = 10;
   const BOTTOM_PAD   = 6;
   const frag = document.createDocumentFragment();
   ALL.forEach(n => {
     const g = GEO[n];
     const narrow = g.w < NARROW_W;
-    const fs  = narrow ? 9  : 10;
-    const pfs = narrow ? 8  : 10;
-    const dfs = narrow ? 10 : 12;
+    const fs  = narrow ? 12 : 15;
+    const pfs = narrow ? 10 : 13;
+    const dfs = narrow ? 12 : 16;
     const descY = Math.min(g.y + g.h * 0.89, g.y + g.h - BOTTOM_PAD);
     const partY = Math.min(g.y + g.h * 0.75, descY - MIN_TEXT_GAP);
     // Cell rect
@@ -502,46 +562,75 @@ function renderRackLabels(){
   });
 }
 
-/** Populate part-number and description text into every orange cart slot (vertical). */
+/** Section -> [cart slots] map built from PICK_ROUTES. */
+function sectionMap(){
+  const map={};
+  for(const[slot,racks]of Object.entries(PICK_ROUTES)){
+    (racks||[]).forEach(rn=>{
+      const k=Number(rn);
+      if(!map[k])map[k]=[];
+      if(!map[k].includes(Number(slot)))map[k].push(Number(slot));
+    });
+  }
+  Object.values(map).forEach(a=>a.sort((x,y)=>x-y));
+  return map;
+}
+function hEl(tag,cls,text){
+  const e=document.createElement(tag);
+  if(cls)e.className=cls;
+  if(text!==undefined)e.textContent=text;
+  return e;
+}
+/** Draw the 8 orange cart slots, laid out like the real cart:
+    top row 8 6 4 2, bottom row 7 5 3 1. */
 function renderCartLabels(){
-  const SLOT_W=50,SLOT_H=158,NUM_H=35;
-  const AVAIL=SLOT_H-NUM_H-5;
-  const COL_P=0.30,COL_D=0.70;
-  const P_FS=15,D_FS=12;
+  const SLOT_POS={1:{col:3,row:1},2:{col:3,row:0},3:{col:2,row:1},4:{col:2,row:0},5:{col:1,row:1},6:{col:1,row:0},7:{col:0,row:1},8:{col:0,row:0}};
+  const frame=document.getElementById('cart-frame');
+  if(!frame)return;
+  frame.innerHTML='';
   for(let s=1;s<=8;s++){
     const op=ORANGE_PARTS[s]||{p:'',d:''};
-    const col=3-Math.floor((s-1)/2);
-    const row=(s%2===1)?1:0;
-    const sx=14+col*56;
-    const sy=row===0?14:178;
-    const pel=document.getElementById('cp'+s);
-    const del_=document.getElementById('cd'+s);
-    if(pel){
-      pel.textContent=String(op.p).slice(0,MAX_TEXT_LEN);
-      const px=sx+SLOT_W*COL_P;
-      const py=sy+NUM_H+AVAIL/2;
-      pel.setAttribute('x',px);
-      pel.setAttribute('y',py);
-      pel.setAttribute('font-size',P_FS);
-      pel.setAttribute('transform','rotate(90,'+px+','+py+')');
-      fitText(pel,AVAIL);
-    }
-    if(del_){
-      del_.textContent=String(op.d).slice(0,MAX_TEXT_LEN);
-      const dx=sx+SLOT_W*COL_D;
-      const dy=sy+NUM_H+AVAIL/2;
-      del_.setAttribute('x',dx);
-      del_.setAttribute('y',dy);
-      del_.setAttribute('font-size',D_FS);
-      del_.setAttribute('transform','rotate(90,'+dx+','+dy+')');
-      fitText(del_,AVAIL);
-    }
+    const secs=[...new Set((PICK_ROUTES[s]||[]).map(Number))].sort((a,b)=>a-b);
+    const card=hEl('div','slot'+(secs.length?' on':'')+(!op.p&&!op.d&&!secs.length?' empty':''));
+    card.style.gridColumn=SLOT_POS[s].col+1;
+    card.style.gridRow=SLOT_POS[s].row+1;
+    const hd=hEl('div','hd');
+    hd.appendChild(hEl('div','sn',s));
+    hd.appendChild(hEl('div','dt',String(op.p||'').slice(0,MAX_TEXT_LEN)));
+    card.appendChild(hd);
+    card.appendChild(hEl('div','dc',String(op.d||'').slice(0,MAX_TEXT_LEN)));
+    const chips=hEl('div','chips');
+    secs.forEach(n=>chips.appendChild(hEl('span','chip',n)));
+    card.appendChild(chips);
+    frame.appendChild(card);
   }
+}
+/** One row per highlighted rack section: part -> cart slots. */
+function renderPickList(map){
+  const list=document.getElementById('picklist');
+  if(!list)return;
+  list.innerHTML='';
+  const secs=Object.keys(map).map(Number).sort((a,b)=>a-b);
+  if(!secs.length){list.appendChild(hEl('div','pl-empty','No picks for these doors.'));return;}
+  secs.forEach(n=>{
+    const rp=RACK_PARTS[n]||{p:'',d:''};
+    const row=hEl('div','pl');
+    row.appendChild(hEl('div','sec',n));
+    const pt=hEl('div','pt');
+    pt.appendChild(hEl('b','',rp.d||rp.p||('Section '+n)));
+    pt.appendChild(hEl('span','',rp.d?rp.p:''));
+    row.appendChild(pt);
+    const to=hEl('div','to');
+    to.appendChild(hEl('span','ar','➜'));
+    map[n].forEach(c=>to.appendChild(hEl('span','dot',c)));
+    row.appendChild(to);
+    list.appendChild(row);
+  });
 }
 
 /** Draw orange cart-slot number badges on an illuminated rack section. */
 function drawBadges(slotNum,cartNums){
-  const g=GEO[slotNum];if(!g)return;
+  const g=GEO[slotNum];if(!g||g.w<=0||g.h<=0)return;  // hidden section: badges would sit on a neighbour
   const layer=document.getElementById('badge-layer');
   const sorted=[...cartNums].sort((a,b)=>a-b);
   const count=sorted.length;if(!count)return;
@@ -569,8 +658,8 @@ function drawBadges(slotNum,cartNums){
     if(cy+R>g.y+g.h)return;
     const grp=document.createElementNS(NS,'g');
     const sw=Math.max(0.8,1.5*(R/BADGE_RADIUS));
-    const circle=mkEl('circle',{fill:'#E8620A',stroke:'#000','stroke-width':sw.toFixed(1),cx,cy,r:R});
-    const fs=Math.max(5,Math.round(9*(R/BADGE_RADIUS)));
+    const circle=mkEl('circle',{fill:'#FF6A13',stroke:'#111','stroke-width':sw.toFixed(1),cx,cy,r:R});
+    const fs=Math.max(5,Math.round(17*(R/BADGE_RADIUS)));
     const text=mkEl('text',{'font-family':'Arial,sans-serif','font-size':fs,'font-weight':'900',fill:'#fff','text-anchor':'middle','dominant-baseline':'central','pointer-events':'none',x:cx,y:cy});
     text.textContent=num;grp.appendChild(circle);grp.appendChild(text);layer.appendChild(grp);
   });
@@ -580,7 +669,7 @@ function drawBadges(slotNum,cartNums){
 function applyPickRoutes(){
   // Clear all active states
   ALL.forEach(n=>{
-    ['s','l','p','d'].forEach(pfx=>{
+    ['s','l','p','d','img'].forEach(pfx=>{
       const el=document.getElementById(pfx+n);
       if(el)el.classList.remove('on');
     });
@@ -588,39 +677,23 @@ function applyPickRoutes(){
   const bl=document.getElementById('badge-layer');
   if(bl)bl.innerHTML='';
 
-  // Build section→[cartSlots] reverse map
-  const map={};
-  for(const[slot,racks]of Object.entries(PICK_ROUTES)){
-    racks.forEach(rn=>{
-      const k=Number(rn);
-      if(!map[k])map[k]=[];
-      if(!map[k].includes(Number(slot)))map[k].push(Number(slot));
-    });
-  }
+  const map=sectionMap();
 
   Object.entries(map).forEach(([rn,slots])=>{
     const n=Number(rn);
-    ['s','l','p','d'].forEach(pfx=>{
+    ['s','l','p','d','img'].forEach(pfx=>{
       const el=document.getElementById(pfx+n);
       if(el)el.classList.add('on');
     });
     drawBadges(n,slots);
   });
 
-  // Footer status
-  const activeSlots=Object.keys(PICK_ROUTES).map(Number).filter(s=>{
-    const r=PICK_ROUTES[s];return r&&r.length>0;
-  });
-  document.getElementById('fm').textContent=
-    activeSlots.length>0
-      ?'Pick from highlighted sections — place parts in numbered cart slots'
-      :'No active picks configured';
-
-  const partList=Object.keys(ORANGE_PARTS).map(s=>{
-    const op=ORANGE_PARTS[s];
-    return op&&op.p?s+':'+op.p:null;
-  }).filter(Boolean).join(' · ');
-  document.getElementById('fx').textContent=partList;
+  renderCartLabels();
+  renderPickList(map);
+  const doors=Object.keys(PICK_ROUTES).filter(s=>(PICK_ROUTES[s]||[]).length>0).length;
+  const nSec=Object.keys(map).length;
+  showStatus(nSec?'Pick each highlighted part and place it in the numbered orange cart slot':'No active picks configured',false);
+  document.getElementById('fx').textContent=doors+' doors \u00b7 '+nSec+' rack sections';
 }
 
 /** Populate rack slot images from RACK_IMAGES. */
@@ -736,12 +809,7 @@ function closeSlotPicker(){
 
 /* ---- Export / Import ----------------------------------------------- */
 function exportSettings(){
-  const data={parts:{},geo:{},images:{}};
-  ALL.forEach(n=>{
-    data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
-    data.geo[n]={w:GEO[n].w,h:GEO[n].h};
-    if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
-  });
+  const data=collectSettings();
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -757,34 +825,72 @@ function importSettings(e){
   reader.onload=function(evt){
     try{
       const saved=JSON.parse(evt.target.result);
-      if(saved.parts){
-        Object.entries(saved.parts).forEach(([k,v])=>{
-          const n=Number(k);
-          if(RACK_PARTS[n]){
-            if(v.p!==undefined)RACK_PARTS[n].p=v.p;
-            if(v.d!==undefined)RACK_PARTS[n].d=v.d;
-          }
-        });
-      }
-      if(saved.geo){
-        Object.entries(saved.geo).forEach(([k,v])=>{
-          const n=Number(k);
-          if(GEO[n]){
-            if(v.w!==undefined)GEO[n].w=v.w;
-            if(v.h!==undefined)GEO[n].h=v.h;
-          }
-        });
-      }
-      if(saved.images){
-        Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
-        Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
-      }
+      applySaved(saved,true);
       saveToStorage();
       fullRerender();
     }catch(err){console.warn('import error',err);alert('Invalid settings file.');}
   };
   reader.readAsText(file);
   e.target.value='';
+}
+
+/* ---- Live data (next 8 doors) ------------------------------------- */
+let lastLiveSig='';
+function applyLiveData(data){
+  if(!data||typeof data!=='object')return false;
+  const orange=data.orange||data.ORANGE_PARTS;
+  const routes=data.routes||data.PICK_ROUTES;
+  if(!orange&&!routes)return false;
+  const sig=JSON.stringify([orange||null,routes||null]);
+  if(sig===lastLiveSig)return false;   // nothing changed: touch nothing
+  lastLiveSig=sig;
+  if(orange){
+    Object.keys(ORANGE_PARTS).forEach(k=>{delete ORANGE_PARTS[k];});
+    Object.entries(orange).forEach(([k,v])=>{
+      ORANGE_PARTS[Number(k)]={p:String((v&&v.p)||''),d:String((v&&v.d)||'')};
+    });
+  }
+  if(routes){
+    Object.keys(PICK_ROUTES).forEach(k=>{delete PICK_ROUTES[k];});
+    Object.entries(routes).forEach(([k,v])=>{
+      PICK_ROUTES[Number(k)]=(Array.isArray(v)?v:String(v||'').split(','))
+        .map(Number).filter(x=>x>0);
+    });
+  }
+  // Only redraw the cart labels and highlights; rack cells, edits,
+  // sizes, pictures and any open edit window stay exactly as they are.
+  renderCartLabels();
+  applyPickRoutes();
+  document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+  return true;
+}
+window.updatePickData=applyLiveData;
+/* Re-read this same HTML file in a hidden frame (works when opened as a
+   local file or from a server) and apply its doors/routes if changed. */
+function startLivePolling(){
+  if(!(CHECK_FOR_UPDATES_SECONDS>0))return;
+  const sd=document.getElementById('sd');
+  let frame=null,timer=null;
+  function done(ok){
+    if(timer){clearTimeout(timer);timer=null;}
+    if(frame){frame.remove();frame=null;}
+    if(sd)sd.style.background=ok?'':'#ff4444';  // red dot = file could not be read
+  }
+  window.addEventListener('message',e=>{
+    if(!frame||e.source!==frame.contentWindow)return;
+    const d=e.data;
+    if(d&&d.type==='pick-guide-data'){applyLiveData(d);done(true);}
+  });
+  function check(){
+    if(frame)return;  // previous check still running
+    frame=document.createElement('iframe');
+    frame.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
+    frame.setAttribute('aria-hidden','true');
+    frame.src=location.pathname.split('/').pop()+'?probe='+Date.now();
+    timer=setTimeout(()=>done(false),15000);
+    document.body.appendChild(frame);
+  }
+  setInterval(check,CHECK_FOR_UPDATES_SECONDS*1000);
 }
 
 function fullRerender(){
@@ -835,6 +941,8 @@ document.getElementById('btn-import').addEventListener('click',function(){
 });
 document.getElementById('import-file').addEventListener('change',importSettings);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+lastLiveSig=JSON.stringify([ORANGE_PARTS,PICK_ROUTES]);
+loadSaved().finally(()=>{fullRerender();startLivePolling();});
 })();
 </script>
 </body>

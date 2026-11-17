@@ -132,6 +132,46 @@ $html | Set-Content .\pick-guide-$(Get-Date -f yyyyMMdd).html
 
 ---
 
+## Auto-Update (next 8 doors) Without Reloading
+
+Your query script keeps rewriting `ORANGE_PARTS` and `PICK_ROUTES` in the HTML
+file as before. **Stop reloading the page afterwards.** The open page re-reads
+its own file every `CHECK_FOR_UPDATES_SECONDS` (default 10) and, only when the
+doors or routes actually changed, redraws the orange cart and highlighted rack
+sections in place. Rack edits, sizes, pictures and an open edit window are not
+touched. This works whether the page is opened as a local file or from a server.
+
+- Keep the file name and folder the same; the page re-reads the file it was opened from.
+- The status dot turns red if the file could not be read.
+- Set `CHECK_FOR_UPDATES_SECONDS=0` to turn it off.
+- Other code on the page can also push data directly: `window.updatePickData({orange:{...},routes:{...}})`.
+
+Rack edits, sizes and pictures are stored in the browser's IndexedDB, which has
+room for many photos, so they also survive an actual reload. (The old
+localStorage store held only ~5 MB and silently failed once pictures filled it.)
+
+---
+
+## Settings File (RH page)
+
+In Chrome or Edge, click **📁 Link folder** in the header once and choose the
+folder that holds `RH Door Line Kitting.html`. After that:
+
+- **Every refresh** loads `warehouse-pick-RH-settings.json` from that folder
+  (if it changed since this screen last loaded or saved it).
+- **Export** saves `warehouse-pick-RH-settings.json` there and first copies the
+  previous version to `warehouse-pick-RH-settings_backup_<date>_<time>.json`.
+  To revert, rename a backup back to `warehouse-pick-RH-settings.json` and refresh.
+- If this screen has edits that were never exported and the file changed
+  elsewhere, the screen's version is saved as `..._backup_<date>_<time>_this-screen.json`
+  before the file is loaded, so nothing is lost.
+- If the browser asks again, the button turns yellow: **Reconnect folder** (one click).
+- Without a linked folder (or in other browsers) Export downloads the file as before.
+
+The LH page will use `warehouse-pick-LH-settings.json` the same way.
+
+---
+
 ## Rack Section Reference
 
 | Group | Sections | Physical location |
