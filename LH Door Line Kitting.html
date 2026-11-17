@@ -17,11 +17,11 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 
 /* ---- Header ---- */
 #hd{background:#060b12;border-bottom:3px solid var(--yw);
-  display:flex;align-items:center;gap:24px;padding:10px 20px}
-#hd h1{font-size:clamp(1.1rem,1.9vw,1.9rem);font-weight:800;letter-spacing:.06em;
+  display:flex;align-items:center;gap:20px;padding:5px 14px}
+#hd h1{font-size:clamp(1rem,1.5vw,1.6rem);font-weight:800;letter-spacing:.06em;
   text-transform:uppercase;color:#fff;white-space:nowrap;display:flex;align-items:center;gap:12px}
 #hd h1 .side{background:var(--yw);color:#111;padding:2px 12px;border-radius:6px}
-#flow{flex:1;text-align:center;font-size:clamp(.95rem,1.45vw,1.5rem);font-weight:700;
+#flow{flex:1;text-align:center;font-size:clamp(.85rem,1.2vw,1.3rem);font-weight:700;
   color:var(--mut);white-space:nowrap;letter-spacing:.03em}
 #flow .y{color:#111;background:var(--yw);padding:1px 10px;border-radius:5px}
 #flow .o{color:#fff;background:var(--or);padding:1px 10px;border-radius:5px}
@@ -34,94 +34,85 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   padding:4px 9px;border-radius:4px;font-size:.7rem;cursor:pointer;opacity:.75}
 .hb:hover{opacity:1;border-color:var(--yw);color:var(--yw)}
 
-/* ---- Main layout ---- */
-#main{display:grid;grid-template-columns:clamp(340px,31vw,620px) 1fr;gap:16px;
-  padding:14px 16px;min-height:0}
-.ph{font-size:clamp(.8rem,1vw,1.05rem);font-weight:800;letter-spacing:.14em;
-  text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.ph::before{content:'';width:14px;height:14px;border-radius:3px;background:currentColor}
+/* ---- Main layout: yellow rack gets the space ---- */
+#main{display:grid;grid-template-rows:auto minmax(120px,1fr);gap:8px;padding:8px 12px;min-height:0}
+.ph{font-size:clamp(.7rem,.85vw,.95rem);font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ph::before{content:'';width:11px;height:11px;border-radius:3px;background:currentColor}
 .ph.o{color:var(--or)}.ph.y{color:var(--yw)}
-
-/* ---- Orange cart (mirrors the real 4 x 2 pass-thru cart) ---- */
-#cart{display:flex;flex-direction:column;min-height:0}
-#cart-frame{flex:1;min-height:0;border:10px solid var(--or);border-radius:8px;
-  background:#1b1d21;padding:8px;display:grid;
-  grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:8px;
-  box-shadow:0 0 0 2px #000 inset}
-#cart-wheels{display:flex;justify-content:space-between;padding:0 18px}
-#cart-wheels span{width:30px;height:30px;margin-top:-4px;border-radius:50%;
-  background:#c94f10;border:4px solid #2a2a2a}
-.slot{background:#3a3d42;border:2px solid #555a61;border-radius:6px;
-  display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:10px 6px;gap:8px;min-width:0;overflow:hidden}
-.slot.on{background:#2b2f35;border-color:var(--or);box-shadow:0 0 0 2px var(--or) inset}
-.slot.empty{opacity:.4}
-.slot .sn{width:clamp(44px,3.6vw,68px);height:clamp(44px,3.6vw,68px);border-radius:50%;
-  background:var(--or);color:#fff;font-weight:900;border:3px solid #111;
-  font-size:clamp(1.6rem,2.4vw,2.7rem);display:flex;align-items:center;justify-content:center;flex:none}
-.slot .dt{font-size:clamp(1rem,1.35vw,1.6rem);font-weight:900;color:#fff;line-height:1.1;
-  text-transform:uppercase;word-break:break-word}
-.slot .dc{font-size:clamp(.72rem,.9vw,1.05rem);font-weight:600;color:#ffcfae;line-height:1.2;
-  word-break:break-word;font-family:Consolas,'Courier New',monospace}
-.slot .pf{margin-top:auto;width:100%}
-.slot .pf .lbl{font-size:clamp(.55rem,.62vw,.75rem);letter-spacing:.12em;color:#b9c0c9;font-weight:700}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:4px}
-.chip{background:var(--yw);color:#111;font-weight:900;border-radius:5px;
-  font-size:clamp(1rem,1.4vw,1.7rem);min-width:2em;padding:1px 6px}
 
 /* ---- Yellow rack ---- */
 #pr{display:flex;flex-direction:column;min-height:0;min-width:0}
-#rsv{width:100%;height:auto;max-height:58vh;display:block;flex:none}
+#rsv{width:100%;height:auto;max-height:calc(100vh - 250px);display:block}
 .RF{fill:none;stroke:var(--yw);stroke-width:4;stroke-linejoin:round;opacity:.55}
 .RS{fill:#101a26;stroke:#2a3d56;stroke-width:1.5}
 .RS.on{fill:var(--yw);stroke:#fff6b0;stroke-width:3;
   filter:drop-shadow(0 0 10px rgba(245,200,0,.55));animation:rg 1.6s ease-in-out infinite}
 @keyframes rg{0%,100%{stroke-opacity:1}50%{stroke-opacity:.35}}
+/* pictures fade when a section is not being picked */
+#rack-cells image{opacity:.35}
+#rack-cells image.on{opacity:1}
 .SN{font-family:'Segoe UI',Arial,sans-serif;fill:#5b7593;font-weight:900;
-  text-anchor:start;dominant-baseline:auto;pointer-events:none}
-.SN.on{fill:#2b2100}
-.SP{font-family:Consolas,'Courier New',monospace;fill:#4f6a88;font-weight:600;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.SP.on{fill:#2b2100;font-weight:700}
-.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#6d88a6;font-weight:700;
-  text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.SD.on{fill:#000;font-weight:900}
+  text-anchor:start;dominant-baseline:auto;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SN.on{fill:#2b2100;stroke:var(--yw)}
+.SP{font-family:Consolas,'Courier New',monospace;fill:#6f8aa8;font-weight:600;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SP.on{fill:#2b2100;font-weight:700;stroke:var(--yw)}
+.SD{font-family:'Segoe UI',Arial,sans-serif;fill:#8aa3bf;font-weight:700;
+  text-anchor:middle;dominant-baseline:central;pointer-events:none;
+  paint-order:stroke;stroke:#0b1119;stroke-width:3px}
+.SD.on{fill:#000;font-weight:900;stroke:var(--yw);stroke-width:4px}
 
-/* ---- Pick list ---- */
-#pl-wrap{flex:1;min-height:0;display:flex;flex-direction:column;margin-top:12px}
-#picklist{flex:1;min-height:0;overflow:auto;display:grid;align-content:start;gap:6px;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr))}
-.pl{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
-  background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--yw);
-  border-radius:6px;padding:6px 10px}
-.pl .sec{background:var(--yw);color:#111;font-weight:900;border-radius:6px;
-  font-size:clamp(1.05rem,1.35vw,1.6rem);min-width:2.2em;text-align:center;padding:2px 6px}
-.pl .pt{min-width:0}
-.pl .pt b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  font-size:clamp(.9rem,1.1vw,1.3rem);color:#fff;line-height:1.15}
-.pl .pt span{display:block;font-size:clamp(.7rem,.8vw,.95rem);color:var(--mut);
+/* ---- Bottom strip ---- */
+#strip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;min-height:0}
+#cart{display:flex;flex-direction:column;min-height:0}
+#cart-frame{flex:1;min-height:0;border:5px solid var(--or);border-radius:6px;
+  background:#1b1d21;padding:4px;display:grid;width:clamp(300px,24vw,440px);
+  grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:4px}
+.slot{background:#33363b;border:1px solid #50555c;border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:3px;gap:2px;min-width:0;overflow:hidden}
+.slot.on{border-color:var(--or)}
+.slot.empty{opacity:.4}
+.slot .hd{display:flex;align-items:center;gap:5px;max-width:100%}
+.slot .sn{width:clamp(20px,1.7vw,30px);height:clamp(20px,1.7vw,30px);border-radius:50%;
+  background:var(--or);color:#fff;font-weight:900;border:2px solid #111;flex:none;
+  font-size:clamp(.8rem,1.1vw,1.15rem);display:flex;align-items:center;justify-content:center}
+.slot .dt{font-size:clamp(.62rem,.8vw,.9rem);font-weight:900;color:#fff;line-height:1.05;
+  text-transform:uppercase;overflow:hidden;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:left}
+.slot .dc{font-size:clamp(.5rem,.6vw,.68rem);color:#ffcfae;line-height:1.1;max-width:100%;
+  font-family:Consolas,'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
+.chip{background:var(--yw);color:#111;font-weight:900;border-radius:3px;
+  font-size:clamp(.6rem,.75vw,.85rem);min-width:1.7em;padding:0 2px}
+#pl-wrap{display:flex;flex-direction:column;min-height:0;min-width:0}
+#picklist{flex:1;min-height:0;overflow:auto;display:grid;align-content:start;gap:4px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
+.pl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
+  background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--yw);
+  border-radius:5px;padding:3px 8px}
+.pl .sec{background:var(--yw);color:#111;font-weight:900;border-radius:5px;
+  font-size:clamp(.85rem,1.05vw,1.2rem);min-width:2em;text-align:center;padding:1px 4px}
+.pl .pt b{display:block;font-size:clamp(.75rem,.9vw,1rem);color:#fff;line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl .pt span{display:block;font-size:clamp(.6rem,.7vw,.8rem);color:var(--mut);
   font-family:Consolas,'Courier New',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl .to{display:flex;align-items:center;gap:5px}
-.pl .to .ar{color:var(--mut);font-size:1.2rem;margin-right:2px}
-.dot{width:clamp(28px,2.2vw,40px);height:clamp(28px,2.2vw,40px);border-radius:50%;
+.pl .to{display:flex;align-items:center;gap:3px}
+.pl .to .ar{color:var(--mut);font-size:1rem;margin-right:2px}
+.dot{width:clamp(20px,1.6vw,28px);height:clamp(20px,1.6vw,28px);border-radius:50%;
   background:var(--or);color:#fff;border:2px solid #111;font-weight:900;
-  font-size:clamp(.95rem,1.2vw,1.4rem);display:flex;align-items:center;justify-content:center}
-.pl-empty{color:var(--mut);font-size:1.2rem;padding:20px}
+  font-size:clamp(.7rem,.9vw,1rem);display:flex;align-items:center;justify-content:center}
+.pl-empty{color:var(--mut);font-size:1rem;padding:10px}
 
-/* Smaller screens: keep every "pick from" number visible in narrow cart slots */
-@media (max-width:1500px){
-  .slot{padding:8px 3px;gap:6px}
-  .chips{gap:3px}
-  .chip{font-size:.85rem;min-width:1.8em;padding:0 3px}
-  .slot .dc{font-size:.68rem}
-}
 /* ---- Footer ---- */
 #ft{background:#060b12;border-top:2px solid #1a2840;display:flex;align-items:center;
-  justify-content:space-between;padding:8px 20px;gap:12px}
-#fl{display:flex;gap:22px;font-size:clamp(.75rem,.9vw,1rem);color:var(--mut);white-space:nowrap}
+  justify-content:space-between;padding:3px 14px;gap:12px}
+#fl{display:flex;gap:18px;font-size:clamp(.65rem,.75vw,.85rem);color:var(--mut);white-space:nowrap}
 #fl i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
-#fm{flex:1;text-align:center;font-size:clamp(.8rem,1vw,1.1rem);font-weight:700;color:var(--yw)}
-#fx{color:var(--mut);font-size:clamp(.75rem,.9vw,1rem);white-space:nowrap;text-align:right}
+#fm{flex:1;text-align:center;font-size:clamp(.7rem,.85vw,.95rem);font-weight:700;color:var(--yw)}
+#fx{color:var(--mut);font-size:clamp(.65rem,.75vw,.85rem);white-space:nowrap;text-align:right}
 
 /* ---- Edit modal ---- */
 #edit-modal{position:fixed;top:0;left:0;width:100%;height:100%;
@@ -173,29 +164,30 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   </div>
 </header>
 <div id="main">
-  <aside id="cart">
-    <div class="ph o">Orange pass-thru cart</div>
-    <div id="cart-frame"></div>
-    <div id="cart-wheels"><span></span><span></span></div>
-  </aside>
   <section id="pr">
     <div class="ph y">Yellow rack</div>
-    <svg id="rsv" viewBox="0 88 1296 434" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
-    <rect class="RF" x="4"    y="179" width="336" height="336" rx="4"/><!-- E (slots 1-8) -->
-    <rect class="RF" x="340"  y="151" width="112" height="364" rx="4"/><!-- F (slots 9-12) -->
-    <rect class="RF" x="452"  y="179" width="140" height="336" rx="4"/><!-- D (slots 13-20) -->
-    <rect class="RF" x="592"  y="235" width="280" height="280" rx="4"/><!-- B (slots 21-24) -->
-    <rect class="RF" x="872"  y="207" width="140" height="308" rx="4"/><!-- C (slots 25-31) -->
-    <rect class="RF" x="1012" y="95"  width="280" height="420" rx="4"/><!-- A (slots 32-39) -->
-    <!-- Cells generated by JS -->
-    <g id="rack-cells"></g>
-    <g id="badge-layer"></g>
-    </svg>
+  <svg id="rsv" viewBox="0 88 1296 434" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <rect class="RF" x="4"    y="179" width="336" height="336" rx="4"/><!-- E (slots 1-8) -->
+  <rect class="RF" x="340"  y="151" width="112" height="364" rx="4"/><!-- F (slots 9-12) -->
+  <rect class="RF" x="452"  y="179" width="140" height="336" rx="4"/><!-- D (slots 13-20) -->
+  <rect class="RF" x="592"  y="235" width="280" height="280" rx="4"/><!-- B (slots 21-24) -->
+  <rect class="RF" x="872"  y="207" width="140" height="308" rx="4"/><!-- C (slots 25-31) -->
+  <rect class="RF" x="1012" y="95"  width="280" height="420" rx="4"/><!-- A (slots 32-39) -->
+  <!-- Cells generated by JS -->
+  <g id="rack-cells"></g>
+  <g id="badge-layer"></g>
+  </svg>
+  </section>
+  <div id="strip">
+    <aside id="cart">
+      <div class="ph o">Orange cart</div>
+      <div id="cart-frame"></div>
+    </aside>
     <div id="pl-wrap">
       <div class="ph y">Pick list</div>
       <div id="picklist"></div>
     </div>
-  </section>
+  </div>
 </div>
 <footer id="ft">
   <span id="fl"><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
@@ -403,7 +395,10 @@ const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 
 /* ---- Persistence -------------------------------------------------- */
 const STORAGE_KEY='warehouse-pick-LH';
-const RACK_IMAGES={};
+/* Built-in pictures (window.RACK_DEFAULT_IMAGES, in the script block just
+   above this one). A browser's own saved pictures are applied on top. */
+const DEFAULT_IMAGES=window.RACK_DEFAULT_IMAGES||{};
+const RACK_IMAGES=Object.assign({},DEFAULT_IMAGES);
 /* Settings are stored in IndexedDB (hundreds of MB available) because
    localStorage only holds ~5 MB; pictures used to overflow it, the save
    silently failed, and every reload came back with default settings. */
@@ -452,7 +447,9 @@ function applySaved(saved,replaceImages){
   }
   if(saved.images){
     if(replaceImages)Object.keys(RACK_IMAGES).forEach(k=>{delete RACK_IMAGES[k];});
-    Object.entries(saved.images).forEach(([k,v])=>{RACK_IMAGES[Number(k)]=v;});
+    Object.entries(saved.images).forEach(([k,v])=>{
+      if(v)RACK_IMAGES[Number(k)]=v;else delete RACK_IMAGES[Number(k)];
+    });
   }
 }
 function collectSettings(){
@@ -461,6 +458,7 @@ function collectSettings(){
     data.parts[n]={p:(RACK_PARTS[n]||{}).p||'',d:(RACK_PARTS[n]||{}).d||''};
     data.geo[n]={w:GEO[n].w,h:GEO[n].h};
     if(RACK_IMAGES[n])data.images[n]=RACK_IMAGES[n];
+    else if(DEFAULT_IMAGES[n])data.images[n]='';
   });
   return data;
 }
@@ -474,7 +472,8 @@ async function loadSaved(){
       if(raw){saved=JSON.parse(raw);idbPut(STORAGE_KEY,saved).catch(()=>{});}
     }catch(e){console.warn('load error',e);}
   }
-  applySaved(saved,true);
+  if(saved&&saved.images)Object.assign(RACK_IMAGES,DEFAULT_IMAGES);
+  applySaved(saved,false);
 }
 function showStatus(msg,isError){
   const fm=document.getElementById('fm');
@@ -595,15 +594,14 @@ function renderCartLabels(){
     const card=hEl('div','slot'+(secs.length?' on':'')+(!op.p&&!op.d&&!secs.length?' empty':''));
     card.style.gridColumn=SLOT_POS[s].col+1;
     card.style.gridRow=SLOT_POS[s].row+1;
-    card.appendChild(hEl('div','sn',s));
-    card.appendChild(hEl('div','dt',String(op.p||'').slice(0,MAX_TEXT_LEN)));
+    const hd=hEl('div','hd');
+    hd.appendChild(hEl('div','sn',s));
+    hd.appendChild(hEl('div','dt',String(op.p||'').slice(0,MAX_TEXT_LEN)));
+    card.appendChild(hd);
     card.appendChild(hEl('div','dc',String(op.d||'').slice(0,MAX_TEXT_LEN)));
-    const pf=hEl('div','pf');
-    pf.appendChild(hEl('div','lbl',secs.length?'PICK FROM':'NOTHING TO PICK'));
     const chips=hEl('div','chips');
     secs.forEach(n=>chips.appendChild(hEl('span','chip',n)));
-    pf.appendChild(chips);
-    card.appendChild(pf);
+    card.appendChild(chips);
     frame.appendChild(card);
   }
 }
@@ -671,7 +669,7 @@ function drawBadges(slotNum,cartNums){
 function applyPickRoutes(){
   // Clear all active states
   ALL.forEach(n=>{
-    ['s','l','p','d'].forEach(pfx=>{
+    ['s','l','p','d','img'].forEach(pfx=>{
       const el=document.getElementById(pfx+n);
       if(el)el.classList.remove('on');
     });
@@ -683,7 +681,7 @@ function applyPickRoutes(){
 
   Object.entries(map).forEach(([rn,slots])=>{
     const n=Number(rn);
-    ['s','l','p','d'].forEach(pfx=>{
+    ['s','l','p','d','img'].forEach(pfx=>{
       const el=document.getElementById(pfx+n);
       if(el)el.classList.add('on');
     });
