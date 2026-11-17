@@ -132,22 +132,23 @@ $html | Set-Content .\pick-guide-$(Get-Date -f yyyyMMdd).html
 
 ---
 
-## Live Data (next 8 doors) Without Reloading
+## Auto-Update (next 8 doors) Without Reloading
 
-Do **not** reload the page to pick up new doors. A reload is what used to wipe
-edits and pictures. Instead, point the page at a JSON feed and it updates the
-orange cart and highlighted sections in place every few seconds:
+Your query script keeps rewriting `ORANGE_PARTS` and `PICK_ROUTES` in the HTML
+file as before. **Stop reloading the page afterwards.** The open page re-reads
+its own file every `CHECK_FOR_UPDATES_SECONDS` (default 10) and, only when the
+doors or routes actually changed, redraws the orange cart and highlighted rack
+sections in place. Rack edits, sizes, pictures and an open edit window are not
+touched. This works whether the page is opened as a local file or from a server.
 
-- Set `LIVE_DATA_URL` (and `LIVE_POLL_SECONDS`) in the PICK DATA block, or open
-  the page as `RH Door Line Kitting.html?data=<feed url>`.
-- Feed format: `{"orange":{"1":{"p":"FRONT","d":"N1WB..."}},"routes":{"1":[1,2,3]}}`
-  (`ORANGE_PARTS` / `PICK_ROUTES` keys also work; routes may be `"1,2,3"` strings).
-- Or push data from your own script: `window.updatePickData(json)`.
-- The status dot turns red when the feed cannot be reached.
+- Keep the file name and folder the same; the page re-reads the file it was opened from.
+- The status dot turns red if the file could not be read.
+- Set `CHECK_FOR_UPDATES_SECONDS=0` to turn it off.
+- Other code on the page can also push data directly: `window.updatePickData({orange:{...},routes:{...}})`.
 
 Rack edits, sizes and pictures are stored in the browser's IndexedDB, which has
-room for many photos (the old localStorage store held only ~5 MB and silently
-failed once pictures filled it).
+room for many photos, so they also survive an actual reload. (The old
+localStorage store held only ~5 MB and silently failed once pictures filled it.)
 
 ---
 

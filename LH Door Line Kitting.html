@@ -328,21 +328,21 @@ const PICK_ROUTES={
   8:[23],
 };
 /*
-   LIVE DATA (optional): where the page fetches the next 8 doors from.
-   The page polls this URL in the background and updates ONLY the orange
-   cart and the highlighted rack sections. It never reloads the page, so
-   rack edits, sizes and pictures are untouched.
-   Leave '' to disable, or pass it in the address bar: ...html?data=<url>
-   Expected JSON (either key style works):
-     {"orange":{"1":{"p":"FRONT","d":"N1WB..."},...},
-      "routes":{"1":[1,2,3],...}}
-   Your own code can also push data directly: window.updatePickData(json)
+   AUTO-UPDATE: your query script rewrites ORANGE_PARTS and PICK_ROUTES
+   above in this file. The page re-reads its own file every
+   CHECK_FOR_UPDATES_SECONDS and, only if the doors/routes changed, redraws
+   the cart and highlighted sections in place. Do NOT reload the page:
+   no reload means edits, sizes, pictures and any open edit window are kept.
+   Set to 0 to turn auto-update off.
 */
-const LIVE_DATA_URL='';
-const LIVE_POLL_SECONDS=15;
+const CHECK_FOR_UPDATES_SECONDS=10;
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
+if(/[?&]probe=/.test(location.search)&&window.parent!==window){
+  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES},'*');
+  return;
+}
 const GEO={
   // E group (old 28-35 → new 1-8): 3 cols, slots 1-5 tall, 6 short, 7-8 small
   1:{x:4,y:179,w:112,h:168},
@@ -855,26 +855,32 @@ function applyLiveData(data){
   return true;
 }
 window.updatePickData=applyLiveData;
+/* Re-read this same HTML file in a hidden frame (works when opened as a
+   local file or from a server) and apply its doors/routes if changed. */
 function startLivePolling(){
-  let url=LIVE_DATA_URL;
-  try{const q=new URLSearchParams(location.search).get('data');if(q)url=q;}catch(e){}
-  if(!url)return;
-  let busy=false;
+  if(!(CHECK_FOR_UPDATES_SECONDS>0))return;
   const sd=document.getElementById('sd');
-  async function poll(){
-    if(busy)return;busy=true;
-    try{
-      const r=await fetch(url,{cache:'no-store'});
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      applyLiveData(await r.json());
-      if(sd)sd.style.background='';
-    }catch(e){
-      console.warn('live data error',e);
-      if(sd)sd.style.background='#ff4444';   // red dot = feed unreachable
-    }finally{busy=false;}
+  let frame=null,timer=null;
+  function done(ok){
+    if(timer){clearTimeout(timer);timer=null;}
+    if(frame){frame.remove();frame=null;}
+    if(sd)sd.style.background=ok?'':'#ff4444';  // red dot = file could not be read
   }
-  poll();
-  setInterval(poll,Math.max(2,LIVE_POLL_SECONDS)*1000);
+  window.addEventListener('message',e=>{
+    if(!frame||e.source!==frame.contentWindow)return;
+    const d=e.data;
+    if(d&&d.type==='pick-guide-data'){applyLiveData(d);done(true);}
+  });
+  function check(){
+    if(frame)return;  // previous check still running
+    frame=document.createElement('iframe');
+    frame.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
+    frame.setAttribute('aria-hidden','true');
+    frame.src=location.pathname.split('/').pop()+'?probe='+Date.now();
+    timer=setTimeout(()=>done(false),15000);
+    document.body.appendChild(frame);
+  }
+  setInterval(check,CHECK_FOR_UPDATES_SECONDS*1000);
 }
 
 function fullRerender(){
@@ -925,6 +931,7 @@ document.getElementById('btn-import').addEventListener('click',function(){
 });
 document.getElementById('import-file').addEventListener('change',importSettings);
 document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+lastLiveSig=JSON.stringify([ORANGE_PARTS,PICK_ROUTES]);
 loadSaved().finally(()=>{fullRerender();startLivePolling();});
 })();
 </script>
