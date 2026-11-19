@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <footer id="ft">
-  <span id="fl"><span class="rev" title="Page revision">Rev E</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
+  <span id="fl"><span class="rev" title="Page revision">Rev F</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
   <span id="fx"></span>
 </footer>
@@ -344,6 +344,17 @@ const CHECK_FOR_UPDATES_SECONDS=10;
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
+/* Theme: dark by default; light if this screen chose it (remembered per screen). */
+const THEME_KEY='pick-guide-theme';
+function getTheme(){try{return localStorage.getItem(THEME_KEY)==='light'?'light':'dark';}catch(e){return 'dark';}}
+function setTheme(t){
+  if(t==='light')document.documentElement.setAttribute('data-theme','light');
+  else document.documentElement.removeAttribute('data-theme');
+  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
+  const b=document.getElementById('btn-theme');
+  if(b){b.textContent=t==='light'?'\u263E Dark':'\u2600 Light';b.title='Switch to '+(t==='light'?'dark':'light')+' mode';b.setAttribute('aria-pressed',String(t==='light'));}
+}
+if(getTheme()==='light')document.documentElement.setAttribute('data-theme','light');
 /* Keep only real section numbers in each route. A route whose placeholder was not
    filled in by the query shows as "nothing to pick", with a red warning, never a blank page. */
 let UNFILLED_ROUTES=[];
@@ -424,8 +435,9 @@ const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 /* Page revision (shown in the footer): B = even highlight ring, badges clear of labels, full part names;
    C = Flex-N-Gate logo, Settings > live data monitor;
    D = security hardening: settings validation, picture checks, own-page-only update check, CSP;
-   E = page still loads (with a red warning) when the pick-route placeholders are not filled in */
-const PAGE_REV='E';
+   E = page still loads (with a red warning) when the pick-route placeholders are not filled in;
+   F = light mode toggle */
+const PAGE_REV='F';
 const STORAGE_KEY='warehouse-pick-RH';
 /* RACK_PARTS exactly as written in the HTML file, before this screen's saved edits (for the monitor). */
 let FILE_RACK=JSON.parse(JSON.stringify(RACK_PARTS));
@@ -1415,6 +1427,10 @@ function initDbg(){
   const hr=document.getElementById('hr');
   const sb=E('button',{class:'hb',id:'btn-settings',title:'Live debug monitor for the door and rack data'},'\u2699 Settings');
   hr.insertBefore(sb,document.getElementById('btn-slots'));
+  const tb=E('button',{class:'hb',id:'btn-theme',type:'button'});
+  hr.insertBefore(tb,sb);
+  tb.addEventListener('click',()=>{setTheme(getTheme()==='light'?'dark':'light');scheduleFit();});
+  setTheme(getTheme());
   document.getElementById('btn-settings').addEventListener('click',dbgOpen);
   document.getElementById('dbg-close').addEventListener('click',dbgClose);
   const back=document.getElementById('dbg');
@@ -1557,6 +1573,96 @@ pre.dg-raw{background:#0a111b;border:1px solid #22334a;border-radius:6px;padding
 .dg-log div{padding:3px 8px;border-radius:3px;background:#121d2c}
 .dg-log div.bad{background:#2a1416;color:#ffb3b3}
 .dg-log div.chg{background:#10283a;color:#bdf3ff}
+
+/* ================= Light mode (toggle in the header; dark stays the default) ================= */
+:root[data-theme="light"]{
+  --bg:#eef1f5;--panel:#ffffff;--line:#cfd8e3;--tx:#18222e;--mut:#55667b;
+}
+[data-theme="light"] body{background:var(--bg);color:var(--tx)}
+[data-theme="light"] #hd{background:#ffffff;border-bottom-color:#d4a800}
+[data-theme="light"] #hd h1{color:#18222e}
+[data-theme="light"] #flow{color:#55667b}
+[data-theme="light"] #flow .arr{color:#18222e}
+[data-theme="light"] #logo-img{filter:invert(1)}                       /* white logo -> black */
+[data-theme="light"] #logo-txt{color:#18222e;border-color:#18222e}
+[data-theme="light"] #lu{color:#55667b}
+[data-theme="light"] .hb{border-color:#b9c6d6;color:#3e5068;opacity:1}
+[data-theme="light"] .hb:hover{border-color:#b58900;color:#7a5c00}
+[data-theme="light"] .hb.ok{color:#1b7a46;border-color:#8cc9a6}
+[data-theme="light"] .ph.y{color:#9a7400}
+[data-theme="light"] .ph.o{color:#d4500a}
+/* rack */
+[data-theme="light"] .RF{stroke:#d4a800;opacity:.9}
+[data-theme="light"] .RS{fill:#ffffff;stroke:#b9c6d6}
+[data-theme="light"] .RS.on{fill:var(--yw)}
+[data-theme="light"] .SN{fill:#6b7f97;stroke:#ffffff}
+[data-theme="light"] .SP{fill:#4b6380;stroke:#ffffff}
+[data-theme="light"] .SD{fill:#2c3e55;stroke:#ffffff}
+[data-theme="light"] .SN.on,[data-theme="light"] .SP.on{fill:#2b2100;stroke:var(--yw)}
+[data-theme="light"] .SD.on{fill:#000;stroke:var(--yw)}
+[data-theme="light"] #rack-cells image{opacity:.5}
+[data-theme="light"] #rack-cells image.on{opacity:1}
+/* orange cart */
+[data-theme="light"] #cart-frame{background:#f4f5f7}
+[data-theme="light"] .slot{background:#ffffff;border-color:#c9ced6}
+[data-theme="light"] .slot.on{border-color:var(--or)}
+[data-theme="light"] .slot .dt{color:#18222e}
+[data-theme="light"] .slot .dc{color:#8a4b1f}
+/* pick list */
+[data-theme="light"] .pl{background:#ffffff;border-color:#cfd8e3;border-left-color:#e0b400}
+[data-theme="light"] .pl .pt b{color:#18222e}
+[data-theme="light"] .pl .pt span{color:#55667b}
+[data-theme="light"] .pl.missing{border-left-color:#e53935}
+/* footer */
+[data-theme="light"] #ft{background:#ffffff;border-top-color:#cfd8e3}
+[data-theme="light"] #fm{color:#7a5c00}
+[data-theme="light"] #fl,[data-theme="light"] #fx{color:#55667b}
+[data-theme="light"] #fl .rev{color:#00809a}
+/* toast, edit windows, slot picker */
+[data-theme="light"] #toast{background:#ffffff;color:#18222e;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+[data-theme="light"] #edit-modal,[data-theme="light"] #slot-picker{background:rgba(20,30,45,.45)}
+[data-theme="light"] #edit-modal .modal-body,[data-theme="light"] #slot-picker .modal-body{background:#ffffff;color:#18222e;border-color:#d4a800}
+[data-theme="light"] #edit-modal h2,[data-theme="light"] #slot-picker h2{color:#7a5c00}
+[data-theme="light"] #edit-modal label{color:#55667b}
+[data-theme="light"] #edit-modal input[type="text"],[data-theme="light"] #edit-modal input[type="number"]{background:#f7f9fb;border-color:#b9c6d6;color:#18222e}
+[data-theme="light"] #edit-modal input[type="file"]{color:#18222e}
+[data-theme="light"] #edit-modal .btn-cancel,[data-theme="light"] #slot-picker .sp-close{background:#e3e8ef;color:#18222e}
+[data-theme="light"] #slot-picker .slot-btn{background:#f7f9fb;border-color:#b9c6d6;color:#18222e}
+[data-theme="light"] #slot-picker .slot-btn:hover{background:#fff6cc;border-color:#d4a800}
+[data-theme="light"] #slot-picker .slot-btn.zero{border-color:#e57373;color:#c62828}
+/* Settings monitor */
+[data-theme="light"] #dbg{background:rgba(20,30,45,.35)}
+[data-theme="light"] #dbg-panel{background:#f7f9fb;color:#18222e;box-shadow:-10px 0 30px rgba(0,0,0,.18)}
+[data-theme="light"] #dbg-head,[data-theme="light"] #dbg-tabs,[data-theme="light"] #dbg-foot{border-color:#cfd8e3}
+[data-theme="light"] #dbg-head h2{color:#18222e}
+[data-theme="light"] #dbg-close{background:#e3e8ef;color:#18222e}
+[data-theme="light"] #dbg-tabs button{color:#55667b}
+[data-theme="light"] #dbg-tabs button.act{background:#ffffff;border-color:#cfd8e3;color:#18222e}
+[data-theme="light"] #dbg-tabs .cnt{background:#e3e8ef;color:#2c3e55}
+[data-theme="light"] #dbg-tabs .cnt.warn{background:#e53935;color:#fff}
+[data-theme="light"] #dbg-live{color:#1b7a46}
+[data-theme="light"] #dbg-foot{color:#55667b}
+[data-theme="light"] .dg-card{background:#ffffff;border-color:#cfd8e3}
+[data-theme="light"] .dg-card .k{color:#55667b}
+[data-theme="light"] .dg-card .v{color:#18222e}
+[data-theme="light"] .dg-card .v.ok{color:#1b7a46}
+[data-theme="light"] .dg-card .v.bad{color:#c62828}
+[data-theme="light"] .dg-h{color:#00809a}
+[data-theme="light"] .dg-warn li{background:#fdecec;color:#18222e}
+[data-theme="light"] .dg-warn li.info{background:#e6f5f9}
+[data-theme="light"] .dg-warn li.none{background:#e7f6ec}
+[data-theme="light"] table.dg th{background:#f7f9fb;color:#55667b;border-bottom-color:#cfd8e3}
+[data-theme="light"] table.dg td{border-bottom-color:#e3e8ef}
+[data-theme="light"] table.dg tr.dim td{color:#8a99ab}
+[data-theme="light"] table.dg tr.changed td{background:rgba(0,150,190,.12)}
+[data-theme="light"] .dg-tag.mut{background:#e3e8ef;color:#55667b}
+[data-theme="light"] .dg-old{color:#c62828}
+[data-theme="light"] .dg-tools{color:#55667b}
+[data-theme="light"] pre.dg-raw{background:#ffffff;border-color:#cfd8e3;color:#2c3e55}
+[data-theme="light"] .dg-log div{background:#ffffff}
+[data-theme="light"] .dg-log div.bad{background:#fdecec;color:#8e1b1b}
+[data-theme="light"] .dg-log div.chg{background:#e6f5f9;color:#0d4f61}
+#btn-theme{min-width:5.4em}
 </style>
 <div id="dbg" role="dialog" aria-modal="true" aria-labelledby="dbg-title" style="display:none">
   <div id="dbg-panel">
