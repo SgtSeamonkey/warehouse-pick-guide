@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <footer id="ft">
-  <span id="fl"><span class="rev" title="Page revision">Rev D</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
+  <span id="fl"><span class="rev" title="Page revision">Rev E</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
   <span id="fx"></span>
 </footer>
@@ -245,7 +245,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </div>
 <script>
 /* Built-in rack pictures (none yet for LH; export warehouse-pick-LH-settings.json to add them).
-   Kept in their own block so the PICK DATA below stays easy to edit. */
+   Kept in their own block so the PICK DATA below stays easy to edit. */ /* Safety net: if the query has not filled in the pick-route placeholders yet, they read as empty instead of stopping the page (names are built from pieces so find-and-replace never touches this). */ (function(){for(let i=1;i<=8;i++){const n=['PICK','ROUTE',i].join('');if(!(n in window))Object.defineProperty(window,n,{value:undefined,writable:true,configurable:true});}})();
 window.RACK_DEFAULT_IMAGES={};
 </script>
 <script>
@@ -352,12 +352,20 @@ const CHECK_FOR_UPDATES_SECONDS=10;
 /* ================================================================
    ENGINE — Do not edit below this line.
    ================================================================ */
+/* Keep only real section numbers in each route. A route whose placeholder was not
+   filled in by the query shows as "nothing to pick", with a red warning, never a blank page. */
+let UNFILLED_ROUTES=[];
+Object.keys(PICK_ROUTES).forEach(k=>{
+  const r=Array.isArray(PICK_ROUTES[k])?PICK_ROUTES[k]:[];
+  if(!Array.isArray(PICK_ROUTES[k])||r.some(v=>v===undefined))UNFILLED_ROUTES.push(Number(k));
+  PICK_ROUTES[k]=r.filter(v=>typeof v==='number'&&Number.isFinite(v));
+});
 if(/[?&]probe=/.test(location.search)&&window.parent!==window){
   // Answer only this page's own update check: never a page from another site that frames this file.
   let own=false;
   try{own=window.parent.location.origin===location.origin&&window.parent.location.pathname===location.pathname;}
   catch(e){own=location.protocol==='file:';}   // local files are opaque to each other; web pages cannot frame them
-  if(own)window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES,rack:RACK_PARTS},
+  if(own)window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES,rack:RACK_PARTS,unfilled:UNFILLED_ROUTES},
     location.protocol==='file:'?'*':location.origin);
   return;
 }
@@ -424,8 +432,9 @@ const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 /* ---- Persistence -------------------------------------------------- */
 /* Page revision (shown in the footer): B = even highlight ring, badges clear of labels, full part names;
    C = Flex-N-Gate logo, Settings > live data monitor;
-   D = security hardening: settings validation, picture checks, own-page-only update check, CSP */
-const PAGE_REV='D';
+   D = security hardening: settings validation, picture checks, own-page-only update check, CSP;
+   E = page still loads (with a red warning) when the pick-route placeholders are not filled in */
+const PAGE_REV='E';
 const STORAGE_KEY='warehouse-pick-LH';
 /* RACK_PARTS exactly as written in the HTML file, before this screen's saved edits (for the monitor). */
 let FILE_RACK=JSON.parse(JSON.stringify(RACK_PARTS));
@@ -788,7 +797,8 @@ function applyPickRoutes(){
   scheduleFit();
   const doors=Object.keys(PICK_ROUTES).filter(s=>(PICK_ROUTES[s]||[]).length>0).length;
   const nSec=Object.keys(map).length;
-  showStatus(nSec?'Pick each highlighted part and place it in the numbered orange cart slot':'No active picks configured',false);
+  if(UNFILLED_ROUTES.length)showStatus('Pick routes were not filled in for cart slot'+(UNFILLED_ROUTES.length>1?'s ':' ')+UNFILLED_ROUTES.join(', ')+' (route placeholders still in the file)',true);
+  else showStatus(nSec?'Pick each highlighted part and place it in the numbered orange cart slot':'No active picks configured',false);
   document.getElementById('fx').textContent=doors+' doors \u00b7 '+nSec+' rack sections';
 }
 
@@ -1116,6 +1126,8 @@ function startLivePolling(){
     const d=e.data;
     if(d&&d.type==='pick-guide-data'){
       if(d.rack){try{FILE_RACK=cleanSettings({parts:d.rack}).parts||{};}catch(err){}}
+      if(Array.isArray(d.unfilled)){const u=d.unfilled.filter(Number.isInteger);
+        if(JSON.stringify(u)!==JSON.stringify(UNFILLED_ROUTES)){UNFILLED_ROUTES=u;lastLiveSig='';}}
       applyLiveData(d);done(true);
     }
   });
@@ -1238,6 +1250,7 @@ function dbgRead(ok){
 const PLACEHOLDER_RE=/PARTNUMBER_|PARTDESC_|PLACEHOLDER/i;
 function dbgWarnings(){
   const W=[], m=sectionMap();
+  if(UNFILLED_ROUTES.length)W.push(['bad','Pick routes were not filled in for cart slot'+(UNFILLED_ROUTES.length>1?'s ':' ')+UNFILLED_ROUTES.join(', ')+': the query did not replace the route placeholders in PICK_ROUTES']);
   for(let s=1;s<=8;s++){
     const op=ORANGE_PARTS[s];
     if(!op)W.push(['bad','Cart slot '+s+' is missing from ORANGE_PARTS']);
