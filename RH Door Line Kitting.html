@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8"/><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' file: data: blob:; frame-src 'self' file:; child-src 'self' file:; connect-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Door Line RH Side Kitting Pick Guide</title>
 <style>
@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <footer id="ft">
-  <span id="fl"><span class="rev" title="Page revision">Rev C</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
+  <span id="fl"><span class="rev" title="Page revision">Rev D</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
   <span id="fx"></span>
 </footer>
@@ -345,7 +345,12 @@ const CHECK_FOR_UPDATES_SECONDS=10;
    ENGINE — Do not edit below this line.
    ================================================================ */
 if(/[?&]probe=/.test(location.search)&&window.parent!==window){
-  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES,rack:RACK_PARTS},'*');
+  // Answer only this page's own update check: never a page from another site that frames this file.
+  let own=false;
+  try{own=window.parent.location.origin===location.origin&&window.parent.location.pathname===location.pathname;}
+  catch(e){own=location.protocol==='file:';}   // local files are opaque to each other; web pages cannot frame them
+  if(own)window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES,rack:RACK_PARTS},
+    location.protocol==='file:'?'*':location.origin);
   return;
 }
 const GEO={
@@ -409,8 +414,9 @@ const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 
 /* ---- Persistence -------------------------------------------------- */
 /* Page revision (shown in the footer): B = even highlight ring, badges clear of labels, full part names;
-   C = Flex-N-Gate logo, Settings > live data monitor */
-const PAGE_REV='C';
+   C = Flex-N-Gate logo, Settings > live data monitor;
+   D = security hardening: settings validation, picture checks, own-page-only update check, CSP */
+const PAGE_REV='D';
 const STORAGE_KEY='warehouse-pick-RH';
 /* RACK_PARTS exactly as written in the HTML file, before this screen's saved edits (for the monitor). */
 let FILE_RACK=JSON.parse(JSON.stringify(RACK_PARTS));
@@ -444,8 +450,44 @@ function idbPut(key,val){
     tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);
   }));
 }
+/* ---- Settings validation: every settings file, import and browser copy is checked here ----
+   Text: strings only, max MAX_TEXT_LEN, no control characters. Sizes: whole numbers in range.
+   Sections: real section numbers only. Pictures: base64 png/jpeg/gif/webp/bmp data only
+   (no web links, so the page never loads anything from outside). */
+const IMG_DATA_RE=/^data:image\/(png|jpeg|gif|webp|bmp);base64,[A-Za-z0-9+/]+=*$/;
+const MAX_IMG_CHARS=8*1024*1024;      // about 6 MB of picture per section
+const MAX_SETTINGS_BYTES=150*1024*1024;
+let lastRejected=0;
+function cleanSettings(raw){
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('not a settings object');
+  let rejected=0;
+  const sec=k=>{const n=Number(k);return Number.isInteger(n)&&n>=0&&n<=999&&String(n)===String(k).trim()?n:null;};
+  const txt=v=>typeof v==='string'?v.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g,'').slice(0,MAX_TEXT_LEN):undefined;
+  const num=(v,max)=>{if(v===undefined)return undefined;const x=Number(v);
+    if(!Number.isFinite(x)){rejected++;return undefined;}return Math.max(0,Math.min(max,Math.round(x)));};
+  const obj=o=>o&&typeof o==='object'&&!Array.isArray(o);
+  const out={};
+  if(obj(raw.parts)){out.parts={};
+    for(const [k,v] of Object.entries(raw.parts)){const n=sec(k);
+      if(n===null||!obj(v)){rejected++;continue;}out.parts[n]={p:txt(v.p),d:txt(v.d)};}}
+  if(obj(raw.geo)){out.geo={};
+    for(const [k,v] of Object.entries(raw.geo)){const n=sec(k);
+      if(n===null||!obj(v)){rejected++;continue;}
+      out.geo[n]={x:num(v.x,1296),y:num(v.y,600),w:num(v.w,1296),h:num(v.h,434)};}}
+  if(obj(raw.images)){out.images={};
+    for(const [k,v] of Object.entries(raw.images)){const n=sec(k);
+      if(n===null){rejected++;continue;}
+      if(v===''||v===null)out.images[n]='';
+      else if(typeof v==='string'&&v.length<=MAX_IMG_CHARS&&IMG_DATA_RE.test(v))out.images[n]=v;
+      else rejected++;}}
+  if(Array.isArray(raw.frames))out.frames=raw.frames.slice(0,50).map(f=>obj(f)?{x:num(f.x,1296),y:num(f.y,600),w:num(f.w,1296),h:num(f.h,434)}:null);
+  const t=Number(raw.savedAt);if(Number.isFinite(t)&&t>0)out.savedAt=t;
+  lastRejected=rejected;
+  return out;
+}
 function applySaved(saved,replaceImages){
   if(!saved)return;
+  try{saved=cleanSettings(saved);}catch(e){console.warn('settings ignored:',e.message);lastRejected=1;return;}
   if(saved.parts){
     Object.entries(saved.parts).forEach(([k,v])=>{
       const n=Number(k);
@@ -815,8 +857,11 @@ function resetSlotToDefault(){
 function handleImageUpload(e){
   const file=e.target.files&&e.target.files[0];
   if(!file||currentEditSlot===null)return;
+  if(!/^image\/(png|jpeg|gif|webp|bmp)$/.test(file.type)){toast('Please choose a PNG, JPEG, GIF, WebP or BMP picture.',true);e.target.value='';return;}
+  if(file.size>MAX_IMG_CHARS*0.74){toast('That picture is too large (limit about 6 MB). Please use a smaller one.',true);e.target.value='';return;}
   const reader=new FileReader();
   reader.onload=function(evt){
+    if(!IMG_DATA_RE.test(evt.target.result)){toast('That file could not be read as a picture.',true);return;}
     RACK_IMAGES[currentEditSlot]=evt.target.result;
     const preview=document.getElementById('em-preview');
     preview.src=evt.target.result;
@@ -920,8 +965,9 @@ async function syncFromFolder(){
     if(unexported)toast('This screen has changes that are not in '+SETTINGS_FILE+' yet. Click Export to save them.');
     return;
   }
+  if(file.size>MAX_SETTINGS_BYTES){toast(SETTINGS_FILE+' is too large to be a settings file, so it was not loaded.',true);return;}
   let data;
-  try{data=JSON.parse(await file.text());}
+  try{data=JSON.parse(await file.text());cleanSettings(data);}
   catch(e){toast(SETTINGS_FILE+' is not valid JSON, so it was not loaded. Current settings kept.',true);return;}
   let note='';
   if(unexported){   // never drop this screen's edits without a copy
@@ -933,7 +979,8 @@ async function syncFromFolder(){
   await saveToStorage(file.lastModified);
   await idbPut(SYNC_KEY,file.lastModified);
   fullRerender();
-  toast('Loaded '+SETTINGS_FILE+' (saved '+new Date(file.lastModified).toLocaleString()+').'+note);
+  toast('Loaded '+SETTINGS_FILE+' (saved '+new Date(file.lastModified).toLocaleString()+').'+note+
+    (lastRejected?' '+lastRejected+' invalid entr'+(lastRejected===1?'y was':'ies were')+' skipped.':''),!!lastRejected);
 }
 async function initFolder(){
   if(!FS_OK){folderBtn();return;}
@@ -993,13 +1040,16 @@ function downloadSettings(){
 function importSettings(e){
   const file=e.target.files&&e.target.files[0];
   if(!file)return;
+  if(file.size>MAX_SETTINGS_BYTES){toast('That file is too large to be a settings file, so it was not imported.',true);e.target.value='';return;}
   const reader=new FileReader();
   reader.onload=function(evt){
     try{
       const saved=JSON.parse(evt.target.result);
+      cleanSettings(saved);           // throws if it is not a settings file at all
       applySaved(saved,true);
       saveToStorage();
       fullRerender();
+      if(lastRejected)toast('Imported. '+lastRejected+' invalid entr'+(lastRejected===1?'y was':'ies were')+' skipped (for example a picture that was not image data).',true);
     }catch(err){console.warn('import error',err);alert('Invalid settings file.');}
   };
   reader.readAsText(file);
@@ -1056,7 +1106,7 @@ function startLivePolling(){
     if(!frame||e.source!==frame.contentWindow)return;
     const d=e.data;
     if(d&&d.type==='pick-guide-data'){
-      if(d.rack)FILE_RACK=JSON.parse(JSON.stringify(d.rack));
+      if(d.rack){try{FILE_RACK=cleanSettings({parts:d.rack}).parts||{};}catch(err){}}
       applyLiveData(d);done(true);
     }
   });
