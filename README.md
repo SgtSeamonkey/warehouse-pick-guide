@@ -189,11 +189,60 @@ The LH page will use `warehouse-pick-LH-settings.json` the same way.
     cart slots it feeds; where a saved screen edit differs from `RACK_PARTS` in
     the file, the file value is shown struck through.
   - **Event log:** every door-data change and read error since the page opened.
-- The revision shows bottom left (`Rev C`). New code sits after the data, so
+- The revision shows bottom left (`Rev C` or later). New code sits after the data, so
   `ORANGE_PARTS` is on line 264 and `RACK_PARTS` on line 279 in **both** the RH
   and LH pages (`PICK_ROUTES`: line 325 RH, 333 LH).
 - The LH page has the same features as RH, including the folder settings file
   (`warehouse-pick-LH-settings.json`) and Rev B display fixes.
+
+---
+
+## Security (Rev D)
+
+The pages make **no network connections**, load no outside scripts, and show
+all text as plain text (never as HTML). Rev D adds:
+
+- A Content Security Policy that blocks all outside connections, plugins,
+  form posts and base-URL tricks, even for code running inside the page.
+- Validation of every settings file (Import, folder auto-load, browser copy):
+  text limited to 30 characters, sizes checked, only real section numbers,
+  pictures only as embedded PNG/JPEG/GIF/WebP/BMP data (no web links).
+- Picture uploads limited to real image types, about 6 MB each.
+- The background update check only answers the page itself, so another
+  website that frames the page cannot read the door or part data.
+
+### Required: escape values in the query script
+
+The query script writes database values into `ORANGE_PARTS`, `RACK_PARTS`
+and `PICK_ROUTES` as JavaScript. A value containing a quote (for example
+`24" TRIM`) breaks the page (blank screen), and a crafted value could run
+code with the page's access, including the linked folder. **Write every text
+value through this function** instead of pasting it between quotes:
+
+```powershell
+# Safe JavaScript string literal (quotes included) for any database value
+function ConvertTo-JsString([string]$Value) {
+    if ($null -eq $Value) { $Value = '' }
+    $json = ConvertTo-Json -InputObject $Value -Compress   # escapes " \ and control characters
+    $json -replace '<', '<' -replace '>', '>' -replace ' ', ' ' -replace ' ', ' '
+}
+
+# Example: one cart slot line, and one route line (numbers forced to integers)
+"  $($slot):{p:$(ConvertTo-JsString $row.DoorType),d:$(ConvertTo-JsString $row.DoorCode)},"
+"  $($slot):[$((@($sections) | ForEach-Object { [int]$_ }) -join ',')],"
+```
+
+Note the values are written **without** surrounding quotes; the function adds them.
+
+### Station setup
+
+- Link a folder that holds only the page and its settings files (the page
+  gets read/write access to the folder you pick).
+- Limit who can write to that folder: whatever is in
+  `warehouse-pick-RH-settings.json` is what operators see.
+- If the page is ever served from a web server, also send the header
+  `Content-Security-Policy: frame-ancestors 'self'` to stop other sites
+  framing it (a page file cannot set this itself).
 
 ---
 
