@@ -172,6 +172,27 @@ The LH page will use `warehouse-pick-LH-settings.json` the same way.
 
 ---
 
+## Logo and Settings Monitor (RH page, Rev C)
+
+- **Logo:** put the logo image next to the page as `flexngate-logo.png` (or
+  `flexngate-logo.svg`). It shows top left on a white tab. Until the file is
+  there, a plain "FLEX-N-GATE" text label is shown instead.
+- **⚙ Settings** (header) opens a read-only live data monitor:
+  - **Live status:** auto-update on/off, last check / successful read / data
+    change, read errors, and data checks (placeholder door text, routes to
+    sections that are not on the rack or have zero size, picked sections with
+    no part text, screen edits that differ from the file).
+  - **Orange parts:** `ORANGE_PARTS` and `PICK_ROUTES` per cart slot, rows that
+    changed in the last minute tinted, plus the data as loaded.
+  - **Rack parts:** every section with part, description, size, picture and the
+    cart slots it feeds; where a saved screen edit differs from `RACK_PARTS` in
+    the file, the file value is shown struck through.
+  - **Event log:** every door-data change and read error since the page opened.
+- The revision shows bottom left (`Rev C`). New code sits after the data, so
+  `ORANGE_PARTS` stays on line 264 and `RACK_PARTS` on line 279.
+
+---
+
 ## Rack Section Reference
 
 | Group | Sections | Physical location |

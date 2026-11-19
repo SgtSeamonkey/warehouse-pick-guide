@@ -168,7 +168,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 <div id="app">
 <header id="hd">
   <h1><span class="side">RH</span> Door Line Kitting</h1>
-  <div id="flow">PICK from <span class="y">YELLOW</span> rack<span class="arr">&#10132;</span>PUT in <span class="o">ORANGE</span> cart slot</div>
+  <div id="flow"><span class="fw">PICK from </span><span class="y">YELLOW</span><span class="fw"> rack</span><span class="arr">&#10132;</span><span class="fw">PUT in </span><span class="o">ORANGE</span><span class="fw"> cart slot</span></div>
   <div id="hr">
     <button class="hb" id="btn-slots">&#9998; Edit Slots</button>
     <button class="hb" id="btn-export">&#8681; Export</button>
@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 <footer id="ft">
-  <span id="fl"><span class="rev" title="Page revision">Rev B</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
+  <span id="fl"><span class="rev" title="Page revision">Rev C</span><span><i style="background:var(--yw)"></i>Pick from this rack section</span><span><i style="background:var(--or);border-radius:50%"></i>Put in this cart slot</span></span>
   <span id="fm">Loading&#8230;</span>
   <span id="fx"></span>
 </footer>
@@ -345,7 +345,7 @@ const CHECK_FOR_UPDATES_SECONDS=10;
    ENGINE — Do not edit below this line.
    ================================================================ */
 if(/[?&]probe=/.test(location.search)&&window.parent!==window){
-  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES},'*');
+  window.parent.postMessage({type:'pick-guide-data',orange:ORANGE_PARTS,routes:PICK_ROUTES,rack:RACK_PARTS},'*');
   return;
 }
 const GEO={
@@ -408,9 +408,12 @@ const BADGE_GAP=4;       // px gap between adjacent badges
 const MIN_BADGE_R=8;     // smallest badge radius when auto-shrinking
 
 /* ---- Persistence -------------------------------------------------- */
-/* Page revision (shown in the footer): B = even highlight ring, badges clear of labels, full part names */
-const PAGE_REV='B';
+/* Page revision (shown in the footer): B = even highlight ring, badges clear of labels, full part names;
+   C = Flex-N-Gate logo, Settings > live data monitor */
+const PAGE_REV='C';
 const STORAGE_KEY='warehouse-pick-RH';
+/* RACK_PARTS exactly as written in the HTML file, before this screen's saved edits (for the monitor). */
+let FILE_RACK=JSON.parse(JSON.stringify(RACK_PARTS));
 /* Built-in pictures (window.RACK_DEFAULT_IMAGES, in the script block just
    above this one). A browser's own saved pictures are applied on top. */
 const DEFAULT_IMAGES=window.RACK_DEFAULT_IMAGES||{};
@@ -1013,6 +1016,7 @@ function applyLiveData(data){
   const sig=JSON.stringify([orange||null,routes||null]);
   if(sig===lastLiveSig)return false;   // nothing changed: touch nothing
   lastLiveSig=sig;
+  let before=null;try{before=dbgSnap();}catch(e){}
   if(orange){
     Object.keys(ORANGE_PARTS).forEach(k=>{delete ORANGE_PARTS[k];});
     Object.entries(orange).forEach(([k,v])=>{
@@ -1022,8 +1026,9 @@ function applyLiveData(data){
   if(routes){
     Object.keys(PICK_ROUTES).forEach(k=>{delete PICK_ROUTES[k];});
     Object.entries(routes).forEach(([k,v])=>{
+      // keep every listed section (including 0, as a fresh page load does); skip blanks
       PICK_ROUTES[Number(k)]=(Array.isArray(v)?v:String(v||'').split(','))
-        .map(Number).filter(x=>x>0);
+        .filter(x=>String(x).trim()!=='').map(Number).filter(Number.isFinite);
     });
   }
   // Only redraw the cart labels and highlights; rack cells, edits,
@@ -1031,6 +1036,7 @@ function applyLiveData(data){
   renderCartLabels();
   applyPickRoutes();
   document.getElementById('lu').textContent=new Date().toLocaleTimeString();
+  try{dbgChanged(before);}catch(e){console.warn(e);}
   return true;
 }
 window.updatePickData=applyLiveData;
@@ -1044,14 +1050,19 @@ function startLivePolling(){
     if(timer){clearTimeout(timer);timer=null;}
     if(frame){frame.remove();frame=null;}
     if(sd)sd.style.background=ok?'':'#ff4444';  // red dot = file could not be read
+    try{dbgRead(ok);}catch(e){}
   }
   window.addEventListener('message',e=>{
     if(!frame||e.source!==frame.contentWindow)return;
     const d=e.data;
-    if(d&&d.type==='pick-guide-data'){applyLiveData(d);done(true);}
+    if(d&&d.type==='pick-guide-data'){
+      if(d.rack)FILE_RACK=JSON.parse(JSON.stringify(d.rack));
+      applyLiveData(d);done(true);
+    }
   });
   function check(){
     if(frame)return;  // previous check still running
+    DBG.checks++;DBG.lastCheck=Date.now();
     frame=document.createElement('iframe');
     frame.style.cssText='position:absolute;width:0;height:0;border:0;visibility:hidden';
     frame.setAttribute('aria-hidden','true');
@@ -1132,6 +1143,243 @@ function fullRerender(){
   setupClickHandlers();
 }
 
+/* ================================================================
+   SETTINGS: live data monitor (read-only)
+   ================================================================ */
+const DBG={opened:false,tab:'status',checks:0,reads:0,fails:0,changes:0,
+  lastCheck:0,lastRead:0,lastChange:0,lastError:'',loadedAt:Date.now(),
+  changedSlots:{},changedSecs:{},log:[]};
+function dbgLog(msg,cls){
+  DBG.log.unshift({t:Date.now(),msg,cls:cls||''});
+  if(DBG.log.length>200)DBG.log.length=200;
+}
+function dbgSnap(){return {o:JSON.parse(JSON.stringify(ORANGE_PARTS)),r:JSON.parse(JSON.stringify(PICK_ROUTES)),m:sectionMap()};}
+function dbgChanged(b){
+  if(!b)return;
+  const now=Date.now(), slots=[], secs=[];
+  const keys=new Set([...Object.keys(b.o),...Object.keys(ORANGE_PARTS),...Object.keys(b.r),...Object.keys(PICK_ROUTES)]);
+  keys.forEach(k=>{
+    if(JSON.stringify(b.o[k]||null)!==JSON.stringify(ORANGE_PARTS[k]||null)||
+       JSON.stringify(b.r[k]||[])!==JSON.stringify(PICK_ROUTES[k]||[])){slots.push(+k);DBG.changedSlots[k]=now;}
+  });
+  const m=sectionMap();
+  new Set([...Object.keys(b.m),...Object.keys(m)]).forEach(k=>{
+    if(JSON.stringify(b.m[k]||[])!==JSON.stringify(m[k]||[])){secs.push(+k);DBG.changedSecs[k]=now;}
+  });
+  DBG.changes++;DBG.lastChange=now;
+  dbgLog('New door data: cart slot'+(slots.length===1?' ':'s ')+(slots.sort((a,c)=>a-c).join(', ')||'-')+
+    ' changed; rack section'+(secs.length===1?' ':'s ')+(secs.sort((a,c)=>a-c).join(', ')||'-')+' affected','chg');
+  if(DBG.opened)dbgRender();
+}
+function dbgRead(ok){
+  if(ok){DBG.reads++;DBG.lastRead=Date.now();}
+  else{DBG.fails++;DBG.lastError='Could not read '+location.pathname.split('/').pop()+' (no answer in 15 s)';
+    dbgLog(DBG.lastError,'bad');}
+}
+const PLACEHOLDER_RE=/PARTNUMBER_|PARTDESC_|PLACEHOLDER/i;
+function dbgWarnings(){
+  const W=[], m=sectionMap();
+  for(let s=1;s<=8;s++){
+    const op=ORANGE_PARTS[s];
+    if(!op)W.push(['bad','Cart slot '+s+' is missing from ORANGE_PARTS']);
+    else{
+      if(!op.p)W.push(['bad','Cart slot '+s+' has no door type (p)']);
+      if(PLACEHOLDER_RE.test(op.p+' '+op.d))W.push(['bad','Cart slot '+s+' still has placeholder text: "'+op.d+'"']);
+    }
+    const r=PICK_ROUTES[s]||[];
+    if(!r.length)W.push(['info','Cart slot '+s+' has nothing to pick']);
+    const dup=r.filter((x,i)=>r.indexOf(x)!==i);
+    if(dup.length)W.push(['bad','Cart slot '+s+' lists section '+[...new Set(dup)].join(', ')+' more than once']);
+  }
+  Object.keys(m).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    const g=GEO[n], rp=RACK_PARTS[n];
+    if(!g)W.push(['bad','Section '+n+' is in PICK_ROUTES (cart slot '+m[n].join(', ')+') but is not on the rack']);
+    else if(!(g.w>0&&g.h>0))W.push(['bad','Section '+n+' is picked (cart slot '+m[n].join(', ')+') but has zero size, so it cannot be seen']);
+    else if(!rp||(!rp.p&&!rp.d))W.push(['bad','Section '+n+' is picked (cart slot '+m[n].join(', ')+') but has no part number or description']);
+  });
+  const ov=ALL.filter(n=>FILE_RACK[n]&&RACK_PARTS[n]&&(FILE_RACK[n].p!==RACK_PARTS[n].p||FILE_RACK[n].d!==RACK_PARTS[n].d));
+  if(ov.length)W.push(['info','Rack text on this screen differs from RACK_PARTS in the file for section'+(ov.length>1?'s ':' ')+ov.join(', ')+' (saved edits or imported settings)']);
+  return W;
+}
+function E(tag,attrs,...kids){
+  const e=document.createElement(tag);
+  if(attrs)for(const k in attrs){if(k==='class')e.className=attrs[k];else if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}
+  kids.flat().forEach(c=>{if(c==null)return;e.appendChild(typeof c==='string'||typeof c==='number'?document.createTextNode(String(c)):c);});
+  return e;
+}
+function ago(t){
+  if(!t)return 'never';
+  const s=Math.round((Date.now()-t)/1000);
+  const when=new Date(t).toLocaleTimeString();
+  if(s<60)return when+' ('+s+' s ago)';
+  if(s<3600)return when+' ('+Math.floor(s/60)+' min ago)';
+  return new Date(t).toLocaleString();
+}
+const recent=t=>t&&Date.now()-t<60000;
+function card(k,v,cls){return E('div',{class:'dg-card'},E('div',{class:'k',text:k}),E('div',{class:'v'+(cls?' '+cls:''),text:v}));}
+function rawBlock(name,obj,fmt){
+  const lines=Object.keys(obj).map(Number).sort((a,b)=>a-b).map(k=>'  '+String(k).padStart(2)+':'+fmt(obj[k])+',');
+  return E('pre',{class:'dg-raw',text:'const '+name+'={\n'+lines.join('\n')+'\n};'});
+}
+function dbgStatus(){
+  const live=CHECK_FOR_UPDATES_SECONDS>0;
+  const stale=live&&DBG.lastRead&&Date.now()-DBG.lastRead>CHECK_FOR_UPDATES_SECONDS*3000;
+  const folderBtn=document.getElementById('btn-folder');
+  const W=dbgWarnings();
+  const list=document.getElementById('picklist'), slot=document.querySelector('#cart-frame .slot');
+  return [
+    E('div',{class:'dg-h',text:'Live updates'}),
+    E('div',{class:'dg-grid'},
+      card('Auto-update',live?'On, every '+CHECK_FOR_UPDATES_SECONDS+' s':'Off (CHECK_FOR_UPDATES_SECONDS = 0)',live?'ok':'bad'),
+      card('Data file',decodeURIComponent(location.pathname.split('/').pop())),
+      card('Last check',ago(DBG.lastCheck)),
+      card('Last successful read',ago(DBG.lastRead),stale?'bad':(DBG.lastRead?'ok':'')),
+      card('Last door data change',ago(DBG.lastChange)),
+      card('Checks / reads / failed',DBG.checks+' / '+DBG.reads+' / '+DBG.fails,DBG.fails?'bad':''),
+      card('Last error',DBG.lastError||'none',DBG.lastError?'bad':'ok'),
+      card('Page loaded',ago(DBG.loadedAt))),
+    E('div',{class:'dg-h',text:'Data checks ('+W.filter(w=>w[0]==='bad').length+' problem'+(W.filter(w=>w[0]==='bad').length===1?'':'s')+')'}),
+    E('ul',{class:'dg-warn'},W.length?W.map(w=>E('li',{class:w[0]==='bad'?'':'info',text:w[1]})):E('li',{class:'none',text:'No problems found in the door, route or rack data.'})),
+    E('div',{class:'dg-h',text:'Screen'}),
+    E('div',{class:'dg-grid'},
+      card('Page revision','Rev '+PAGE_REV),
+      card('Window size',innerWidth+' × '+innerHeight+' px at '+Math.round(devicePixelRatio*100)+'% scaling'),
+      card('Pick list text size',list?list.style.fontSize||'-':'-'),
+      card('Cart text size',slot?slot.style.fontSize||'-':'-'),
+      card('Settings file',FS_OK?(folderBtn?folderBtn.textContent.trim():'')+' · '+SETTINGS_FILE:'Not supported in this browser (download only)'),
+      card('Rack sections',ALL.length+' total · '+ALL.filter(n=>!(GEO[n].w>0&&GEO[n].h>0)).length+' hidden (zero size) · '+Object.keys(RACK_IMAGES).length+' pictures'))
+  ];
+}
+function dbgOrange(){
+  const rows=[];
+  for(let s=1;s<=8;s++){
+    const op=ORANGE_PARTS[s]||{p:'',d:''};
+    const r=PICK_ROUTES[s]||[];
+    const flags=[];
+    if(!ORANGE_PARTS[s])flags.push(['bad','missing']);
+    if(PLACEHOLDER_RE.test(op.p+' '+op.d))flags.push(['bad','placeholder']);
+    r.forEach(n=>{
+      if(!GEO[n])flags.push(['bad',n+' not on rack']);
+      else if(!(GEO[n].w>0&&GEO[n].h>0))flags.push(['bad',n+' zero size']);
+    });
+    if(!r.length)flags.push(['mut','nothing to pick']);
+    const cls=[flags.some(f=>f[0]==='bad')?'flag':'',recent(DBG.changedSlots[s])?'changed':'',r.length?'':'dim'].join(' ');
+    rows.push(E('tr',{class:cls},
+      E('td',{},E('span',{class:'dg-dot',text:s})),
+      E('td',{text:op.p}),E('td',{class:'mono',text:op.d}),
+      E('td',{},r.map(n=>E('span',{class:'dg-chip',text:n}))),
+      E('td',{},flags.map(f=>E('span',{class:'dg-tag '+f[0],text:f[1]}))),
+      E('td',{text:recent(DBG.changedSlots[s])?'just now':(DBG.changedSlots[s]?new Date(DBG.changedSlots[s]).toLocaleTimeString():'')})));
+  }
+  return [
+    E('table',{class:'dg'},E('thead',{},E('tr',{},['Slot','Door type (p)','Door code (d)','Pick from (PICK_ROUTES)','Checks','Changed'].map(h=>E('th',{text:h})))),E('tbody',{},rows)),
+    E('div',{class:'dg-h',text:'As currently loaded (same layout as the file)'}),
+    rawBlock('ORANGE_PARTS',ORANGE_PARTS,v=>'{p:'+JSON.stringify(v.p)+',d:'+JSON.stringify(v.d)+'}'),
+    rawBlock('PICK_ROUTES',PICK_ROUTES,v=>'['+v.join(',')+']')
+  ];
+}
+let dbgRackFilter='all';
+function dbgRack(){
+  const m=sectionMap();
+  const ids=[...new Set([...ALL,...Object.keys(m).map(Number)])].sort((a,b)=>a-b);
+  const rows=[];
+  ids.forEach(n=>{
+    const g=GEO[n], rp=RACK_PARTS[n]||{p:'',d:''}, fp=FILE_RACK[n];
+    const lit=!!m[n], hidden=!g||!(g.w>0&&g.h>0);
+    const differs=fp&&(fp.p!==rp.p||fp.d!==rp.d);
+    const flags=[];
+    if(!g)flags.push(['bad','not on rack']);
+    else if(hidden)flags.push([lit?'bad':'mut','zero size']);
+    if(lit&&g&&!rp.p&&!rp.d)flags.push(['bad','no part text']);
+    if(differs)flags.push(['info','edited on screen']);
+    const bad=flags.some(f=>f[0]==='bad');
+    if(dbgRackFilter==='active'&&!lit)return;
+    if(dbgRackFilter==='flagged'&&!flags.length)return;
+    const cls=[lit?'lit':'',bad?'flag':'',hidden&&!lit?'dim':'',recent(DBG.changedSecs[n])?'changed':''].join(' ');
+    rows.push(E('tr',{class:cls},
+      E('td',{},E('b',{text:n})),
+      E('td',{class:'mono'},rp.p,differs&&fp.p!==rp.p?E('span',{class:'dg-old',text:'file: '+(fp.p||'(blank)')}):null),
+      E('td',{},rp.d,differs&&fp.d!==rp.d?E('span',{class:'dg-old',text:'file: '+(fp.d||'(blank)')}):null),
+      E('td',{class:'mono',text:g?g.w+' × '+g.h:'-'}),
+      E('td',{text:RACK_IMAGES[n]?'yes':''}),
+      E('td',{},(m[n]||[]).map(c=>E('span',{class:'dg-dot',text:c}))),
+      E('td',{},flags.map(f=>E('span',{class:'dg-tag '+f[0],text:f[1]})))));
+  });
+  const sel=E('select',{id:'dg-filter'},[['all','All sections'],['active','Being picked now'],['flagged','With a flag']].map(([v,t])=>{const o=E('option',{value:v,text:t});if(v===dbgRackFilter)o.selected=true;return o;}));
+  sel.addEventListener('change',()=>{dbgRackFilter=sel.value;dbgRender();});
+  return [
+    E('div',{class:'dg-tools'},E('label',{},'Show ',sel),E('span',{text:'Yellow edge = being picked · struck-through red text = value written in RACK_PARTS in the file'})),
+    E('table',{class:'dg'},E('thead',{},E('tr',{},['Section','Part number (p)','Description (d)','Size','Picture','Cart slots','Checks'].map(h=>E('th',{text:h})))),E('tbody',{},rows)),
+    E('div',{class:'dg-h',text:'RACK_PARTS as written in the file'}),
+    rawBlock('RACK_PARTS',FILE_RACK,v=>'{p:'+JSON.stringify(v.p)+',d:'+JSON.stringify(v.d)+'}')
+  ];
+}
+function dbgLogView(){
+  return [E('div',{class:'dg-log'},DBG.log.length?DBG.log.map(l=>E('div',{class:l.cls,text:new Date(l.t).toLocaleTimeString()+'  '+l.msg})):E('div',{text:'No events yet. Changes to the door data and read errors appear here.'}))];
+}
+function dbgRender(){
+  if(!DBG.opened)return;
+  const body=document.getElementById('dbg-body');
+  const keep=body.scrollTop;
+  body.innerHTML='';
+  const view={status:dbgStatus,orange:dbgOrange,rack:dbgRack,log:dbgLogView}[DBG.tab]();
+  view.forEach(v=>body.appendChild(v));
+  body.scrollTop=keep;
+  // tab counters
+  const W=dbgWarnings();
+  const co=document.getElementById('cnt-orange'), cr=document.getElementById('cnt-rack');
+  const oBad=W.filter(w=>w[0]==='bad'&&/^Cart slot/.test(w[1])).length;
+  const rBad=W.filter(w=>w[0]==='bad'&&/^Section/.test(w[1])).length;
+  co.textContent=oBad||Object.keys(ORANGE_PARTS).length;co.classList.toggle('warn',!!oBad);
+  cr.textContent=rBad||Object.keys(sectionMap()).length;cr.classList.toggle('warn',!!rBad);
+  const stale=CHECK_FOR_UPDATES_SECONDS>0&&DBG.lastRead&&Date.now()-DBG.lastRead>CHECK_FOR_UPDATES_SECONDS*3000;
+  const lv=document.getElementById('dbg-live');
+  lv.classList.toggle('stale',!!stale||CHECK_FOR_UPDATES_SECONDS<=0);
+  lv.textContent=CHECK_FOR_UPDATES_SECONDS<=0?'● AUTO-UPDATE OFF':(stale?'● NO RECENT DATA':'● LIVE');
+}
+let dbgTimer=null;
+function dbgOpen(){
+  DBG.opened=true;document.getElementById('dbg').style.display='flex';dbgRender();
+  clearInterval(dbgTimer);
+  // refresh once a second, but not while someone is selecting text in the panel
+  dbgTimer=setInterval(()=>{const sel=getSelection();if(sel&&String(sel).length&&document.getElementById('dbg').contains(sel.anchorNode))return;dbgRender();},1000);
+  document.getElementById('dbg-close').focus();
+}
+function dbgClose(){DBG.opened=false;clearInterval(dbgTimer);document.getElementById('dbg').style.display='none';}
+function initDbg(){
+  const hr=document.getElementById('hr');
+  const sb=E('button',{class:'hb',id:'btn-settings',title:'Live debug monitor for the door and rack data'},'\u2699 Settings');
+  hr.insertBefore(sb,document.getElementById('btn-slots'));
+  document.getElementById('btn-settings').addEventListener('click',dbgOpen);
+  document.getElementById('dbg-close').addEventListener('click',dbgClose);
+  const back=document.getElementById('dbg');
+  let down=false;
+  back.addEventListener('mousedown',e=>{down=e.target===back;});
+  back.addEventListener('mouseup',e=>{if(down&&e.target===back)dbgClose();down=false;});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&DBG.opened)dbgClose();});
+  document.querySelectorAll('#dbg-tabs button').forEach(b=>b.addEventListener('click',()=>{
+    DBG.tab=b.dataset.tab;
+    document.querySelectorAll('#dbg-tabs button').forEach(x=>x.classList.toggle('act',x===b));
+    document.getElementById('dbg-body').scrollTop=0;
+    dbgRender();
+  }));
+  // Logo (top left): flexngate-logo.png, then .svg, then a plain text label
+  const hd=document.getElementById('hd');
+  const box=E('div',{id:'logo',title:'Flex-N-Gate'},E('img',{id:'logo-img',alt:'Flex-N-Gate'}),E('span',{id:'logo-txt',text:'FLEX-N-GATE'}));
+  hd.insertBefore(box,hd.firstChild);
+  const img=box.querySelector('img');
+  const tries=['flexngate-logo.png','flexngate-logo.svg'];
+  img.addEventListener('load',()=>box.classList.add('has-img'));
+  img.addEventListener('error',()=>{const i=tries.indexOf(img.getAttribute('src'));
+    if(i>=0&&i<tries.length-1)img.setAttribute('src',tries[i+1]);else box.classList.remove('has-img');});
+  img.setAttribute('src',tries[0]);
+  dbgLog('Page loaded (Rev '+PAGE_REV+')');
+}
+/* The panel markup sits at the end of the page, so set it up once the page has loaded.
+   Wrapped so a monitor problem can never stop the pick guide itself. */
+function initDbgSafe(){try{initDbg();}catch(e){console.warn('settings monitor error',e);}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initDbgSafe);else initDbgSafe();
+
 // Boot
 generateRackCells();
 renderRackLabels();
@@ -1175,5 +1423,91 @@ lastLiveSig=JSON.stringify([ORANGE_PARTS,PICK_ROUTES]);
 loadSaved().finally(()=>{fullRerender();startLivePolling();initFolder();});
 })();
 </script>
+<style>
+/* Rev C additions (kept after the data so ORANGE_PARTS / RACK_PARTS stay on the same lines) */
+/* The header must never make the page wider than the screen */
+#app{grid-template-columns:minmax(0,1fr)}
+#hd{min-width:0;overflow:hidden}
+#flow{min-width:0;overflow:hidden;white-space:nowrap}
+#hr{flex:none}
+#btn-folder{max-width:13em;overflow:hidden;text-overflow:ellipsis}
+/* Narrower screens: short instruction (YELLOW > ORANGE) and tighter buttons */
+@media (max-width:1700px){#flow .fw{display:none}#hd{gap:14px}}
+@media (max-width:1400px){.hb{padding:4px 6px}#hr{gap:5px}#lu{min-width:0}}
+/* Logo: shows flexngate-logo.png (or .svg) from this folder; plain text until the file is there */
+#logo{display:flex;align-items:center;height:clamp(24px,1.85vw,36px);flex:none}  /* same height as the title, so the header does not grow */
+#logo-img{height:100%;width:auto;display:none;background:#fff;border-radius:6px;padding:2px 7px}
+#logo-txt{font-weight:900;letter-spacing:.08em;font-size:clamp(.75rem,1.05vw,1.1rem);color:#fff;line-height:1;
+  border:2px solid #fff;border-radius:6px;padding:.25em .6em;white-space:nowrap}
+#logo.has-img #logo-img{display:block}
+#logo.has-img #logo-txt{display:none}
+/* ---- Settings / live data monitor ---- */
+#dbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1500;display:flex;justify-content:flex-end}
+#dbg-panel{width:min(1100px,96vw);height:100%;background:#0e1622;border-left:3px solid #00b8d4;
+  display:flex;flex-direction:column;color:var(--tx);font-size:14px;box-shadow:-10px 0 30px rgba(0,0,0,.5)}
+#dbg-head{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #22334a}
+#dbg-head h2{font-size:1.05rem;color:#fff;flex:1}
+#dbg-live{color:#00e676;font-weight:800;font-size:.75rem;letter-spacing:.1em}
+#dbg-live.stale{color:#ff5252}
+#dbg-close{background:#22334a;border:0;color:#fff;width:32px;height:32px;border-radius:6px;font-size:1rem;cursor:pointer}
+#dbg-tabs{display:flex;gap:4px;padding:8px 16px 0;border-bottom:1px solid #22334a}
+#dbg-tabs button{background:transparent;border:1px solid transparent;border-bottom:0;color:#9fb2c8;
+  padding:8px 14px;border-radius:6px 6px 0 0;cursor:pointer;font-size:.85rem;font-weight:700}
+#dbg-tabs button.act{background:#16233a;border-color:#22334a;color:#fff}
+#dbg-tabs .cnt{display:inline-block;min-width:1.6em;padding:0 .4em;border-radius:9px;background:#22334a;
+  color:#cfe;font-size:.75em;margin-left:4px}
+#dbg-tabs .cnt.warn{background:#ff5252;color:#fff}
+#dbg-body{flex:1;overflow:auto;padding:14px 16px}
+#dbg-foot{padding:8px 16px;border-top:1px solid #22334a;color:#6f86a0;font-size:.75rem}
+.dg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-bottom:14px}
+.dg-card{background:#16233a;border:1px solid #22334a;border-radius:6px;padding:8px 10px}
+.dg-card .k{color:#7f93ab;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+.dg-card .v{color:#fff;font-weight:700;margin-top:2px;word-break:break-word}
+.dg-card .v.ok{color:#7ee2a8}.dg-card .v.bad{color:#ff6b6b}
+.dg-h{color:#00e5ff;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:12px 0 6px}
+.dg-warn{list-style:none;display:flex;flex-direction:column;gap:4px}
+.dg-warn li{background:#2a1416;border-left:4px solid #ff5252;padding:5px 9px;border-radius:4px}
+.dg-warn li.info{background:#14212e;border-left-color:#00b8d4}
+.dg-warn li.none{background:#132a1e;border-left-color:#00e676}
+table.dg{width:100%;border-collapse:collapse;font-size:.85rem}
+table.dg th{position:sticky;top:-14px;background:#0e1622;color:#7f93ab;text-align:left;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.06em;padding:6px 8px;border-bottom:1px solid #22334a}
+table.dg td{padding:5px 8px;border-bottom:1px solid #1a2738;vertical-align:top}
+table.dg td.mono{font-family:Consolas,'Courier New',monospace}
+table.dg tr.lit td:first-child{box-shadow:inset 4px 0 0 var(--yw)}
+table.dg tr.flag td{background:rgba(255,82,82,.08)}
+table.dg tr.dim td{color:#5d7189}
+table.dg tr.changed td{background:rgba(0,229,255,.14)}  /* changed in the last minute */
+.dg-chip{display:inline-block;background:var(--yw);color:#111;font-weight:900;border-radius:3px;padding:0 5px;margin:1px 2px 1px 0}
+.dg-dot{display:inline-block;background:var(--or);color:#fff;font-weight:900;border-radius:50%;
+  width:1.6em;height:1.6em;line-height:1.6em;text-align:center;margin:1px 2px 1px 0;font-size:.85em}
+.dg-tag{display:inline-block;font-size:.7rem;font-weight:800;border-radius:3px;padding:1px 5px;margin:1px 3px 1px 0}
+.dg-tag.bad{background:#ff5252;color:#fff}.dg-tag.info{background:#00b8d4;color:#001318}.dg-tag.mut{background:#22334a;color:#9fb2c8}
+.dg-old{color:#ff9f9f;text-decoration:line-through;font-size:.8em;display:block}
+.dg-tools{display:flex;gap:14px;align-items:center;margin-bottom:8px;color:#9fb2c8;font-size:.8rem}
+pre.dg-raw{background:#0a111b;border:1px solid #22334a;border-radius:6px;padding:10px;font-size:.78rem;
+  color:#cfe;overflow:auto;max-height:260px;white-space:pre}
+.dg-log{font-family:Consolas,'Courier New',monospace;font-size:.8rem;display:flex;flex-direction:column;gap:3px}
+.dg-log div{padding:3px 8px;border-radius:3px;background:#121d2c}
+.dg-log div.bad{background:#2a1416;color:#ffb3b3}
+.dg-log div.chg{background:#10283a;color:#bdf3ff}
+</style>
+<div id="dbg" role="dialog" aria-modal="true" aria-labelledby="dbg-title" style="display:none">
+  <div id="dbg-panel">
+    <div id="dbg-head">
+      <h2 id="dbg-title">&#9881; Settings &#183; Live data monitor</h2>
+      <span id="dbg-live" title="Refreshes every second and whenever new door data arrives">&#9679; LIVE</span>
+      <button id="dbg-close" aria-label="Close">&#10005;</button>
+    </div>
+    <div id="dbg-tabs" role="tablist">
+      <button role="tab" data-tab="status" class="act">Live status</button>
+      <button role="tab" data-tab="orange">Orange parts <span class="cnt" id="cnt-orange"></span></button>
+      <button role="tab" data-tab="rack">Rack parts <span class="cnt" id="cnt-rack"></span></button>
+      <button role="tab" data-tab="log">Event log</button>
+    </div>
+    <div id="dbg-body"></div>
+    <div id="dbg-foot">Read-only view. ORANGE_PARTS and PICK_ROUTES come from the HTML file (re-read every few seconds); RACK_PARTS comes from the file, with any edits saved on this screen applied on top.</div>
+  </div>
+</div>
 </body>
 </html>
