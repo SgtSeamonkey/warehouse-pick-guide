@@ -172,11 +172,12 @@ The LH page will use `warehouse-pick-LH-settings.json` the same way.
 
 ---
 
-## Logo and Settings Monitor (RH page, Rev C)
+## Logo and Settings Monitor (RH and LH pages, Rev C)
 
-- **Logo:** put the logo image next to the page as `flexngate-logo.png` (or
-  `flexngate-logo.svg`). It shows top left on a white tab. Until the file is
-  there, a plain "FLEX-N-GATE" text label is shown instead.
+- **Logo:** the Flex-N-Gate logo is built into both pages (white, top left), so
+  no extra file is needed. To replace it, put a `flexngate-logo.png` (or `.svg`,
+  white on transparent works best) next to the page. Source files are in
+  `reference pics/`.
 - **⚙ Settings** (header) opens a read-only live data monitor:
   - **Live status:** auto-update on/off, last check / successful read / data
     change, read errors, and data checks (placeholder door text, routes to
@@ -189,7 +190,10 @@ The LH page will use `warehouse-pick-LH-settings.json` the same way.
     the file, the file value is shown struck through.
   - **Event log:** every door-data change and read error since the page opened.
 - The revision shows bottom left (`Rev C`). New code sits after the data, so
-  `ORANGE_PARTS` stays on line 264 and `RACK_PARTS` on line 279.
+  `ORANGE_PARTS` is on line 264 and `RACK_PARTS` on line 279 in **both** the RH
+  and LH pages (`PICK_ROUTES`: line 325 RH, 333 LH).
+- The LH page has the same features as RH, including the folder settings file
+  (`warehouse-pick-LH-settings.json`) and Rev B display fixes.
 
 ---
 
