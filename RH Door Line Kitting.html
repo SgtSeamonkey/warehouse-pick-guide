@@ -69,46 +69,52 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);
   paint-order:stroke;stroke:#0b1119;stroke-width:3px}
 .SD.on{fill:#000;font-weight:900;stroke:var(--yw);stroke-width:4px}
 
-/* ---- Bottom strip ---- */
+/* ---- Bottom strip (text sizes are fitted by fitStrip() so nothing scrolls) ---- */
 #strip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;min-height:0}
 #cart{display:flex;flex-direction:column;min-height:0}
 #cart-frame{flex:1;min-height:0;border:5px solid var(--or);border-radius:6px;
-  background:#1b1d21;padding:4px;display:grid;width:clamp(300px,24vw,440px);
-  grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:4px}
+  background:#1b1d21;padding:4px;display:grid;width:clamp(320px,28vw,540px);
+  grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:4px}
 .slot{background:#33363b;border:1px solid #50555c;border-radius:4px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  padding:3px;gap:2px;min-width:0;overflow:hidden}
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;
+  padding:.25em;gap:.22em;min-width:0;min-height:0;overflow:hidden;font-size:14px}
+/* centred with auto margins, so any overflow goes downward where the fit check can measure it */
+.slot>*{flex:none}  /* rows never get squeezed away; the text shrinks instead */
+.slot>:first-child{margin-top:auto}.slot>:last-child{margin-bottom:auto}
 .slot.on{border-color:var(--or)}
 .slot.empty{opacity:.4}
-.slot .hd{display:flex;align-items:center;gap:5px;max-width:100%}
-.slot .sn{width:clamp(20px,1.7vw,30px);height:clamp(20px,1.7vw,30px);border-radius:50%;
-  background:var(--or);color:#fff;font-weight:900;border:2px solid #111;flex:none;
-  font-size:clamp(.8rem,1.1vw,1.15rem);display:flex;align-items:center;justify-content:center}
-.slot .dt{font-size:clamp(.62rem,.8vw,.9rem);font-weight:900;color:#fff;line-height:1.05;
+.slot .hd{display:flex;align-items:center;gap:.3em;max-width:100%}
+.slot .sn{width:1.75em;height:1.75em;border-radius:50%;flex:none;
+  background:var(--or);color:#fff;font-weight:900;border:2px solid #111;
+  font-size:1.05em;display:flex;align-items:center;justify-content:center}
+.slot .dt{font-size:.95em;font-weight:900;color:#fff;line-height:1.05;
   text-transform:uppercase;overflow:hidden;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-align:left}
-.slot .dc{font-size:clamp(.5rem,.6vw,.68rem);color:#ffcfae;line-height:1.1;max-width:100%;
+.slot .dc{font-size:.62em;color:#ffcfae;line-height:1.1;max-width:100%;
   font-family:Consolas,'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
-.chip{background:var(--yw);color:#111;font-weight:900;border-radius:3px;
-  font-size:clamp(.6rem,.75vw,.85rem);min-width:1.7em;padding:0 2px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.16em;max-width:100%}
+.chip{background:var(--yw);color:#111;font-weight:900;border-radius:.2em;
+  font-size:.9em;min-width:1.8em;padding:0 .12em;line-height:1.25}
 #pl-wrap{display:flex;flex-direction:column;min-height:0;min-width:0}
-#picklist{flex:1;min-height:0;overflow:auto;display:grid;align-content:start;gap:4px;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr))}
-.pl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
-  background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--yw);
-  border-radius:5px;padding:3px 8px}
-.pl .sec{background:var(--yw);color:#111;font-weight:900;border-radius:5px;
-  font-size:clamp(.85rem,1.05vw,1.2rem);min-width:2em;text-align:center;padding:1px 4px}
-.pl .pt b{display:block;font-size:clamp(.75rem,.9vw,1rem);color:#fff;line-height:1.15;
+#picklist{flex:1;min-height:0;overflow:hidden;display:grid;align-content:start;gap:.3em;font-size:16px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,21em),1fr))}
+.pl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:.5em;
+  background:var(--panel);border:1px solid var(--line);border-left:.32em solid var(--yw);
+  border-radius:.3em;padding:.2em .5em}
+.pl .sec{background:var(--yw);color:#111;font-weight:900;border-radius:.3em;
+  font-size:1.25em;min-width:2em;text-align:center;padding:0 .2em}
+.pl .pt{min-width:0}
+.pl .pt b{display:block;font-size:1em;color:#fff;line-height:1.15;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl .pt span{display:block;font-size:clamp(.6rem,.7vw,.8rem);color:var(--mut);
+.pl .pt span{display:block;font-size:.7em;color:var(--mut);
   font-family:Consolas,'Courier New',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pl .to{display:flex;align-items:center;gap:3px}
-.pl .to .ar{color:var(--mut);font-size:1rem;margin-right:2px}
-.dot{width:clamp(20px,1.6vw,28px);height:clamp(20px,1.6vw,28px);border-radius:50%;
+.pl.missing{border-left-color:#ff5252}
+.pl.missing .sec{background:#ff5252;color:#fff}
+.pl .to{display:flex;align-items:center;gap:.2em}
+.pl .to .ar{color:var(--mut);font-size:.9em;margin-right:.1em}
+.dot{width:1.7em;height:1.7em;border-radius:50%;flex:none;
   background:var(--or);color:#fff;border:2px solid #111;font-weight:900;
-  font-size:clamp(.7rem,.9vw,1rem);display:flex;align-items:center;justify-content:center}
-.pl-empty{color:var(--mut);font-size:1rem;padding:10px}
+  font-size:1em;display:flex;align-items:center;justify-content:center}
+.pl-empty{color:var(--mut);font-size:1em;padding:.6em}
 
 /* ---- Footer ---- */
 #ft{background:#060b12;border-top:2px solid #1a2840;display:flex;align-items:center;
@@ -536,8 +542,10 @@ function generateRackCells(){
       width:Math.max(0,g.w-2), height:Math.max(0,g.h-2),
       preserveAspectRatio:'xMidYMid meet', 'pointer-events':'none'}));
     // Section number label (top-left)
-    const lbl = mkEl('text', {id:'l'+n, class:'SN', x:g.x+LABEL_X, y:g.y+LABEL_Y, 'font-size':fs});
-    lbl.textContent = n;
+    // Section number shrinks with small sections and disappears when there is no room
+    const lfs = Math.min(fs, g.h*0.3, g.w*0.35);
+    const lbl = mkEl('text', {id:'l'+n, class:'SN', x:g.x+Math.min(LABEL_X,g.w*0.1), y:g.y+Math.min(LABEL_Y,lfs+1), 'font-size':Math.max(lfs,0.1).toFixed(1)});
+    lbl.textContent = (g.w>0 && g.h>0 && lfs>=4) ? n : '';
     frag.appendChild(lbl);
     // Part number text (bottom area)
     frag.appendChild(mkEl('text', {id:'p'+n, class:'SP', x:g.x+g.w/2, y:partY, 'font-size':pfs}));
@@ -551,7 +559,8 @@ function generateRackCells(){
 function renderRackLabels(){
   ALL.forEach(n=>{
     const g=GEO[n];
-    const rp=RACK_PARTS[n]||{p:'',d:''};
+    const hidden=!(g.w>0&&g.h>0);
+    const rp=hidden?{p:'',d:''}:(RACK_PARTS[n]||{p:'',d:''});
     const pel=document.getElementById('p'+n);
     const del_=document.getElementById('d'+n);
     if(pel){
@@ -617,10 +626,10 @@ function renderPickList(map){
   if(!secs.length){list.appendChild(hEl('div','pl-empty','No picks for these doors.'));return;}
   secs.forEach(n=>{
     const rp=RACK_PARTS[n]||{p:'',d:''};
-    const row=hEl('div','pl');
+    const row=hEl('div','pl'+(GEO[n]?'':' missing'));
     row.appendChild(hEl('div','sec',n));
     const pt=hEl('div','pt');
-    pt.appendChild(hEl('b','',rp.d||rp.p||('Section '+n)));
+    pt.appendChild(hEl('b','',GEO[n]?(rp.d||rp.p||('Section '+n)):('Section '+n+' (not on rack)')));
     pt.appendChild(hEl('span','',rp.d?rp.p:''));
     row.appendChild(pt);
     const to=hEl('div','to');
@@ -693,6 +702,7 @@ function applyPickRoutes(){
 
   renderCartLabels();
   renderPickList(map);
+  scheduleFit();
   const doors=Object.keys(PICK_ROUTES).filter(s=>(PICK_ROUTES[s]||[]).length>0).length;
   const nSec=Object.keys(map).length;
   showStatus(nSec?'Pick each highlighted part and place it in the numbered orange cart slot':'No active picks configured',false);
@@ -1022,6 +1032,51 @@ function startLivePolling(){
   }
   setInterval(check,CHECK_FOR_UPDATES_SECONDS*1000);
 }
+
+/* ---- Fit cart + pick list text to the space, so an overhead TV never needs scrolling ---- */
+const fitsIn=el=>el.scrollHeight<=el.clientHeight+1&&el.scrollWidth<=el.clientWidth+1;
+function fitFont(el,min,max,test){
+  el.style.fontSize=max+'px';
+  if(test(el))return max;
+  let lo=min,hi=max,best=min;
+  for(let i=0;i<10;i++){
+    const mid=(lo+hi)/2;el.style.fontSize=mid+'px';
+    if(test(el)){best=mid;lo=mid;}else hi=mid;
+  }
+  el.style.fontSize=best+'px';
+  return best;
+}
+let fitTimer=null, scrollTimer=null;
+function scheduleFit(){clearTimeout(fitTimer);fitTimer=setTimeout(fitStrip,30);}
+function fitStrip(){
+  // Cart: one size for all 8 slots, small enough for the busiest one
+  const cards=[...document.querySelectorAll('#cart-frame .slot')];
+  if(cards.length){
+    let size=26;
+    // a slot fits when nothing overflows and the door type word is not clipped
+    const cardFits=c=>fitsIn(c)&&[...c.querySelectorAll('.dt')].every(d=>d.scrollWidth<=d.clientWidth+1);
+    cards.forEach(c=>{size=Math.min(size,fitFont(c,7,size,cardFits));});
+    cards.forEach(c=>{c.style.fontSize=size+'px';});
+  }
+  // Pick list: as large as possible while every row fits
+  const list=document.getElementById('picklist');
+  if(!list)return;
+  clearInterval(scrollTimer);list.scrollTop=0;
+  const size=fitFont(list,11,30,fitsIn);
+  // Fallback only for very long lists: slow automatic scroll, never manual
+  if(size<=11.2&&!fitsIn(list)){
+    let pause=60,dir=1;
+    scrollTimer=setInterval(()=>{
+      if(pause>0){pause--;return;}
+      list.scrollTop+=dir;
+      const end=list.scrollTop+list.clientHeight>=list.scrollHeight-1;
+      if(dir>0&&end){dir=-1;pause=60;}
+      else if(dir<0&&list.scrollTop<=0){dir=1;pause=60;}
+    },50);
+  }
+}
+window.addEventListener('resize',scheduleFit);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(scheduleFit);
 
 function fullRerender(){
   document.getElementById('rack-cells').innerHTML='';
